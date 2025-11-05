@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.3",
         "andreia/filament-nord-theme": "^2.0",
+        "deployer/deployer": "^7.5",
         "filament/filament": "^4.0",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.31",

@@ -1,0 +1,67 @@
+image: node:22-bullseye
+
+stages:
+  - preparation
+  - build
+  - test
+  - deploy
+
+variables:
+  DEPLOY_PATH: /var/www/myapp
+  GIT_SUBMODULE_STRATEGY: recursive
+  NODE_ENV: production
+
+# Dependencies installation
+prepare:
+  stage: preparation
+  before_script:
+    - apt-get update -y
+    - apt-get install -y php8.3 php8.3-cli php8.3-mbstring php8.3-xml php8.3-bcmath php8.3-curl unzip git curl mariadb-client
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  script:
+    - php -v
+    - composer -V
+    - node -v
+    - npm ci
+    - composer install --no-dev --no-interaction --prefer-dist
+  artifacts:
+    paths:
+      - vendor/
+      - node_modules/
+    expire_in: 1h
+
+# Front compilation with vite
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - public/build/
+      - public/assets/
+      - public/css/
+      - public/js/
+      - public/images/
+    expire_in: 1h
+
+# Tests Laravel
+test:
+  stage: test
+  script:
+    - php artisan test --without-tty
+
+# Deploy
+deploy:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "release" || $CI_COMMIT_REF_NAME == "master"'
+  before_script:
+    - apt-get update -y && apt-get install -y ssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - composer global require deployer/deployer
+    - ~/.composer/vendor/bin/dep deploy -vvv
+# Laravel pint ?
