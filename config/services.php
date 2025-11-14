@@ -35,4 +35,24 @@ return [
         ],
     ],
 
+    'dolibarr' => [
+        'base_url' => env('DOLIBARR_URL'),
+        'username' => env('DOLIBARR_USERNAME'),
+        'password' => env('DOLIBARR_PWD'),
+        'api_key' => env('DOLIBARR_APIKEY')
+    ],
+
+    'ispconfig' => [
+        'hosting' => [
+            'base_url' => env('HOSTING_ISPAPI_URL'),
+            'username' => env('HOSTING_ISPAPI_USERNAME'),
+            'password' => env('HOSTING_ISPAPI_PWD'),
+        ],
+        'mailbox' => [
+            'base_url' => env('MAIL_ISPAPI_URL'),
+            'username' => env('MAIL_ISPAPI_USERNAME'),
+            'password' => env('MAIL_ISPAPI_PWD'),
+        ]
+    ]
+
 ];

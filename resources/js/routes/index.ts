@@ -526,3 +526,77 @@ membershipForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 })
 
 membership.form = membershipForm
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+export const callDolibarr = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: callDolibarr.url(options),
+    method: 'get',
+})
+
+callDolibarr.definition = {
+    methods: ["get","head"],
+    url: '/call-dolibarr',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+callDolibarr.url = (options?: RouteQueryOptions) => {
+    return callDolibarr.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+callDolibarr.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: callDolibarr.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+callDolibarr.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: callDolibarr.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+const callDolibarrForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callDolibarr.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+callDolibarrForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callDolibarr.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/dev-routes.php:5
+* @route '/call-dolibarr'
+*/
+callDolibarrForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: callDolibarr.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+callDolibarr.form = callDolibarrForm
