@@ -19,8 +19,14 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('status', ['active', 'expired', 'pending'])->default('pending');
+            $table->date('validation_date')->nullable();
+            $table->string('payment_method')->nullable();
             $table->decimal('amount', 10, 2)->default(0);
             $table->enum('payment_status', ['paid', 'unpaid', 'partial'])->default('unpaid');
+            $table->longText('note_public')->nullable();
+            $table->longText('note_private')->nullable();
+            $table->string('dolibarr_id')->nullable();
+            $table->string('dolibarr_user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

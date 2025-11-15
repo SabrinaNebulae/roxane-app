@@ -3,26 +3,25 @@
 namespace App\Console\Commands;
 
 use App\Models\Member;
+use App\Models\Membership;
 use App\Services\DolibarrService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
-use function Deployer\timestamp;
+use function Laravel\Prompts\progress;
 
 class SyncDolibarrMembers extends Command
 {
     /**
      * The name and signature of the console command.
      *
-     * @var string
-     */
-    protected $signature = 'app:sync-dolibarr-members';
+     * @var string */
+    protected $signature = 'sync:dolibarr-members';
 
     /**
-     * The console command description.
+     * The console command description. *
      *
-     * @var string
-     */
+     * @var string */
     protected $description = 'Retrieve members data from Dolibarr';
 
     /**
@@ -32,55 +31,120 @@ class SyncDolibarrMembers extends Command
     public function handle(): void
     {
         $this->info('Starting Dolibarr members import...');
-        // Dolibarr API call
-        $client =  new DolibarrService;
+
+        $client = new DolibarrService;
+
+        // $doliMembers = collect($client->getAllMembers())->take(10); // For test
         $doliMembers = collect($client->getAllMembers());
 
-        $progressBar = $this->output->createProgressBar(count($doliMembers));
+        $progressBar = progress(label: 'Dolibarr Members import', steps: $doliMembers->count());
         $progressBar->start();
-        $i = 0;
+
+        // Stats trackers
+        $createdMembers = 0;
+        $updatedMembers = 0;
+        $createdMemberships = 0;
+        $updatedMemberships = 0;
+
+        // Status mapping from Dolibarr
+        $memberStatuses = [
+            '-2' => 'excluded',
+            '0' => 'cancelled',
+            '1' => 'valid'
+        ];
 
         foreach ($doliMembers as $member) {
-            dd($member);
 
-            $newMember = Member::updateOrCreate([
-                'dolibarr_id' => $member->id,
-            ], [
-                'status' => $member['status'], // @todo: faire concorder les statuts
-                'nature' => 'physical',
-                'member_type' => $member['type'],
-                'group_id' => null,
-                'lastname' => $member['firstname'],
-                'firstname' => $member['lastname'],
-                'email' => $member['email'],
-                'personal_email' => '',
-                'company' => '',
-                'website_url' => $member['url'],
-                'date_of_birth' => '',
-                'address' => '',
-                'zipcode' => '',
-                'city' => '',
-                'country' => '',
-                'phone1' => '',
-                'phone2' => '',
-                'public_membership' => '',
-                'created_at' => Carbon::create($member['date_creation'])->format(timestamp()),
-                'updated_at' => '',
-            ]);
+            // CREATE or UPDATE MEMBER
+            $newMember = Member::updateOrCreate(
+                ['dolibarr_id' => $member['id']],
+                [
+                    'status' => $memberStatuses[$member['status']] ?? 'draft',
+                    'nature' => 'physical',
+                    'member_type' => $member['type'],
+                    'group_id' => null,
+                    'lastname' => $member['firstname'],
+                    'firstname' => $member['lastname'],
+                    'email' => $member['email'] ?: null,
+                    'retzien_email' => '',
+                    'company' => $member['societe'],
+                    'website_url' => $member['url'],
+                    'address' => $member['address'],
+                    'zipcode' => $member['zip'],
+                    'city' => $member['town'],
+                    'country' => '',
+                    'phone1' => $member['phone'],
+                    'phone2' => $member['phone_mobile'],
+                    'public_membership' => 0,
+                    'created_at' => $this->toDate($member['date_creation']),
+                ]
+            );
 
-            // On crée l'adhérent en remplissant les données en bdd avec ses coordonnées, son statut etc ...
+            // Count member creation/update
+            if ($newMember->wasRecentlyCreated) {
+                $createdMembers++;
+            } else {
+                $updatedMembers++;
+            }
 
-            // On récupère toutes les adhésions/cotisations pour chaque adhérent
-            $memberships = $client->getMemberSubscriptions($member->id);
+            // Get subscriptions for memeber
+            $memberships = collect($client->getMemberSubscriptions($member['id']));
 
-            // on traite les notes (privée, publique, lien ect) contenues dans dolibarr
+            foreach ($memberships as $membership) {
 
-            $i++;
+                $membershipStatus = $membership['datef'] < now()->timestamp ? 'expired' : 'active';
+
+                $newMembership = Membership::updateOrCreate(
+                    ['dolibarr_id' => $membership['id']],
+                    [
+                        'member_id' => $newMember->id,
+                        'admin_id' => 1,
+                        'package_id' => 2, // annual subscription
+                        'start_date' => $this->toDate($membership['dateh']),
+                        'end_date' => $this->toDate($membership['datef']),
+                        'status' => $membershipStatus,
+                        'validation_date' => $this->toDate($membership['datem']),
+                        'payment_method' => null,
+                        'amount' => number_format($membership['amount'], 2),
+                        'payment_status' => 'paid',
+                        'note_public' => $membership['note_public'],
+                        'note_private' => $membership['note_private'],
+                        'dolibarr_user_id' => $member['id']
+                    ]
+                );
+
+                // Count membership creation/update
+                if ($newMembership->wasRecentlyCreated) {
+                    $createdMemberships++;
+                } else {
+                    $updatedMemberships++;
+                }
+            }
+
+            $progressBar->advance();
         }
 
         $progressBar->finish();
-        // Logs
 
-        $this->info('Import finished. ' .$i.' members have been imported.');
+        //  Report
+        $this->info('');
+        $this->info('===== IMPORT SUMMARY =====');
+        $this->info("Members created : $createdMembers");
+        $this->info("Members updated : $updatedMembers");
+        $this->info("Memberships created : $createdMemberships");
+        $this->info("Memberships updated : $updatedMemberships");
+        $this->info('===========================');
+        $this->info('Import completed successfully.');
+    }
+
+    /**
+     * Convert timestamp to date format safely
+     * @todo: export this in a service or repo
+     */
+    private function toDate($timestamp): ?string
+    {
+        return $timestamp
+            ? Carbon::createFromTimestamp($timestamp)->format('Y-m-d H:i:s')
+            : null;
     }
 }

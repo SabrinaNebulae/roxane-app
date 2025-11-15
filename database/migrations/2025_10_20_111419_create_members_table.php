@@ -18,6 +18,8 @@ return new class extends Migration
             // User
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
 
+            $table->string('dolibarr_id')->nullable();
+
             // Keycloak
             $table->string('keycloak_id')->nullable();
 
@@ -33,6 +35,9 @@ return new class extends Migration
             // Nature
             $table->enum('nature', ['physical', 'legal'])->default('physical');
 
+            // Type
+            $table->unsignedBigInteger('type_id')->nullable();
+
             // Group
             $table->unsignedBigInteger('group_id')->nullable();
 
@@ -40,6 +45,7 @@ return new class extends Migration
             $table->string('lastname')->nullable();
             $table->string('firstname')->nullable();
             $table->string('email');
+            $table->string('retzien_email')->nullable();
             $table->string('company')->nullable();
             $table->date('date_of_birth')->nullable();
 
@@ -53,6 +59,9 @@ return new class extends Migration
 
             // Membership type
             $table->boolean('public_membership')->default(false);
+
+            // Others
+            $table->string('website_url')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

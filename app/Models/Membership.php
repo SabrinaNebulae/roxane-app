@@ -13,11 +13,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $member_id
  * @property int|null $admin_id
  * @property int $package_id
- * @property string $start_date
+ * @property string|null $start_date
  * @property string|null $end_date
  * @property string $status
+ * @property string|null $validation_date
+ * @property string|null $payment_method
  * @property string $amount
  * @property string $payment_status
+ * @property string|null $note_public
+ * @property string|null $note_private
+ * @property string|null $dolibarr_id
+ * @property string|null $dolibarr_user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
@@ -33,14 +39,20 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereDolibarrId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereDolibarrUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereEndDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereMemberId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereNotePrivate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereNotePublic($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership wherePackageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership wherePaymentMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership wherePaymentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereStartDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereValidationDate($value)
  * @mixin \Eloquent
  */
 class Membership extends Model
@@ -52,8 +64,14 @@ class Membership extends Model
         'start_date',
         'end_date',
         'status',
+        'validation_date',
+        'payment_method',
         'amount',
         'payment_status',
+        'note_public',
+        'note_private',
+        'dolibarr_id',
+        'dolibarr_user_id'
     ];
 
 
