@@ -1,4 +1,4 @@
-image: node:22-bullseye
+image: nebulaed/php83-node22:latest
 
 stages:
   - preparation
@@ -7,7 +7,7 @@ stages:
   - deploy
 
 variables:
-  DEPLOY_PATH: /var/www/myapp
+  DEPLOY_PATH: /var/www/roxane
   GIT_SUBMODULE_STRATEGY: recursive
   NODE_ENV: production
 
