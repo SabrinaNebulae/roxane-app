@@ -1,4 +1,4 @@
-# LRL APP - Centralized Portal with Laravel, React & Keycloak SSO
+# ROXANE - Centralized Portal with Laravel, React & Keycloak SSO
 
 This project is a **centralized portal application & web hosting association ERP** built with **Laravel 12 & React19**, designed to provide a seamless and secure entry point for both **end users** and **administrators**.
 

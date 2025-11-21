@@ -1,4 +1,4 @@
-name: lrl-app
+name: roxane-app
 recipe: laravel
 config:
   php: '8.3'
@@ -11,11 +11,11 @@ config:
 
 proxy:
   appserver:
-    - lrl-app.lndo.site
+    - roxane.lndo.site
   mailhog:
-    - mail.lrl-app.lndo.site
+    - mail.roxane.lndo.site
   pma:
-    - pma.lrl-app.lndo.site
+    - pma.roxane.lndo.site
 
 services:
   pma:
