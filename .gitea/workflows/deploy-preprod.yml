@@ -1,0 +1,59 @@
+name: Deploy Roxane to Preprod
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.PREPROD_PORT }} ${{ secrets.PREPROD_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Roxane
+        run: |
+          ssh -p ${{ secrets.PREPROD_PORT }} ${{ secrets.PREPROD_USER }}@${{ secrets.PREPROD_HOST }} << 'ENDSSH'
+            set -e
+            cd ${{ secrets.PREPROD_PATH }}
+
+            echo "Pulling latest Roxane release..."
+            git pull origin release
+
+            echo "Installing Composer dependencies..."
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "Building frontend with Vite..."
+            npm ci
+            npm run build
+
+            echo "🗄️ Running database migrations..."
+            php artisan migrate --force
+
+            echo "⚡ Optimizing Roxane..."
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan filament:optimize
+
+            echo "Restarting queue workers..."
+            php artisan queue:restart || true
+
+            echo "Roxane deployed successfully to preprod!"
+          ENDSSH
+
+      - name: Deployment Status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "Roxane is live on preprod!"
+          else
+            echo "Deployment failed - check logs"
+            exit 1
+          fi
