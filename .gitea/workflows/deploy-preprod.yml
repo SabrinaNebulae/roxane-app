@@ -13,12 +13,11 @@ jobs:
       image: nebulaed/php83-node22
 
     steps:
-      - name: Debug Env
+      - name: Check IPv6 connectivity
         run: |
-          echo "${{ vars.PREPROD_HOST }}"
-          echo "${{ vars.PREPROD_PORT }}"
-          echo "${{ vars.PREPROD_USER }}"
-          echo "${{ vars.PREPROD_PATH }}"
+          ip -6 route
+          ip -6 addr
+          ping6 -c 2 2a01:e0a:bfe:a8a0::205 || echo "ping failed"
 
       - name: Configure SSH
         env:
