@@ -13,6 +13,14 @@ jobs:
       image: nebulaed/php83-node22
 
     steps:
+      - name: Debug Env
+        run: |
+          echo "${{ secrets.PREPROD_HOST }}"
+          echo "${{ secrets.PREPROD_PORT }}"
+          echo "${{ secrets.PREPROD_USER }}"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}"
+          echo "${{ secrets.PREPROD_PATH }}"
+
       - name: Configure SSH
         env:
           SSH_HOST: ${{ secrets.PREPROD_HOST }}
@@ -22,12 +30,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Met en forme l'host SSH pour IPv6 si besoin
-          if [[ "$SSH_HOST" =~ : ]]; then
-            SSH_HOST_SSH="[$SSH_HOST]"
-          else
-            SSH_HOST_SSH="$SSH_HOST"
-          fi
+          case "$SSH_HOST" in
+          *:*) SSH_HOST_SSH="[$SSH_HOST]" ;;
+          *) SSH_HOST_SSH="$SSH_HOST" ;;
+          esac
+
           echo "Host used for SSH: $SSH_HOST_SSH"
 
           # Ajoute l'hôte dans known_hosts
@@ -68,3 +75,4 @@ jobs:
 
             echo "Roxane deployed successfully to preprod!"
           ENDSSH
+
