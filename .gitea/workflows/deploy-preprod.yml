@@ -15,16 +15,16 @@ jobs:
     steps:
       - name: Debug Env
         run: |
-          echo "${{ variables.PREPROD_HOST }}"
-          echo "${{ variables.PREPROD_PORT }}"
-          echo "${{ variables.PREPROD_USER }}"
+          echo "${{ vars.PREPROD_HOST }}"
+          echo "${{ vars.PREPROD_PORT }}"
+          echo "${{ vars.PREPROD_USER }}"
           echo "${{ secrets.SSH_PRIVATE_KEY }}"
-          echo "${{ variables.PREPROD_PATH }}"
+          echo "${{ vars.PREPROD_PATH }}"
 
       - name: Configure SSH
         env:
-          SSH_HOST: ${{ variables.PREPROD_HOST }}
-          SSH_PORT: ${{ variables.PREPROD_PORT }}
+          SSH_HOST: ${{ vars.PREPROD_HOST }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -45,10 +45,10 @@ jobs:
 
       - name: Deploy Roxane
         env:
-          SSH_USER: ${{ variables.PREPROD_USER }}
-          SSH_PORT: ${{ variables.PREPROD_PORT }}
+          SSH_USER: ${{ vars.PREPROD_USER }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
           SSH_HOST_SSH: ${{ env.SSH_HOST_SSH }}
-          PREPROD_PATH: ${{ variables.PREPROD_PATH }}
+          PREPROD_PATH: ${{ vars.PREPROD_PATH }}
         run: |
           ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST_SSH" <<'ENDSSH'
             set -e
