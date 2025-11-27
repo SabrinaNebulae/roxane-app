@@ -1,0 +1,11 @@
+name: Test IPv6
+run-name: IPv6 connectivity test
+
+on: [workflow_dispatch]
+
+jobs:
+  ipv6-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ip a
+      - run: ping6 -c 3 2a01:e0a:bfe:a8a0::205
