@@ -13,6 +13,11 @@ jobs:
       image: nebulaed/php83-node22
 
     steps:
+      - name: Install network tools
+        run: |
+          apt update
+          apt install -y iproute2 iputils-ping
+
       - name: Check IPv6 connectivity
         run: |
           ip -6 route
