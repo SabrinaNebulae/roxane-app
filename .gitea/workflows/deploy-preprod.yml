@@ -1,13 +1,23 @@
-name: IPv6-test
-run-name: Test IPv6 connectivity
+name: Deploy Roxane to Preprod
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - release
 
 jobs:
-  ipv6:
+  deploy:
     runs-on: ubuntu-latest
+
+    container:
+      image: nebulaed/php83-node22
+
     steps:
+      - name: Install network tools
+        run: |
+          apt update
+          apt install -y iproute2 iputils-ping
+
       - name: Show network
         run: |
           ip -6 addr
@@ -16,3 +26,59 @@ jobs:
       - name: Ping IPv6 server
         run: |
           ping6 -c 3 2a01:e0a:bfe:a8a0::205 || true
+
+      - name: Configure SSH
+        env:
+          SSH_HOST: ${{ vars.PREPROD_HOST }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          case "$SSH_HOST" in
+          *:*) SSH_HOST_SSH="[$SSH_HOST]" ;;
+          *) SSH_HOST_SSH="$SSH_HOST" ;;
+          esac
+
+          echo "Host used for SSH: $SSH_HOST_SSH"
+
+          # Ajoute l'hôte dans known_hosts
+          ssh-keyscan -t ed25519 -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+          # Exporte pour usage dans les étapes suivantes
+          echo "SSH_HOST_SSH=$SSH_HOST_SSH" >> $GITHUB_ENV
+
+      - name: Deploy Roxane
+        env:
+          SSH_USER: ${{ vars.PREPROD_USER }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
+          SSH_HOST_SSH: ${{ env.SSH_HOST_SSH }}
+          PREPROD_PATH: ${{ vars.PREPROD_PATH }}
+        run: |
+          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST_SSH" <<'ENDSSH'
+            set -e
+            cd $PREPROD_PATH
+
+            echo "Pulling latest Roxane release..."
+            git pull origin release
+
+            echo "Installing Composer dependencies..."
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "Building frontend with Vite..."
+            npm ci
+            npm run build
+
+            echo "Running database migrations..."
+            php artisan migrate --force
+
+            echo "Optimizing Roxane..."
+            php artisan optimize
+
+            echo "Restarting queue workers..."
+            php artisan queue:restart || true
+
+            echo "Roxane deployed successfully to preprod!"
+          ENDSSH
+
