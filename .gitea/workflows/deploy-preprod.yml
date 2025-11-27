@@ -18,14 +18,11 @@ jobs:
           apt update
           apt install -y iproute2 iputils-ping
 
-      - name: Check IPv6 connectivity
+      - name: Check IPv6 inside container
         run: |
-          echo "ip -6 route"
-          ip -6 route
-          echo "ip -6 addr"
           ip -6 addr
-          echo "ping"
-          ping6 -c 2 2a01:e0a:bfe:a8a0::205 || echo "ping failed"
+          ip -6 route
+          ping6 -c 3 2a01:e0a:bfe:a8a0::205 || echo "IPv6 failed"
 
       - name: Configure SSH
         env:
