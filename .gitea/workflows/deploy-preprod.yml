@@ -20,8 +20,11 @@ jobs:
 
       - name: Check IPv6 connectivity
         run: |
+          echo "ip -6 route"
           ip -6 route
+          echo "ip -6 addr"
           ip -6 addr
+          echo "ping"
           ping6 -c 2 2a01:e0a:bfe:a8a0::205 || echo "ping failed"
 
       - name: Configure SSH
