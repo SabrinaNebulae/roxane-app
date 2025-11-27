@@ -9,20 +9,43 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    container:
+      image: nebulaed/php83-node22
+
     steps:
       - name: Configure SSH
+        env:
+          SSH_HOST: ${{ secrets.PREPROD_HOST }}
+          SSH_PORT: ${{ secrets.PREPROD_PORT }}
         run: |
-          mkdir -p ~/.ssh
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -t ed25519 -p ${{ secrets.PREPROD_PORT }} ${{ secrets.PREPROD_HOST }} >> ~/.ssh/known_hosts
+
+          # Met en forme l'host SSH pour IPv6 si besoin
+          if [[ "$SSH_HOST" =~ : ]]; then
+            SSH_HOST_SSH="[$SSH_HOST]"
+          else
+            SSH_HOST_SSH="$SSH_HOST"
+          fi
+          echo "Host used for SSH: $SSH_HOST_SSH"
+
+          # Ajoute l'hôte dans known_hosts
+          ssh-keyscan -t ed25519 -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+          # Exporte pour usage dans les étapes suivantes
+          echo "SSH_HOST_SSH=$SSH_HOST_SSH" >> $GITHUB_ENV
 
       - name: Deploy Roxane
+        env:
+          SSH_USER: ${{ secrets.PREPROD_USER }}
+          SSH_PORT: ${{ secrets.PREPROD_PORT }}
+          SSH_HOST_SSH: ${{ env.SSH_HOST_SSH }}
+          PREPROD_PATH: ${{ secrets.PREPROD_PATH }}
         run: |
-          ssh -p ${{ secrets.PREPROD_PORT }} ${{ secrets.PREPROD_USER }}@${{ secrets.PREPROD_HOST }} <<'ENDSSH'
+          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST_SSH" <<'ENDSSH'
             set -e
-            cd ${{ secrets.PREPROD_PATH }}
+            cd $PREPROD_PATH
 
             echo "Pulling latest Roxane release..."
             git pull origin release
