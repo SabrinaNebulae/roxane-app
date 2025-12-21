@@ -55,11 +55,15 @@ jobs:
 
           ssh -6 -o StrictHostKeyChecking=yes \
               -p "$SSH_PORT" \
-              "$SSH_USER@$SSH_HOST_SSH" <<'EOF'
+              "$SSH_USER@$SSH_HOST_SSH" bash -s <<'EOF' "$PREPROD_PATH" "$GIT_REPO"
           set -e
 
+          PREPROD_PATH="$1"
+          GIT_REPO="$2"
+
+          # Vérifier si le dépôt existe, sinon le cloner
           if [ ! -d "$PREPROD_PATH/.git" ]; then
-            echo "Repository not found. Cloning..."
+            echo "Repository not found. Cloning from $GIT_REPO..."
             mkdir -p "$(dirname "$PREPROD_PATH")"
             git clone "$GIT_REPO" "$PREPROD_PATH"
             cd "$PREPROD_PATH"
