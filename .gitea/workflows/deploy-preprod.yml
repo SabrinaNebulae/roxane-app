@@ -7,78 +7,83 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: docker
 
     container:
       image: nebulaed/php83-node22
 
     steps:
-      - name: Install network tools
+      - name: Install network & SSH tools
         run: |
+          set -e
           apt update
-          apt install -y iproute2 iputils-ping
+          apt install -y iproute2 iputils-ping openssh-client git
 
-      - name: Show network
+      - name: Show IPv6 network
         run: |
           ip -6 addr
           ip -6 route
 
-      - name: Ping IPv6 server
+      - name: Ping IPv6 preprod server
         run: |
-          ping6 -c 3 2a01:e0a:bfe:a8a0::205 || true
+          ping6 -c 3 2a01:e0a:bfe:a8a0::205
 
       - name: Configure SSH
         env:
           SSH_HOST: ${{ vars.PREPROD_HOST }}
           SSH_PORT: ${{ vars.PREPROD_PORT }}
         run: |
+          set -e
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
           case "$SSH_HOST" in
-          *:*) SSH_HOST_SSH="[$SSH_HOST]" ;;
-          *) SSH_HOST_SSH="$SSH_HOST" ;;
+            *:*) SSH_HOST_SSH="[$SSH_HOST]" ;;
+            *)   SSH_HOST_SSH="$SSH_HOST" ;;
           esac
 
-          echo "Host used for SSH: $SSH_HOST_SSH"
+          echo "SSH_HOST_SSH=$SSH_HOST_SSH" >> "$GITEA_ENV"
 
-          # Ajoute l'hôte dans known_hosts
-          ssh-keyscan -t ed25519 -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
-
-          # Exporte pour usage dans les étapes suivantes
-          echo "SSH_HOST_SSH=$SSH_HOST_SSH" >> $GITHUB_ENV
-
-      - name: Deploy Roxane
+      - name: Deploy Roxane to preprod
         env:
           SSH_USER: ${{ vars.PREPROD_USER }}
           SSH_PORT: ${{ vars.PREPROD_PORT }}
-          SSH_HOST_SSH: ${{ env.SSH_HOST_SSH }}
           PREPROD_PATH: ${{ vars.PREPROD_PATH }}
         run: |
-          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST_SSH" <<'ENDSSH'
-            set -e
-            cd $PREPROD_PATH
+          set -e
 
-            echo "Pulling latest Roxane release..."
-            git pull origin release
+          ssh -o StrictHostKeyChecking=yes \
+              -p "$SSH_PORT" \
+              "$SSH_USER@$SSH_HOST_SSH" <<EOF
+          set -e
 
-            echo "Installing Composer dependencies..."
-            composer install --no-dev --optimize-autoloader --no-interaction
+          cd "$PREPROD_PATH"
 
-            echo "Building frontend with Vite..."
-            npm ci
-            npm run build
+          echo "Pulling latest Roxane release..."
+          git fetch origin
+          git checkout release
+          git pull origin release
 
-            echo "Running database migrations..."
-            php artisan migrate --force
+          echo "Installing Composer dependencies..."
+          composer install --no-dev --optimize-autoloader --no-interaction
 
-            echo "Optimizing Roxane..."
-            php artisan optimize
+          echo "Building frontend with Vite..."
+          npm ci
+          npm run build
 
-            echo "Restarting queue workers..."
-            php artisan queue:restart || true
+          echo "Running database migrations..."
+          php artisan migrate --force
 
-            echo "Roxane deployed successfully to preprod!"
-          ENDSSH
+          echo "Optimizing Roxane..."
+          php artisan optimize
 
+          echo "Restarting queue workers..."
+          php artisan queue:restart || true
+
+          echo "Roxane deployed successfully to preprod!"
+          EOF
