@@ -49,6 +49,7 @@ jobs:
           SSH_USER: ${{ vars.PREPROD_USER }}
           SSH_PORT: ${{ vars.PREPROD_PORT }}
           PREPROD_PATH: ${{ vars.PREPROD_PATH }}
+          GIT_REPO: ${{ vars.GIT_REPO }}
         run: |
           set -e
 
@@ -57,12 +58,19 @@ jobs:
               "$SSH_USER@$SSH_HOST_SSH" <<'EOF'
           set -e
 
-          cd "$PREPROD_PATH"
-
-          echo "Pulling latest Roxane release..."
-          git fetch origin
-          git checkout release
-          git reset --hard origin/release
+          if [ ! -d "$PREPROD_PATH/.git" ]; then
+            echo "Repository not found. Cloning..."
+            mkdir -p "$(dirname "$PREPROD_PATH")"
+            git clone "$GIT_REPO" "$PREPROD_PATH"
+            cd "$PREPROD_PATH"
+            git checkout release
+          else
+            cd "$PREPROD_PATH"
+            echo "Pulling latest Roxane release..."
+            git fetch origin
+            git checkout release
+            git reset --hard origin/release
+          fi
 
           echo "Installing Composer dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction
