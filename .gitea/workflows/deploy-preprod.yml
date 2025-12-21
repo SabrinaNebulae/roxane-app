@@ -52,9 +52,9 @@ jobs:
         run: |
           set -e
 
-          ssh -o StrictHostKeyChecking=yes \
+          ssh -6 -o StrictHostKeyChecking=yes \
               -p "$SSH_PORT" \
-              "$SSH_USER@$SSH_HOST_SSH" <<EOF
+              "$SSH_USER@$SSH_HOST_SSH" <<'EOF'
           set -e
 
           cd "$PREPROD_PATH"
@@ -62,7 +62,7 @@ jobs:
           echo "Pulling latest Roxane release..."
           git fetch origin
           git checkout release
-          git pull origin release
+          git reset --hard origin/release
 
           echo "Installing Composer dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction
