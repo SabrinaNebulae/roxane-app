@@ -54,8 +54,10 @@ jobs:
           set -e
 
           ssh -6 -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=10 \
+              -o ServerAliveInterval=60 \
               -p "$SSH_PORT" \
-              "$SSH_USER@$SSH_HOST_SSH" bash -s <<'EOF' "$PREPROD_PATH" "$GIT_REPO"
+              "$SSH_USER@$SSH_HOST_SSH" bash -l -s <<'EOF' "$PREPROD_PATH" "$GIT_REPO"
           set -e
 
           PREPROD_PATH="$1"
@@ -63,34 +65,78 @@ jobs:
 
           # Vérifier si le dépôt existe, sinon le cloner
           if [ ! -d "$PREPROD_PATH/.git" ]; then
-            echo "Repository not found. Cloning from $GIT_REPO..."
+            echo "[!] Repository not found. Cloning from $GIT_REPO..."
             mkdir -p "$(dirname "$PREPROD_PATH")"
             git clone "$GIT_REPO" "$PREPROD_PATH"
             cd "$PREPROD_PATH"
             git checkout release
           else
             cd "$PREPROD_PATH"
-            echo "Pulling latest Roxane release..."
+            git config --global --add safe.directory "$PREPROD_PATH" 2>/dev/null || true
+
+            echo "[>>] Pulling latest Roxane release..."
             git fetch origin
             git checkout release
             git reset --hard origin/release
+            git clean -fd  # Nettoyer les fichiers non trackés
           fi
 
-          echo "Installing Composer dependencies..."
-          composer install --no-dev --optimize-autoloader --no-interaction
+          echo "[*] Installing Composer dependencies..."
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-          echo "Building frontend with Vite..."
-          npm ci
+          echo "[~] Building frontend with Vite..."
+          npm ci --prefer-offline
           npm run build
 
-          echo "Running database migrations..."
+          echo "[DB] Running database migrations..."
           php artisan migrate --force
 
-          echo "Optimizing Roxane..."
-          php artisan optimize
+          echo "[++] Optimizing Roxane..."
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          php artisan event:cache
 
-          echo "Restarting queue workers..."
+          echo "[<>] Restarting queue workers..."
           php artisan queue:restart || true
 
-          echo "Roxane deployed successfully to preprod!"
+          echo "[OK] Roxane deployed successfully to preprod!"
+          EOF
+
+      - name: Verify deployment
+        if: success()
+        env:
+          SSH_USER: ${{ vars.PREPROD_USER }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
+          PREPROD_PATH: ${{ vars.PREPROD_PATH }}
+        run: |
+          ssh -6 -o StrictHostKeyChecking=yes \
+              -p "$SSH_PORT" \
+              "$SSH_USER@$SSH_HOST_SSH" bash -l -s <<'EOF' "$PREPROD_PATH"
+          set -e
+          cd "$1"
+
+          echo "[?] Verifying deployment..."
+          echo "Current branch: $(git branch --show-current)"
+          echo "Last commit: $(git log -1 --oneline)"
+          echo "Laravel version: $(php artisan --version)"
+          EOF
+
+      - name: Cleanup on failure
+        if: failure()
+        env:
+          SSH_USER: ${{ vars.PREPROD_USER }}
+          SSH_PORT: ${{ vars.PREPROD_PORT }}
+          PREPROD_PATH: ${{ vars.PREPROD_PATH }}
+        run: |
+          ssh -6 -o StrictHostKeyChecking=yes \
+              -p "$SSH_PORT" \
+              "$SSH_USER@$SSH_HOST_SSH" bash -l -s <<'EOF' "$PREPROD_PATH"
+          cd "$1"
+
+          echo "[!!] Deployment failed. Rolling back optimizations..."
+          php artisan config:clear || true
+          php artisan route:clear || true
+          php artisan view:clear || true
+          php artisan cache:clear || true
           EOF
