@@ -22,7 +22,7 @@ export default function MaintenancePage() {
 
             <h1 className="text-4xl font-bold mb-4 text-center">Site en cours de construction</h1>
             <p className="text-lg text-center max-w-xl">
-                Nous effectuons actuellement une mise à jour. Le site sera de visible très bientôt.
+                Le Retzien Libre se refait une beauté. Le site sera visible très bientôt.
             </p>
         </div>
     );
