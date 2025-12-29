@@ -41,18 +41,31 @@ return [
         'password' => env('DOLIBARR_PWD'),
         'api_key' => env('DOLIBARR_APIKEY')
     ],
-
     'ispconfig' => [
-        'hosting' => [
-            'base_url' => env('HOSTING_ISPAPI_URL'),
-            'username' => env('HOSTING_ISPAPI_USERNAME'),
-            'password' => env('HOSTING_ISPAPI_PWD'),
+        'servers' => [
+            'mail_server' => [
+                'name' => 'ISP Config Mail',
+                'soap_location' => env('ISPCONFIG_MAIL_SOAP_LOCATION'),
+                'soap_uri' => env('ISPCONFIG_MAIL_SOAP_URI'),
+                'username' => env('ISPCONFIG_MAIL_USERNAME'),
+                'password' => env('ISPCONFIG_MAIL_PASSWORD'),
+            ],
+            'web_server' => [
+                'name' => 'ISP Config Web',
+                'soap_location' => env('ISPCONFIG_WEB_SOAP_LOCATION'),
+                'soap_uri' => env('ISPCONFIG_WEB_SOAP_URI'),
+                'username' => env('ISPCONFIG_WEB_USERNAME'),
+                'password' => env('ISPCONFIG_WEB_PASSWORD'),
+            ],
+            'test_server' => [
+                'name' => 'ISP Config TEST',
+                'soap_location' => env('ISPCONFIG_TEST_SOAP_LOCATION'),
+                'soap_uri' => env('ISPCONFIG_TEST_SOAP_URI'),
+                'username' => env('ISPCONFIG_TEST_USERNAME'),
+                'password' => env('ISPCONFIG_TEST_PASSWORD'),
+            ],
         ],
-        'mailbox' => [
-            'base_url' => env('MAIL_ISPAPI_URL'),
-            'username' => env('MAIL_ISPAPI_USERNAME'),
-            'password' => env('MAIL_ISPAPI_PWD'),
-        ]
-    ]
+        'cache_ttl' => env('ISPCONFIG_CACHE_TTL', 300), // 5 minutes
+    ],
 
 ];

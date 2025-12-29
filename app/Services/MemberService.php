@@ -6,21 +6,15 @@ use App\Events\MemberRegistered;
 use App\Models\Member;
 use App\Models\MemberGroup;
 use App\Models\Package;
-use Carbon\Carbon;
 
 class MemberService
 {
-    public function __construct()
-    {
-        // No repositories used in this project
-    }
-
     public function registerNewMember(array $data): Member
     {
         // Check if the member already exists
         $member = Member::where('email', $data['email'])->first();
 
-        if (! $member) {
+        if (!$member) {
             // Create a new member
             $member = new Member();
             $member->status = 'pending';
