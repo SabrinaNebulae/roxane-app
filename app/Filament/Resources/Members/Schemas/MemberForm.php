@@ -8,11 +8,11 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\Layout\Split;
+use Filament\Infolists\Components\TextEntry;
+
 
 class MemberForm
 {
@@ -91,6 +91,41 @@ class MemberForm
                                             ->label(Member::getAttributeLabel('country')),
                                     ])
                                     ->columns(2),
+
+                                Section::make('Messagerie ISPConfig Retzien')
+                                    ->schema([
+                                        TextEntry::make('isp_mail_email')
+                                            ->label('Adresse email')
+                                            ->state(fn (?Member $record) =>
+                                                $record?->ispconfigMail()?->email ?? '—'
+                                            ),
+
+                                        TextEntry::make('isp_mail_user_id')
+                                            ->label('ID utilisateur ISPConfig (mailuser_id)')
+                                            ->state(fn (?Member $record) =>
+                                                $record?->ispconfigMail()?->ispconfig_service_user_id ?? '—'
+                                            ),
+
+                                        TextEntry::make('isp_mail_quota')
+                                            ->label('Quota')
+                                            ->state(function (?Member $record) {
+                                                $quota = $record?->ispconfigMail()?->data['mailuser']['quota'] ?? null;
+
+                                                return $quota
+                                                    ? "{$quota} Mo"
+                                                    : 'Non défini';
+                                            }),
+
+                                        TextEntry::make('isp_mail_domain')
+                                            ->label('Domaine')
+                                            ->state(fn (?Member $record) =>
+                                                $record?->ispconfigMail()?->data['mailuser']['domain'] ?? 'retzien.fr'
+                                            ),
+                                    ])
+                                    ->columns(2)
+                                    ->visible(fn (?Member $record) =>
+                                        $record?->ispconfigMail() !== null
+                                    ),
                             ])
                             ->columnSpan(3),
                         Grid::make(1)

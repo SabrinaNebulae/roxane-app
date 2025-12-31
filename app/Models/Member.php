@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IspconfigType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -121,5 +122,24 @@ class Member extends Model
     public function memberships(): HasMany
     {
         return $this->hasMany(Membership::class);
+    }
+
+    public function ispconfigs(): HasMany
+    {
+        return $this->hasMany(IspconfigMember::class, 'member_id');
+    }
+
+    public function ispconfigMail(): ?IspconfigMember
+    {
+        return $this->ispconfigs()
+            ->where('type', IspconfigType::MAIL)
+            ->first();
+    }
+
+    public function ispconfigWeb(): ?IspconfigMember
+    {
+        return $this->ispconfigs()
+            ->where('type', IspconfigType::WEB)
+            ->first();
     }
 }

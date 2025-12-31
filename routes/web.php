@@ -25,7 +25,7 @@ Route::get('/test/sync-ispconfig', function () {
         abort(403);
     }
 
-    Artisan::call('sync:ispconfig-members');
+    Artisan::call('sync:ispconfig-web-members');
 
     return response()->json([
         'status' => 'ok',
