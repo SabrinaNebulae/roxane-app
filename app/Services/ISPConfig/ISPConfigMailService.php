@@ -87,4 +87,20 @@ class ISPConfigMailService extends ISPConfigService
             'spam_filter' => $user['move_junk'] === 'y',
         ];
     }
+
+    public function updateMailUser(string $email, array $changes): bool
+    {
+        $allUsers = $this->getAllMailUsers();
+        $user = collect($allUsers)->firstWhere('email', $email);
+
+        if (!$user) {
+            return false;
+        }
+
+        return $this->call('mail_user_update', [
+            'primary_id' => $user['mailuser_id'],
+            'params' => $changes,
+        ]);
+    }
+
 }

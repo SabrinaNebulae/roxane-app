@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/call-dolibarr', function () {
-    $call = new App\Services\DolibarrService;
+    $call = new \App\Services\Dolibarr\DolibarrService;
     $members = $call->getAllMembers();
     // find specific
     $userData = collect($members)->firstWhere('id', 124); // Isabelle AK

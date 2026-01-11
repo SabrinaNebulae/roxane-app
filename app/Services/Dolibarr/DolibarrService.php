@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Dolibarr;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
@@ -58,4 +58,15 @@ class DolibarrService
 
         return $response->json();
     }
+
+    public function setMemberStatus(int|string $id, string $status): bool
+    {
+        $response = $this->client()->put(
+            $this->baseUrl . '/members/' . $id,
+            ['status' => $status]
+        );
+
+        return $response->successful();
+    }
+
 }
