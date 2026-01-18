@@ -61,7 +61,7 @@ class DolibarrService
         return $response->json();
     }
 
-    public function setMemberStatus(int|string $id, string $status): bool
+    public function setMemberStatus(int|string $id, int|string $status): bool
     {
         $response = $this->client()->put(
             $this->baseUrl . '/members/' . $id,

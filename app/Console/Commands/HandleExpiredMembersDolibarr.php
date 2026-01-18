@@ -8,10 +8,11 @@ use App\Services\Nextcloud\NextcloudService;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class HandleExpiredMembersDolibarr extends Command
 {
-    protected $signature = 'members:cleanup-expired';
+    protected $signature = 'members:cleanup-expired {--dry-run}';
     protected $description = 'Résilie les adhérents expirés et désactive leurs services';
 
     public function __construct(
@@ -27,19 +28,36 @@ class HandleExpiredMembersDolibarr extends Command
      */
     public function handle(): int
     {
+        $dryRun = $this->option('dry-run');
+
+        $this->info(
+            $dryRun
+                ? 'DRY-RUN activé – aucune modification ne sera effectuée'
+                : 'Mode réel activé'
+        );
+
         $this->info('Récupération des adhérents Dolibarr');
 
         $members = collect($this->dolibarr->getAllMembers());
+        $today = now()->startOfDay();
 
-        $expiredMembers = $members->filter(fn ($m) => $m['status'] === 'expired');
+        $expiredMembers = $members->filter(function ($member) use ($today) {
+            if (($member['statut'] ?? null) != 1) {
+                return false;
+            }
 
-        dd($expiredMembers);
+            if (empty($member['datefin'])) {
+                return false;
+            }
+
+            return \Carbon\Carbon::parse($member['datefin'])->lt($today);
+        });
 
         $this->info("{$expiredMembers->count()} adhérent(s) expiré(s)");
 
         foreach ($expiredMembers as $member) {
             try {
-                $this->processMember($member);
+                $this->processMember($member, $dryRun);
             } catch (\Throwable $e) {
                 Log::error('Erreur traitement adhérent', [
                     'member_id' => $member['id'],
@@ -48,36 +66,56 @@ class HandleExpiredMembersDolibarr extends Command
             }
         }
 
-        $this->info('Traitement terminé');
-        return Command::SUCCESS;
+        $this->info(
+            $dryRun
+                ? 'DRY-RUN terminé – aucune action effectuée'
+                : 'Traitement terminé'
+        );
+        return CommandAlias::SUCCESS;
     }
 
-    protected function processMember(array $member): void
+    /**
+     * @throws ConnectionException
+     */
+    protected function processMember(array $member, bool $dryRun): void
     {
-        $email = $member['email'] ?? null;
+        $email = $this->extractRetzienEmail($member['email'] ?? null);
 
-        $this->info("{$member['id']} - {$email}");
+        $this->line("• {$member['id']} - {$email}");
 
-        // 1. Résiliation Dolibarr
-        $this->dolibarr->setMemberStatus($member['id'], 'resilie');
-
-        // 2. Désactivation mail ISPConfig
-        if ($email) {
-            $this->disableMailAccount($email);
+        // Résiliation Dolibarr
+        if ($dryRun) {
+            $this->info("[DRY-RUN] Résiliation Dolibarr");
+        } else {
+            $this->dolibarr->setMemberStatus($member['id'], '0');
         }
 
-        // 3. Désactivation Nextcloud
+        // Désactivation mail
         if ($email) {
-            $this->nextcloud->disableUserByEmail($email);
+            $this->disableMailAccount($email, $dryRun);
+        }
+
+        //  Désactivation Nextcloud
+        if ($email) {
+            if ($dryRun) {
+                $this->info("[DRY-RUN] Désactivation Nextcloud");
+            } else {
+                $this->nextcloud->disableUserByEmail($email);
+            }
         }
     }
 
-    protected function disableMailAccount(string $email): void
+    protected function disableMailAccount(string $email, bool $dryRun): void
     {
         $details = $this->mailService->getMailUserDetails($email);
 
         if (!$details) {
             $this->warn("Boîte mail inexistante : {$email}");
+            return;
+        }
+
+        if ($dryRun) {
+            $this->info("[DRY-RUN] Mail désactivé");
             return;
         }
 
@@ -91,4 +129,15 @@ class HandleExpiredMembersDolibarr extends Command
         $this->info("Mail désactivé");
     }
 
+    protected function extractRetzienEmail(?string $emails): ?string
+    {
+        if (!$emails) {
+            return null;
+        }
+
+        return collect(explode(';', $emails))
+            ->map(fn (string $email): string => trim($email))
+            ->filter(fn (string $email): bool => str_contains($email, '@retzien.fr'))
+            ->first();
+    }
 }

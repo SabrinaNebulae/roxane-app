@@ -2,6 +2,7 @@
 
 namespace App\Services\Nextcloud;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,7 @@ class NextcloudService
 
     /**
      * Désactive un utilisateur Nextcloud à partir de son email
+     * @throws ConnectionException
      */
     public function disableUserByEmail(string $email): void
     {
@@ -44,6 +46,7 @@ class NextcloudService
 
     /**
      * Trouve le userId Nextcloud à partir de l’email
+     * @throws ConnectionException
      */
     protected function findUserIdByEmail(string $email): ?string
     {

@@ -19,7 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // TEST
 
-Route::get('/test/sync-ispconfig', function () {
+/*Route::get('/test/sync-ispconfig', function () {
 
     if (!app()->isLocal()) {
         abort(403);
@@ -37,6 +37,14 @@ Route::get('/test/isp-mails', function() {
     $ispService = new \App\Services\ISPConfig\ISPConfigMailService;
 
     return $ispService->getAllMailDomains();
+});*/
+
+Route::get('/test-dolibarr', function () {
+   $dolibarrService = new \App\Services\Dolibarr\DolibarrService();
+
+   $members = $dolibarrService->getAllMembers();
+
+   dd($members);
 });
 
 require __DIR__.'/settings.php';
