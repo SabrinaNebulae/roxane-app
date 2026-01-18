@@ -2,25 +2,70 @@
 
 namespace App\Services\Nextcloud;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class NextcloudService
 {
-    public function disableUserByEmail(string $email): bool
-    {
-        $username = $this->getUsernameFromEmail($email);
+    protected PendingRequest $http;
 
-        return Http::withBasicAuth(
-            config('services.nextcloud.username'),
+    public function __construct()
+    {
+        $this->http = Http::withBasicAuth(
+            config('services.nextcloud.user'),
             config('services.nextcloud.password')
-        )->put(
-            config('services.nextcloud.base_url') . "/ocs/v1.php/cloud/users/{$username}/disable",
-            []
-        )->successful();
+        )
+            ->withHeaders([
+                'OCS-APIRequest' => 'true',
+                'Accept' => 'application/json',
+            ])
+            ->baseUrl(config('services.nextcloud.url') . '/ocs/v1.php');
     }
 
-    protected function getUsernameFromEmail(string $email): string
+    /**
+     * Désactive un utilisateur Nextcloud à partir de son email
+     */
+    public function disableUserByEmail(string $email): void
     {
-        return strstr($email, '@', true);
+        $userId = $this->findUserIdByEmail($email);
+
+        if (!$userId) {
+            Log::warning("Utilisateur Nextcloud introuvable", ['email' => $email]);
+            return;
+        }
+
+        $response = $this->http->put("/cloud/users/{$userId}/disable");
+
+        if (!$response->successful()) {
+            throw new \RuntimeException("Erreur désactivation Nextcloud {$userId}");
+        }
+    }
+
+    /**
+     * Trouve le userId Nextcloud à partir de l’email
+     */
+    protected function findUserIdByEmail(string $email): ?string
+    {
+        $response = $this->http->get('/cloud/users');
+
+        if (!$response->successful()) {
+            throw new \RuntimeException('Erreur récupération utilisateurs Nextcloud');
+        }
+
+        $users = $response->json('ocs.data.users') ?? [];
+
+        foreach ($users as $userId) {
+            $details = $this->http->get("/cloud/users/{$userId}");
+
+            if (
+                $details->successful() &&
+                ($details->json('ocs.data.email') === $email)
+            ) {
+                return $userId;
+            }
+        }
+
+        return null;
     }
 }

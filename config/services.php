@@ -37,6 +37,7 @@ return [
 
     'dolibarr' => [
         'base_url' => env('DOLIBARR_URL'),
+        'htaccess_url' => env('DOLIBARR_URL_HTACCESS'),
         'username' => env('DOLIBARR_USERNAME'),
         'password' => env('DOLIBARR_PWD'),
         'api_key' => env('DOLIBARR_APIKEY')
@@ -67,5 +68,9 @@ return [
         ],
         'cache_ttl' => env('ISPCONFIG_CACHE_TTL', 300), // 5 minutes
     ],
-
+    'nextcloud' => [
+        'url' => env('NEXTCLOUD_URL'),
+        'user' => env('NEXTCLOUD_USERNAME'),
+        'password' => env('NEXTCLOUD_PASSWORD')
+    ],
 ];

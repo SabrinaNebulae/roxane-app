@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Members\Schemas;
 
+use App\Enums\IspconfigType;
 use App\Models\Member;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -12,6 +14,8 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Actions;
 
 
 class MemberForm
@@ -91,7 +95,7 @@ class MemberForm
                                             ->label(Member::getAttributeLabel('country')),
                                     ])
                                     ->columns(2),
-
+                                // Mail Retzien
                                 Section::make('Messagerie ISPConfig Retzien')
                                     ->schema([
                                         TextEntry::make('isp_mail_email')
@@ -126,6 +130,23 @@ class MemberForm
                                     ->visible(fn (?Member $record) =>
                                         $record?->ispconfigMail() !== null
                                     ),
+
+                                // Hébergement
+
+                                Section::make('Hébergements Web')
+                                    ->schema([
+                                        Placeholder::make('ispconfigs_web_display')
+                                            ->label('')
+                                            ->content(fn (?Member $record) => view('filament.components.ispconfig-web-list', [
+                                                'ispconfigs' => $record?->ispconfigs()
+                                                        ->where('type', IspconfigType::WEB)
+                                                        ->get() ?? collect()
+                                            ]))
+                                    ])
+                                    ->visible(fn (?Member $record) =>
+                                    $record?->ispconfigs()->where('type', IspconfigType::WEB)->exists()
+                                    )
+                                // Fin Hébergement
                             ])
                             ->columnSpan(3),
                         Grid::make(1)

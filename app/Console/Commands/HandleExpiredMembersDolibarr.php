@@ -33,6 +33,8 @@ class HandleExpiredMembersDolibarr extends Command
 
         $expiredMembers = $members->filter(fn ($m) => $m['status'] === 'expired');
 
+        dd($expiredMembers);
+
         $this->info("{$expiredMembers->count()} adhérent(s) expiré(s)");
 
         foreach ($expiredMembers as $member) {
@@ -54,7 +56,7 @@ class HandleExpiredMembersDolibarr extends Command
     {
         $email = $member['email'] ?? null;
 
-        $this->info("👤 {$member['id']} - {$email}");
+        $this->info("{$member['id']} - {$email}");
 
         // 1. Résiliation Dolibarr
         $this->dolibarr->setMemberStatus($member['id'], 'resilie');
@@ -86,6 +88,7 @@ class HandleExpiredMembersDolibarr extends Command
             'disablepop3' => 'y',
         ]);
 
-        $this->info("📧 Mail désactivé");
+        $this->info("Mail désactivé");
     }
+
 }

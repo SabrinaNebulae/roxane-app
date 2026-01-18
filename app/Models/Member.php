@@ -136,7 +136,7 @@ class Member extends Model
             ->first();
     }
 
-    public function ispconfigWeb(): ?IspconfigMember
+    public function ispconfigsWeb(): ?IspconfigMember
     {
         return $this->ispconfigs()
             ->where('type', IspconfigType::WEB)
