@@ -12,8 +12,9 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class HandleExpiredMembersDolibarr extends Command
 {
-    protected $signature = 'members:cleanup-expired {--dry-run}';
-    protected $description = 'Résilie les adhérents expirés et désactive leurs services';
+    protected $signature = 'members:cleanup-expired
+    {email? : Adresse email d\'un adhérent à traiter uniquement}
+    {--dry-run}';
 
     public function __construct(
         protected DolibarrService $dolibarr,
@@ -29,12 +30,17 @@ class HandleExpiredMembersDolibarr extends Command
     public function handle(): int
     {
         $dryRun = $this->option('dry-run');
+        $emailFilter = $this->argument('email');
 
         $this->info(
             $dryRun
                 ? 'DRY-RUN activé – aucune modification ne sera effectuée'
                 : 'Mode réel activé'
         );
+
+        if ($emailFilter) {
+            $this->info("Mode utilisateur unique : {$emailFilter}");
+        }
 
         $this->info('Récupération des adhérents Dolibarr');
 
@@ -52,6 +58,19 @@ class HandleExpiredMembersDolibarr extends Command
 
             return \Carbon\Carbon::parse($member['datefin'])->lt($today);
         });
+
+        if ($emailFilter) {
+            $expiredMembers = $expiredMembers->filter(function ($member) use ($emailFilter) {
+                $email = $this->extractRetzienEmail($member['email'] ?? null);
+                return $email === $emailFilter;
+            });
+
+            if ($expiredMembers->isEmpty()) {
+                $this->warn("Aucun adhérent expiré trouvé pour {$emailFilter}");
+                return CommandAlias::SUCCESS;
+            }
+        }
+
 
         $this->info("{$expiredMembers->count()} adhérent(s) expiré(s)");
 
