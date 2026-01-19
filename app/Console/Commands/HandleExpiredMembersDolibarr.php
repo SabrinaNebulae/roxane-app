@@ -13,14 +13,15 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 class HandleExpiredMembersDolibarr extends Command
 {
     protected $signature = 'members:cleanup-expired
-    {email? : Adresse email d\'un adhérent à traiter uniquement}
-    {--dry-run}';
+        {email? : Adresse email d\'un adhérent à traiter uniquement}
+        {--dry-run}';
 
     public function __construct(
-        protected DolibarrService $dolibarr,
+        protected DolibarrService      $dolibarr,
         protected ISPConfigMailService $mailService,
-        protected NextcloudService $nextcloud
-    ) {
+        protected NextcloudService     $nextcloud
+    )
+    {
         parent::__construct();
     }
 
@@ -39,7 +40,7 @@ class HandleExpiredMembersDolibarr extends Command
         );
 
         if ($emailFilter) {
-            $this->info("Mode utilisateur unique : {$emailFilter}");
+            $this->warn("Mode utilisateur unique : {$emailFilter}");
         }
 
         $this->info('Récupération des adhérents Dolibarr');
@@ -61,8 +62,7 @@ class HandleExpiredMembersDolibarr extends Command
 
         if ($emailFilter) {
             $expiredMembers = $expiredMembers->filter(function ($member) use ($emailFilter) {
-                $email = $this->extractRetzienEmail($member['email'] ?? null);
-                return $email === $emailFilter;
+                return $this->extractRetzienEmail($member['email'] ?? null) === $emailFilter;
             });
 
             if ($expiredMembers->isEmpty()) {
@@ -70,7 +70,6 @@ class HandleExpiredMembersDolibarr extends Command
                 return CommandAlias::SUCCESS;
             }
         }
-
 
         $this->info("{$expiredMembers->count()} adhérent(s) expiré(s)");
 
@@ -90,11 +89,13 @@ class HandleExpiredMembersDolibarr extends Command
                 ? 'DRY-RUN terminé – aucune action effectuée'
                 : 'Traitement terminé'
         );
+
         return CommandAlias::SUCCESS;
     }
 
     /**
      * @throws ConnectionException
+     * @throws \Exception
      */
     protected function processMember(array $member, bool $dryRun): void
     {
@@ -106,7 +107,9 @@ class HandleExpiredMembersDolibarr extends Command
         if ($dryRun) {
             $this->info("[DRY-RUN] Résiliation Dolibarr");
         } else {
-            $this->dolibarr->setMemberStatus($member['id'], '0');
+            $this->dolibarr->updateMember($member['id'], [
+                'statut' => 0,
+            ]);
         }
 
         // Désactivation mail
@@ -114,7 +117,7 @@ class HandleExpiredMembersDolibarr extends Command
             $this->disableMailAccount($email, $dryRun);
         }
 
-        //  Désactivation Nextcloud
+        // Désactivation Nextcloud
         if ($email) {
             if ($dryRun) {
                 $this->info("[DRY-RUN] Désactivation Nextcloud");
@@ -124,6 +127,9 @@ class HandleExpiredMembersDolibarr extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function disableMailAccount(string $email, bool $dryRun): void
     {
         $details = $this->mailService->getMailUserDetails($email);
@@ -134,18 +140,22 @@ class HandleExpiredMembersDolibarr extends Command
         }
 
         if ($dryRun) {
-            $this->info("[DRY-RUN] Mail désactivé");
+            $this->info("[DRY-RUN] Mail désactivé ({$email})");
             return;
         }
 
-        $this->mailService->updateMailUser($email, [
+        $result = $this->mailService->updateMailUser($email, [
             'postfix' => 'n',
             'disablesmtp' => 'y',
             'disableimap' => 'y',
             'disablepop3' => 'y',
         ]);
 
-        $this->info("Mail désactivé");
+        if (!$result) {
+            throw new \RuntimeException("Échec désactivation mail ISPConfig pour {$email}");
+        }
+
+        $this->info("Mail désactivé : {$email}");
     }
 
     protected function extractRetzienEmail(?string $emails): ?string
@@ -155,8 +165,8 @@ class HandleExpiredMembersDolibarr extends Command
         }
 
         return collect(explode(';', $emails))
-            ->map(fn (string $email): string => trim($email))
-            ->filter(fn (string $email): bool => str_contains($email, '@retzien.fr'))
+            ->map(fn(string $email): string => trim($email))
+            ->filter(fn(string $email): bool => str_contains($email, '@retzien.fr'))
             ->first();
     }
 }

@@ -109,6 +109,12 @@ class Member extends Model
         return "{$this->firstname} {$this->lastname}";
     }
 
+    public function getRetzienEmailAttribute(): string
+    {
+       $emails = explode(';', $this->email);
+       return collect($emails)->filter(fn($email) => str_contains($email, '@retzien.fr'))->first();
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -141,5 +147,10 @@ class Member extends Model
         return $this->ispconfigs()
             ->where('type', IspconfigType::WEB)
             ->first();
+    }
+
+    public function nextcloudAccounts(): HasMany
+    {
+        return $this->hasMany(NextCloudMember::class, 'member_id');
     }
 }

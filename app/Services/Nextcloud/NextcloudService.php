@@ -4,6 +4,7 @@ namespace App\Services\Nextcloud;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -46,15 +47,24 @@ class NextcloudService
 
     /**
      * Trouve le userId Nextcloud à partir de l’email
-     * @throws ConnectionException
      */
     protected function findUserIdByEmail(string $email): ?string
     {
-        $response = $this->http->get('/cloud/users');
+        return Cache::remember(
+            'nextcloud.user_id.' . md5($email),
+            now()->addDays(7),
+            function () use ($email) {
+                return $this->resolveUserIdByEmail($email);
+            }
+        );
+    }
 
-        if (!$response->successful()) {
-            throw new \RuntimeException('Erreur récupération utilisateurs Nextcloud');
-        }
+    /**
+     * @throws ConnectionException
+     */
+    protected function resolveUserIdByEmail(string $email): ?string
+    {
+        $response = $this->http->get('/cloud/users');
 
         $users = $response->json('ocs.data.users') ?? [];
 
@@ -63,7 +73,7 @@ class NextcloudService
 
             if (
                 $details->successful() &&
-                ($details->json('ocs.data.email') === $email)
+                $details->json('ocs.data.email') === $email
             ) {
                 return $userId;
             }
@@ -71,4 +81,26 @@ class NextcloudService
 
         return null;
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function listUsers(): array
+    {
+        return $this->http
+            ->get('/cloud/users')
+            ->json('ocs.data.users') ?? [];
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function getUserDetails(string $userId): array
+    {
+        return $this->http
+            ->get("/cloud/users/{$userId}")
+            ->json('ocs.data') ?? [];
+    }
+
+
 }

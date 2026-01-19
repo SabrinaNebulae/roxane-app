@@ -61,14 +61,22 @@ class DolibarrService
         return $response->json();
     }
 
-    public function setMemberStatus(int|string $id, int|string $status): bool
+    /**
+     * Update a member with custom data
+     *
+     * @param int|string $id The Dolibarr member ID (rowid)
+     * @param array $data Array of attributes to update (e.g. ['email' => 'new@email.com', 'array_options' => ['options_custom' => 'val']])
+     * @throws ConnectionException
+     */
+    public function updateMember(int|string $id, array $data): bool
     {
         $response = $this->client()->put(
             $this->baseUrl . '/members/' . $id,
-            ['status' => $status]
+            $data
         );
 
         return $response->successful();
     }
+
 
 }

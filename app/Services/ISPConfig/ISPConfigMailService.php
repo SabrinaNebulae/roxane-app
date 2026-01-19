@@ -88,19 +88,44 @@ class ISPConfigMailService extends ISPConfigService
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function updateMailUser(string $email, array $changes): bool
     {
-        $allUsers = $this->getAllMailUsers();
-        $user = collect($allUsers)->firstWhere('email', $email);
+        // On retrouve l'utilisateur
+        $user = collect($this->getAllMailUsers())
+            ->firstWhere('email', $email);
 
         if (!$user) {
             return false;
         }
 
-        return $this->call('mail_user_update', [
-            'primary_id' => $user['mailuser_id'],
-            'params' => $changes,
+        $mailuserId = (int) $user['mailuser_id'];
+
+        // On récupère l'enregistrement COMPLET (OBLIGATOIRE)
+        $mailUserRecord = $this->call('mail_user_get', [
+            $mailuserId
         ]);
+
+        if (!is_array($mailUserRecord)) {
+            throw new \RuntimeException('mail_user_get did not return array');
+        }
+
+        // On applique les changements
+        foreach ($changes as $key => $value) {
+            $mailUserRecord[$key] = $value;
+        }
+
+        // appel conforme EXACT à l’exemple ISPConfig
+        $result = $this->call('mail_user_update', [
+            0,              // client_id (ADMIN)
+            $mailuserId,    // primary_id
+            $mailUserRecord // FULL RECORD
+        ]);
+
+        return (bool) $result;
     }
+
 
 }
