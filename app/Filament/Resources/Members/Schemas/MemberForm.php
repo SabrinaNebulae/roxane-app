@@ -7,6 +7,7 @@ use App\Models\Member;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
@@ -158,7 +159,7 @@ class MemberForm
                                                 /*
                                                  | Hébergements web ISPConfig
                                                  */
-                                                Section::make('Hébergements Web')
+                                                /*Section::make('Hébergements Web')
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('ispconfigs_web')
@@ -166,22 +167,36 @@ class MemberForm
                                                             ->state(fn(?Member $record) => $record?->ispconfigs()
                                                                 ->where('type', IspconfigType::WEB)
                                                                 ->get()
+                                                                ->map(fn ($ispconfig) => $ispconfig->toArray())
+                                                                ->all()
                                                             )
                                                             ->schema([
-                                                                TextEntry::make('data.web_domain.domain')
+                                                                TextEntry::make('data.domain_id')
+                                                                    ->label('ID Domaine'),
+                                                                TextEntry::make('data.domain')
                                                                     ->label('Domaine'),
-
-                                                                TextEntry::make('data.web_domain.ip_address')
-                                                                    ->label('Adresse IP'),
-
-                                                                TextEntry::make('data.web_domain.disk_quota')
-                                                                    ->label('Quota disque')
-                                                                    ->formatStateUsing(fn($state) => $state ? "{$state} Mo" : '—'
+                                                                TextEntry::make('data.active')
+                                                                    ->label('État')
+                                                                    ->formatStateUsing(fn($state) => $state == 'o' ? "Activé" : 'Désactivé'
                                                                     ),
                                                             ])
-                                                            ->columns(3),
+                                                            ->columns(2),
                                                     ])
                                                     ->visible(fn(?Member $record) => $record?->ispconfigs()
+                                                        ->where('type', IspconfigType::WEB)
+                                                        ->exists()
+                                                    ),*/
+                                                Section::make('Hébergements Web')
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        ViewField::make('ispconfig_web_hostings')
+                                                            ->view('filament.components.members.web-hostings')
+                                                            ->viewData(fn (?Member $record) => [
+                                                                'member' => $record,
+                                                            ]),
+                                                    ])
+                                                    ->visible(fn (?Member $record) =>
+                                                    $record?->ispconfigs()
                                                         ->where('type', IspconfigType::WEB)
                                                         ->exists()
                                                     ),
