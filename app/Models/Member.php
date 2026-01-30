@@ -21,7 +21,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $lastname
  * @property string|null $firstname
  * @property string $email
- * @property string|null $retzien_email
+ * @property string $retzien_email
  * @property string|null $company
  * @property string|null $date_of_birth
  * @property string|null $address
@@ -37,8 +37,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $deleted_at
  * @property-read string $full_name
  * @property-read \App\Models\MemberGroup|null $group
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\IspconfigMember> $ispconfigs
+ * @property-read int|null $ispconfigs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Membership> $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\NextCloudMember> $nextcloudAccounts
+ * @property-read int|null $nextcloud_accounts_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\User|null $user

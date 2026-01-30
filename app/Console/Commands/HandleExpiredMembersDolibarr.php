@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Member;
 use App\Services\Dolibarr\DolibarrService;
 use App\Services\ISPConfig\ISPConfigMailService;
+use App\Services\MemberService;
 use App\Services\Nextcloud\NextcloudService;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
@@ -19,7 +21,8 @@ class HandleExpiredMembersDolibarr extends Command
     public function __construct(
         protected DolibarrService      $dolibarr,
         protected ISPConfigMailService $mailService,
-        protected NextcloudService     $nextcloud
+        protected NextcloudService     $nextcloud,
+        protected MemberService        $memberService
     )
     {
         parent::__construct();
@@ -110,6 +113,12 @@ class HandleExpiredMembersDolibarr extends Command
             $this->dolibarr->updateMember($member['id'], [
                 'statut' => 0,
             ]);
+        }
+
+        // Résilitation Roxane
+        $roxaneMember = Member::query()->findOrFail($member['id']);
+        if ($roxaneMember) {
+            $this->memberService->deactivateMember($roxaneMember);
         }
 
         // Désactivation mail

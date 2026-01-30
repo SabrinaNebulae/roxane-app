@@ -9,6 +9,11 @@ use App\Models\Package;
 
 class MemberService
 {
+    /**
+     * Register a new member.
+     * @param array $data
+     * @return Member
+     */
     public function registerNewMember(array $data): Member
     {
         // Check if the member already exists
@@ -51,5 +56,16 @@ class MemberService
 
 
         return $member;
+    }
+
+    /**
+     * Disable a member and his subscriptions
+     */
+    public function deactivateMember(Member $member): void
+    {
+        // todo: send email to member + admin
+        $member->update(['status' => 'excluded']);
+        $member->memberships()->update(['status' => 'expired']);
+
     }
 }

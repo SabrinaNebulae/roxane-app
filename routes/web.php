@@ -17,36 +17,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-// TEST
-
-/*Route::get('/test/sync-ispconfig', function () {
-
-    if (!app()->isLocal()) {
-        abort(403);
-    }
-
-    Artisan::call('sync:ispconfig-web-members');
-
-    return response()->json([
-        'status' => 'ok',
-        'output' => Artisan::output(),
-    ]);
-});
-
-Route::get('/test/isp-mails', function() {
-    $ispService = new \App\Services\ISPConfig\ISPConfigMailService;
-
-    return $ispService->getAllMailDomains();
-});*/
-
-Route::get('/test-dolibarr', function () {
-   $dolibarrService = new \App\Services\Dolibarr\DolibarrService();
-
-   $members = $dolibarrService->getAllMembers();
-
-   dd($members);
-});
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/forms.php';

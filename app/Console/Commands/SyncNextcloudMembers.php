@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use function Laravel\Prompts\progress;
 
 class SyncNextcloudMembers extends Command
 {
@@ -38,7 +39,6 @@ class SyncNextcloudMembers extends Command
                 : 'Synchronisation Nextcloud → Members'
         );
 
-        /** index des membres par email */
         $members = Member::query()
             ->where('email', 'like', '%@retzien.fr%')
             ->when($memberFilter, fn ($q) => $q->where('id', $memberFilter))
@@ -46,18 +46,26 @@ class SyncNextcloudMembers extends Command
             ->filter(fn (Member $m) => !empty($m->retzien_email))
             ->keyBy(fn (Member $m) => strtolower($m->retzien_email));
 
-
         if ($members->isEmpty()) {
             $this->warn('Aucun membre à synchroniser');
             return CommandAlias::SUCCESS;
         }
 
-        $this->info("{$members->count()} membres candidats");
+        $this->info("{$members->count()} membres à synchroniser");
 
-        /**Récupération des users Nextcloud */
         $userIds = $this->nextcloud->listUsers();
 
         $this->info(count($userIds) . ' comptes Nextcloud trouvés');
+
+        $progress = null;
+
+        if (!$dryRun) {
+            $progress = progress(
+                label: 'Synchronisation des membres',
+                steps: $members->count()
+            );
+            $progress->start();
+        }
 
         $synced = 0;
 
@@ -73,19 +81,6 @@ class SyncNextcloudMembers extends Command
 
                 $member = $members[$email];
 
-                $payload = [
-                    'member_id' => $member->id,
-                    'nextcloud_user_id' => $userId,
-                    'data' => [
-                        'email' => $email,
-                        'quota' => $details['quota'] ?? null,
-                        'groups' => $details['groups'] ?? [],
-                        'enabled' => !($details['enabled'] === false),
-                        'last_login' => $details['lastLogin'] ?? null,
-                        'raw' => $details, // utile pour debug
-                    ],
-                ];
-
                 if ($dryRun) {
                     $this->line("[DRY-RUN] {$member->id} ← {$userId}");
                 } else {
@@ -94,18 +89,26 @@ class SyncNextcloudMembers extends Command
                             'member_id' => $member->id,
                             'nextcloud_user_id' => $userId,
                         ],
-                        $payload
+                        [
+                            'data' => json_encode($details, JSON_THROW_ON_ERROR),
+                        ]
                     );
+
+                    $progress->advance();
                 }
 
                 $synced++;
-
             } catch (\Throwable $e) {
                 Log::error('Erreur sync Nextcloud', [
                     'user_id' => $userId,
                     'error' => $e->getMessage(),
                 ]);
             }
+        }
+
+        if ($progress) {
+            $progress->finish();
+            $this->newLine();
         }
 
         $this->info("Synchronisation terminée ({$synced} comptes liés)");

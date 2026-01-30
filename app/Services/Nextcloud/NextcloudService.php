@@ -26,7 +26,7 @@ class NextcloudService
     }
 
     /**
-     * Désactive un utilisateur Nextcloud à partir de son email
+     * Disable user by email
      * @throws ConnectionException
      */
     public function disableUserByEmail(string $email): void
@@ -46,7 +46,16 @@ class NextcloudService
     }
 
     /**
-     * Trouve le userId Nextcloud à partir de l’email
+     * Desable user by id
+     * @throws ConnectionException
+     */
+    public function disableUserById(string $userId): void
+    {
+        $response = $this->http->put("/cloud/users/{$userId}/disable");
+    }
+
+    /**
+     * Find user id by email
      */
     protected function findUserIdByEmail(string $email): ?string
     {
