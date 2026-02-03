@@ -139,22 +139,20 @@ class Member extends Model
         return $this->hasMany(IspconfigMember::class, 'member_id');
     }
 
-    public function ispconfigMail(): ?IspconfigMember
-    {
-        return $this->ispconfigs()
-            ->where('type', IspconfigType::MAIL)
-            ->first();
-    }
-
-    public function ispconfigsWeb(): ?IspconfigMember
-    {
-        return $this->ispconfigs()
-            ->where('type', IspconfigType::WEB)
-            ->first();
-    }
-
     public function nextcloudAccounts(): HasMany
     {
         return $this->hasMany(NextCloudMember::class, 'member_id');
     }
+
+    public function lastMembership(): Membership
+    {
+        return $this->memberships()->where('status', 'active')->first();
+    }
+
+    public function hasService(string $serviceIdentifier): bool
+    {
+        $membership = $this->lastMembership();
+        return $membership->services()->where('identifier', $serviceIdentifier)->exists();
+    }
+
 }

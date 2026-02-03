@@ -7,6 +7,11 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\QueryBuilder;
+use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
+use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class MembershipsTable
@@ -16,8 +21,8 @@ class MembershipsTable
         return $table
             ->columns([
                 TextColumn::make('id')
-                ->label('id')
-                ->sortable(),
+                    ->label('id')
+                    ->sortable(),
                 TextColumn::make('member.full_name')
                     ->label(Membership::getAttributeLabel('member_id'))
                     ->sortable(),
@@ -70,9 +75,39 @@ class MembershipsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
+            ->searchable([
+                'member.firstname',
+                'member.lastname',
+                'author.name',
+                'status',
+                'payment_status',
+                'amount',
             ])
+            ->filters([
+                // Filtres pour status, date de début et date de fin, status de paiement
+
+                QueryBuilder::make()
+                    ->constraints([
+                        SelectConstraint::make('status')
+                            ->label('Statut de l\'adhésion')
+                            ->options([
+                                'active' => 'Active',
+                                'expired' => 'Expirée',
+                                'pending' => 'En attente',
+                            ]),
+                        DateConstraint::make('start_date')
+                            ->label('Date de début'),
+                        DateConstraint::make('end_date')
+                            ->label('Date de fin'),
+                        SelectConstraint::make('payment_status')
+                            ->label('Statut de paiement')
+                            ->options([
+                                'paid' => 'Payée',
+                                'unpaid' => 'Impayée',
+                                'partial' => 'Partiellement payée'
+                            ]),
+                ]),
+            ], layout: FiltersLayout::Modal)
             ->recordActions([
                 EditAction::make(),
             ])

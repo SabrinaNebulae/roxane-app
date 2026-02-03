@@ -7,7 +7,7 @@ use App\Models\Member;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\ViewField;
+use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
@@ -17,6 +17,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Support\Icons\Heroicon;
+use App\Filament\Actions\ServiceToggleAction;
 
 class MemberForm
 {
@@ -41,6 +43,7 @@ class MemberForm
                                          |--------------------------------------------------------------------------
                                          */
                                         Tabs\Tab::make('Informations générales')
+                                            ->icon(Heroicon::OutlinedInformationCircle)
                                             ->schema([
                                                 Section::make('Informations personnelles')
                                                     ->collapsible()
@@ -120,15 +123,19 @@ class MemberForm
                                          |--------------------------------------------------------------------------
                                          */
                                         Tabs\Tab::make('Modules')
+                                            ->icon(Heroicon::OutlinedPuzzlePiece)
                                             ->schema([
                                                 /*
                                                  | Messageries ISPConfig (lecture seule)
                                                  */
                                                 Section::make('Messagerie ISPConfig')
+                                                    ->afterHeader([
+                                                        ServiceToggleAction::forService('mail'),
+                                                    ])
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('ispconfig_mails')
-                                                            ->label('')
+                                                            ->label('Données ISPConfig Mail')
                                                             ->state(fn(?Member $record) => $record?->ispconfigs()
                                                                 ->where('type', IspconfigType::MAIL)
                                                                 ->get()
@@ -141,13 +148,20 @@ class MemberForm
                                                                     ->label('ID ISPConfig'),
 
                                                                 TextEntry::make('data.mailuser.quota')
-                                                                    ->label('Quota')
-                                                                    ->formatStateUsing(fn($state) => $state ? "{$state} Mo" : 'Non défini'
-                                                                    ),
+                                                                    ->label('Quota'),
+                                                                //->formatStateUsing(fn($state) => $state ? "{$state} Mo" : 'Non défini'
+                                                                //),
 
                                                                 TextEntry::make('data.mailuser.domain')
                                                                     ->label('Domaine')
                                                                     ->default('retzien.fr'),
+                                                                ViewEntry::make('data')
+                                                                    ->label('JSON')
+                                                                    ->view('filament.components.json-viewer')
+                                                                    ->viewData(fn($state) => [
+                                                                        'data' => $state,
+                                                                    ])
+                                                                    ->columnSpanFull(),
                                                             ])
                                                             ->columns(2),
                                                     ])
@@ -159,49 +173,92 @@ class MemberForm
                                                 /*
                                                  | Hébergements web ISPConfig
                                                  */
-                                                /*Section::make('Hébergements Web')
+                                                Section::make('Hébergements Web')
+                                                    ->afterHeader([
+                                                        ServiceToggleAction::forService('webhosting'),
+                                                    ])
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('ispconfigs_web')
-                                                            ->label('')
+                                                            ->label('Données ISPConfig Web')
                                                             ->state(fn(?Member $record) => $record?->ispconfigs()
                                                                 ->where('type', IspconfigType::WEB)
                                                                 ->get()
-                                                                ->map(fn ($ispconfig) => $ispconfig->toArray())
+                                                                ->map(fn($ispconfig) => $ispconfig->toArray())
                                                                 ->all()
                                                             )
                                                             ->schema([
                                                                 TextEntry::make('data.domain_id')
-                                                                    ->label('ID Domaine'),
+                                                                    ->label('ID ISPConfig'),
+
                                                                 TextEntry::make('data.domain')
                                                                     ->label('Domaine'),
+
                                                                 TextEntry::make('data.active')
                                                                     ->label('État')
-                                                                    ->formatStateUsing(fn($state) => $state == 'o' ? "Activé" : 'Désactivé'
+                                                                    ->formatStateUsing(fn($state) => $state === 'y' ? 'Activé' : 'Désactivé'
                                                                     ),
+                                                                ViewEntry::make('data')
+                                                                    ->label('JSON')
+                                                                    ->view('filament.components.json-viewer')
+                                                                    ->viewData(fn($state) => [
+                                                                        'data' => $state,
+                                                                    ])
+                                                                    ->columnSpanFull(),
+                                                                    // @todo: background color : #F5F8FA
                                                             ])
-                                                            ->columns(2),
+                                                            ->columns(3),
+
                                                     ])
                                                     ->visible(fn(?Member $record) => $record?->ispconfigs()
                                                         ->where('type', IspconfigType::WEB)
                                                         ->exists()
-                                                    ),*/
-                                                Section::make('Hébergements Web')
+                                                    ),
+
+                                                /*
+                                                 | Compte(s) NextCloud (lecture seule)
+                                                 */
+                                                Section::make('NextCloud')
+                                                    ->afterHeader([
+                                                        ServiceToggleAction::forService('nextcloud'),
+                                                    ])
                                                     ->collapsible()
                                                     ->schema([
-                                                        ViewField::make('ispconfig_web_hostings')
-                                                            ->view('filament.components.members.web-hostings')
-                                                            ->viewData(fn (?Member $record) => [
-                                                                'member' => $record,
-                                                            ]),
+                                                        RepeatableEntry::make('nextcloud_accounts')
+                                                            ->label('Données NextCloud')
+                                                            ->state(fn(?Member $record) => $record?->nextcloudAccounts()
+                                                                ->get()
+                                                                ->map(fn($nextcloudAccount) => $nextcloudAccount->toArray())
+                                                                ->all()
+                                                            )
+                                                            ->schema([
+                                                                TextEntry::make('nextcloud_user_id')
+                                                                    ->label('Id Nextcloud'),
+
+                                                                TextEntry::make('data.displayname')
+                                                                    ->label('Nom de l\'utilisateur'),
+
+                                                                TextEntry::make('data.enabled')
+                                                                    ->label('État')
+                                                                    ->formatStateUsing(fn($state) => $state == 'true' ? 'Activé' : 'Désactivé'
+                                                                    ),
+
+                                                                ViewEntry::make('data')
+                                                                    ->label('JSON')
+                                                                    ->view('filament.components.json-viewer')
+                                                                    ->viewData(fn($state) => [
+                                                                        'data' => $state,
+                                                                    ])
+                                                                    ->columnSpanFull(),
+                                                            ])
+                                                            ->columns(3),
                                                     ])
-                                                    ->visible(fn (?Member $record) =>
-                                                    $record?->ispconfigs()
-                                                        ->where('type', IspconfigType::WEB)
+                                                    ->visible(fn(?Member $record) => $record?->nextcloudAccounts()
                                                         ->exists()
                                                     ),
                                             ]),
-                                    ]),
+                                    ])
+                                ->contained(false)
                             ])
                             ->columnSpan(3),
 

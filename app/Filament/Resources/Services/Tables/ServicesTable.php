@@ -23,8 +23,9 @@ class ServicesTable
                 TextColumn::make('identifier')
                     ->label(Service::getAttributeLabel('identifier'))
                     ->searchable(),
-                TextColumn::make('icon')
-                    ->searchable(),
+                IconColumn::make('icon')
+                    ->label('Icône')
+                    ->icon(fn (Service $record) => 'heroicon-o-' . $record->icon),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

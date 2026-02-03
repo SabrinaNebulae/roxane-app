@@ -1,84 +1,96 @@
-<div class="space-y-4">
+<div class="fi-stack">
     @forelse ($websites as $hosting)
         @php
             $data = $hosting->data ?? [];
         @endphp
 
-        <div class="border rounded-lg p-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <strong>Domaine</strong><br>
-                    {{ $data['domain'] ?? '—' }}
+        <x-filament::section>
+            <x-slot name="heading">
+                {{ $data['domain'] ?? 'Domaine inconnu' }}
+            </x-slot>
+
+            {{-- Informations principales --}}
+            <div class="fi-infolist">
+                <div class="fi-infolist-item">
+                    <div class="fi-infolist-label">Domaine</div>
+                    <div class="fi-infolist-text">
+                        {{ $data['domain'] ?? '—' }}
+                    </div>
                 </div>
 
-                <div>
-                    <strong>État</strong><br>
-                    {{ ($data['active'] ?? 'n') === 'o' ? 'Activé' : 'Désactivé' }}
+                <div class="fi-infolist-item">
+                    <div class="fi-infolist-label">État</div>
+                    <div class="fi-infolist-text">
+                        {{ ($data['active'] ?? 'n') === 'o' ? 'Activé' : 'Désactivé' }}
+                    </div>
                 </div>
 
-                <div class="col-span-2">
-                    <strong>Document root</strong><br>
-                    {{ $data['document_root'] ?? '—' }}
+                <div class="fi-infolist-item">
+                    <div class="fi-infolist-label">Document root</div>
+                    <div class="fi-infolist-text">
+                        {{ $data['document_root'] ?? '—' }}
+                    </div>
                 </div>
             </div>
 
             {{-- Bases de données --}}
             @if (!empty($data['databases']))
-                <details class="mt-4">
-                    <summary class="cursor-pointer font-medium">
+                <x-filament::section collapsible collapsed>
+                    <x-slot name="heading">
                         Bases de données ({{ count($data['databases']) }})
-                    </summary>
+                    </x-slot>
 
-                    <ul class="list-disc ml-6 mt-2">
+                    <div class="fi-infolist">
                         @foreach ($data['databases'] as $db)
-                            <li>
+                            <div class="fi-infolist-item">
                                 {{ $db['database_name'] ?? '—' }}
                                 ({{ $db['database_type'] ?? '—' }})
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
-                </details>
+                    </div>
+                </x-filament::section>
             @endif
 
             {{-- Accès shell --}}
             @if (!empty($data['shell_users']))
-                <details class="mt-4">
-                    <summary class="cursor-pointer font-medium">
+                <x-filament::section collapsible collapsed>
+                    <x-slot name="heading">
                         Accès shell ({{ count($data['shell_users']) }})
-                    </summary>
+                    </x-slot>
 
-                    <ul class="list-disc ml-6 mt-2">
+                    <div class="fi-infolist">
                         @foreach ($data['shell_users'] as $user)
-                            <li>
+                            <div class="fi-infolist-item">
                                 {{ $user['username'] ?? '—' }}
                                 ({{ $user['shell'] ?? '—' }})
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
-                </details>
+                    </div>
+                </x-filament::section>
             @endif
 
             {{-- DNS --}}
             @if (!empty($data['dns_zones']))
-                <details class="mt-4">
-                    <summary class="cursor-pointer font-medium">
+                <x-filament::section collapsible collapsed>
+                    <x-slot name="heading">
                         Zones DNS ({{ count($data['dns_zones']) }})
-                    </summary>
+                    </x-slot>
 
-                    <ul class="list-disc ml-6 mt-2">
+                    <div class="fi-infolist">
                         @foreach ($data['dns_zones'] as $zone)
-                            <li>
-                                {{ $zone['origin'] ?? '—' }}
-                                – {{ $zone['ns'] ?? '—' }}
-                            </li>
+                            <div class="fi-infolist-item">
+                                {{ $zone['origin'] ?? '—' }} – {{ $zone['ns'] ?? '—' }}
+                            </div>
                         @endforeach
-                    </ul>
-                </details>
+                    </div>
+                </x-filament::section>
             @endif
-        </div>
+        </x-filament::section>
     @empty
-        <p class="text-sm text-gray-500">
-            Aucun hébergement web.
-        </p>
+        <x-filament::section>
+            <div class="fi-infolist-text">
+                Aucun hébergement web.
+            </div>
+        </x-filament::section>
     @endforelse
 </div>

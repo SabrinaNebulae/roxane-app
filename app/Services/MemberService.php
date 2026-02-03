@@ -65,7 +65,12 @@ class MemberService
     {
         // todo: send email to member + admin
         $member->update(['status' => 'excluded']);
-        $member->memberships()->update(['status' => 'expired']);
+        $membership = $member->memberships()
+            ->where('status', 'active')->first();
+        $membership->update(['status' => 'inactive']);
+
+        // On détache les services côté Roxane - à tester
+        $membership->services()->detach();
 
     }
 }

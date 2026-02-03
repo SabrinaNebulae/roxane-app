@@ -86,7 +86,7 @@ class User extends Authenticatable
 
     public static function getAttributeLabel(string $attribute): string
     {
-        return __("users.fields.' . $attribute");
+        return __("users.fields.$attribute");
     }
 
     /*public static function getRoleLabel(string $role): string
