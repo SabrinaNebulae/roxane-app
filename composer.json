@@ -7,16 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-soap": "*",
         "andreia/filament-nord-theme": "^2.0",
+        "bezhansalleh/filament-shield": "^4.1",
         "deployer/deployer": "^7.5",
         "filament/filament": "^4.0",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.31",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10",
-        "laravel/wayfinder": "^0.1.9",
-        "spatie/laravel-permission": "^6.21",
-        "ext-soap": "*"
+        "laravel/wayfinder": "^0.1.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Andreia\FilamentNordTheme\FilamentNordThemePlugin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Resources\Members\Widgets\MemberCount;
 use App\Filament\Resources\Memberships\Widgets\MembershipsChart;
 use Filament\Http\Middleware\Authenticate;
@@ -57,6 +58,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make()
+                    ->navigationGroup('Gestion des accès'),
             ])
             ->authMiddleware([
                 Authenticate::class,
