@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 export const returnJavaScriptAsFile = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ returnJavaScriptAsFile.definition = {
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 returnJavaScriptAsFile.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ returnJavaScriptAsFile.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 returnJavaScriptAsFile.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ returnJavaScriptAsFile.get = (options?: RouteQueryOptions): RouteDefinition<'get
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 returnJavaScriptAsFile.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ returnJavaScriptAsFile.head = (options?: RouteQueryOptions): RouteDefinition<'he
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 const returnJavaScriptAsFileForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const returnJavaScriptAsFileForm = (options?: RouteQueryOptions): RouteFormDefin
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 returnJavaScriptAsFileForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ returnJavaScriptAsFileForm.get = (options?: RouteQueryOptions): RouteFormDefinit
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::returnJavaScriptAsFile
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:78
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:79
 * @route '/livewire/livewire.js'
 */
 returnJavaScriptAsFileForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ returnJavaScriptAsFile.form = returnJavaScriptAsFileForm
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 export const maps = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ maps.definition = {
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 maps.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ maps.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 maps.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ maps.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 maps.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ maps.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 const mapsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const mapsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 mapsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ mapsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \Livewire\Mechanisms\FrontendAssets\FrontendAssets::maps
-* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:87
+* @see vendor/livewire/livewire/src/Mechanisms/FrontendAssets/FrontendAssets.php:88
 * @route '/livewire/livewire.min.js.map'
 */
 mapsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

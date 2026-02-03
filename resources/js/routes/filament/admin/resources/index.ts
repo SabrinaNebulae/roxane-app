@@ -4,6 +4,7 @@ import memberships from './memberships'
 import packages from './packages'
 import services from './services'
 import users from './users'
+import shield from './shield'
 
 const resources = {
     memberGroups: Object.assign(memberGroups, memberGroups),
@@ -12,6 +13,7 @@ const resources = {
     packages: Object.assign(packages, packages),
     services: Object.assign(services, services),
     users: Object.assign(users, users),
+    shield: Object.assign(shield, shield),
 }
 
 export default resources
