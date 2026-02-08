@@ -155,4 +155,11 @@ class Member extends Model
         return $membership->services()->where('identifier', $serviceIdentifier)->exists();
     }
 
+    public function isExpired(): bool
+    {
+        // Member ayant leur dernière adhésion non renouvellée de puis plus d'un mois
+        $lastMembership = $this->lastMembership();
+        return $lastMembership->status === 'expired' || $lastMembership->created_at->addMonths(1) < now();
+    }
+
 }
