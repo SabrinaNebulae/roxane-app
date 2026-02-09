@@ -5,6 +5,9 @@ Lire et appliquer les fichiers suivants avant toute action :
 - [.ai-rules.md](.ai-rules.md) : regles de developpement, stack, architecture, style de code
 - [.ai-agent.md](.ai-agent.md) : comportement attendu de l'agent IA
 
+Lire avant chaque session de code et mettre à jour après ajout ou modification de fonctionnalités :
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
+
 ## Rappels critiques
 
 - Backend : Laravel + Filament v4 | Frontend : React + Tailwind
