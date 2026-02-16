@@ -33,6 +33,7 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import AppearanceToggleDropdown from './appearance-dropdown';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -238,6 +239,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 ))}
                             </div>
                         </div>
+                        <AppearanceToggleDropdown />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button

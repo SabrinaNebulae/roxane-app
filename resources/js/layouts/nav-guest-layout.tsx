@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button";
 import type {SharedData} from "@/types";
 import {useMobileNavigation} from "@/hooks/use-mobile-navigation";
 import {LogOut} from "lucide-react";
+import React, {useEffect, useState} from "react";
 
 export default function NavGuestLayout() {
     const {auth} = usePage<SharedData>().props;
@@ -14,6 +15,16 @@ export default function NavGuestLayout() {
         cleanup();
         router.flushAll();
     };
+
+    const [dark, setDark] = useState(false);
+
+    useEffect(() => {
+        if (dark) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    }, [dark]);
 
     return (
         <>
@@ -90,6 +101,12 @@ export default function NavGuestLayout() {
                         </>
                     )}
                 </nav>
+                <button
+                    onClick={() => setDark(!dark)}
+                    className="absolute top-4 right-4 px-3 py-1 rounded-xl border border-gray-400 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                >
+                    {dark ? "☀️ Mode clair" : "🌙 Mode sombre"}
+                </button>
             </header>
         </>
     )
