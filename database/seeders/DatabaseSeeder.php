@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\MemberGroup;
+use App\Models\Package;
 use App\Models\Service;
 use App\Models\User;
-use App\Models\Package;
-
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -36,11 +35,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $websiteGroup = MemberGroup::updateOrCreate([
-            'name' => 'Site Web'
+            'name' => 'Site Web',
         ],
             [
                 'identifier' => 'website',
-                'description' => 'Groupe d\'utilisateurs provenant du site web.'
+                'description' => 'Groupe d\'utilisateurs provenant du site web.',
             ]);
 
         // Subscription packages
@@ -49,20 +48,20 @@ class DatabaseSeeder extends Seeder
                 'identifier' => 'custom',
                 'name' => 'Sur-mesure',
                 'description' => 'Calcul du nombre de mois restant dans l\'année',
-                'price' => '1.00'
+                'price' => '1.00',
             ],
             [
                 'identifier' => 'one-year',
                 'name' => 'Un an',
                 'description' => '12 mois à compter de la date de validation de l\'adhésion du membre',
-                'price' => '12.00'
+                'price' => '12.00',
             ],
             [
                 'identifier' => 'two-years',
                 'name' => 'Deux ans',
                 'description' => '24 mois à compter de la date de validation de l\'adhésion du membre',
-                'price' => '24.00'
-            ]
+                'price' => '24.00',
+            ],
         ];
 
         foreach ($packages as $package) {
@@ -112,7 +111,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Service d\'hébergement web',
                 'url' => '#',
                 'icon' => 'database',
-            ]
+            ],
         ];
 
         foreach ($services as $service) {
@@ -125,6 +124,9 @@ class DatabaseSeeder extends Seeder
                 'icon' => $service['icon'],
             ]);
         }
+
+        // Notification templates
+        $this->call(NotificationTemplateSeeder::class);
 
         // JaneDoe
         $userTest = User::updateOrCreate([

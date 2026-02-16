@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\IspconfigType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,6 +45,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\User|null $user
+ *
  * @method static \Database\Factories\MemberFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member newQuery()
@@ -75,11 +75,13 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereWebsiteUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereZipcode($value)
+ *
  * @mixin \Eloquent
  */
 class Member extends Model
 {
     use HasFactory, Notifiable;
+
     protected $fillable = [
         'user_id',
         'dolibarr_id',
@@ -100,7 +102,7 @@ class Member extends Model
         'phone1',
         'phone2',
         'public_membership',
-        'website_url'
+        'website_url',
     ];
 
     public static function getAttributeLabel(string $attribute): string
@@ -113,10 +115,11 @@ class Member extends Model
         return "{$this->firstname} {$this->lastname}";
     }
 
-    public function getRetzienEmailAttribute(): string
+    public function getRetzienEmailAttribute(): ?string
     {
-       $emails = explode(';', $this->email);
-       return collect($emails)->filter(fn($email) => str_contains($email, '@retzien.fr'))->first();
+        $emails = explode(';', $this->email);
+
+        return collect($emails)->filter(fn ($email) => str_contains($email, '@retzien.fr'))->first();
     }
 
     public function user(): BelongsTo
@@ -152,6 +155,7 @@ class Member extends Model
     public function hasService(string $serviceIdentifier): bool
     {
         $membership = $this->lastMembership();
+
         return $membership->services()->where('identifier', $serviceIdentifier)->exists();
     }
 
@@ -159,7 +163,7 @@ class Member extends Model
     {
         // Member ayant leur dernière adhésion non renouvellée de puis plus d'un mois
         $lastMembership = $this->lastMembership();
+
         return $lastMembership->status === 'expired' || $lastMembership->created_at->addMonths(1) < now();
     }
-
 }

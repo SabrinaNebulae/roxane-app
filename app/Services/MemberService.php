@@ -11,17 +11,15 @@ class MemberService
 {
     /**
      * Register a new member.
-     * @param array $data
-     * @return Member
      */
     public function registerNewMember(array $data): Member
     {
         // Check if the member already exists
         $member = Member::where('email', $data['email'])->first();
 
-        if (!$member) {
+        if (! $member) {
             // Create a new member
-            $member = new Member();
+            $member = new Member;
             $member->status = 'pending';
             $member->nature = 'physical';
             $member->group_id = MemberGroup::where('identifier', 'website')->first()->id ?? null;
@@ -50,10 +48,7 @@ class MemberService
 
         ]);
 
-        // Notify Admin
-        $admin = Member::where('role', 'admin')->first();
-        event(new MemberRegistered($admin));
-
+        event(new MemberRegistered($member));
 
         return $member;
     }

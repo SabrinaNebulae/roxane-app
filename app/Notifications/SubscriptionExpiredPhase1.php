@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\NotificationTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,17 +12,9 @@ class SubscriptionExpiredPhase1 extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(public readonly NotificationTemplate $template) {}
 
     /**
-     * Get the notification's delivery channels.
-     *
      * @return array<int, string>
      */
     public function via(object $notifiable): array
@@ -29,30 +22,27 @@ class SubscriptionExpiredPhase1 extends Notification implements ShouldQueue
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
-        //@todo: créer template générique + espace dans le BO pour alimenter les texte
+        $lastMembership = $notifiable->memberships()->latest()->first();
+
+        $vars = [
+            'member_name' => $notifiable->full_name,
+            'expiry_date' => $lastMembership?->end_date ?? '',
+        ];
+
         return (new MailMessage)
-            ->subject('Votre adhésion est expirée')
-            ->greeting('Bonjour ' . $notifiable->name)
-            ->line('Votre adhésion est arrivée à expiration.')
-            ->line('Pour continuer à profiter nos services, merci de le renouveler.')
-            ->action('Renouveler mon adhésion', url('/devenir-membre'))
-            ->line('Merci pour votre confiance.');
+            ->subject($this->template->renderSubject($vars))
+            ->view('notifications.mail-template', [
+                'body' => $this->template->renderBody($vars),
+            ]);
     }
 
     /**
-     * Get the array representation of the notification.
-     *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

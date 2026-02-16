@@ -36,7 +36,7 @@ class MemberResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\MembershipsRelationManager::class,
         ];
     }
 
@@ -65,5 +65,4 @@ class MemberResource extends Resource
             MemberCount::class,
         ];
     }
-
 }
