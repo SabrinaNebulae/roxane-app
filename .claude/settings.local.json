@@ -9,7 +9,12 @@
       "Bash(vendor/bin/pint:*)",
       "Bash(php artisan test:*)",
       "Bash(php artisan migrate:*)",
-      "Bash(php artisan make:filament-relation-manager:*)"
+      "Bash(php artisan make:filament-relation-manager:*)",
+      "mcp__laravel-boost__list-artisan-commands",
+      "mcp__laravel-boost__tinker",
+      "Bash(php artisan make:job:*)",
+      "mcp__laravel-boost__last-error",
+      "Bash(php artisan view:clear:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

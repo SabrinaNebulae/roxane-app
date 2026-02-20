@@ -1,16 +1,15 @@
 # Configuration Claude Code - Projet Roxane
 
-Lire et appliquer les fichiers suivants avant toute action :
+Lire et appliquer avant toute action :
 
-- [.ai-rules.md](.ai-rules.md) : regles de developpement, stack, architecture, style de code
-- [.ai-agent.md](.ai-agent.md) : comportement attendu de l'agent IA
+- [.ai-rules.md](.ai-rules.md) : regles de developpement, stack, architecture, style de code, comportement attendu
 
 Lire avant chaque session de code et mettre à jour après ajout ou modification de fonctionnalités :
 - [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
 
 ## Rappels critiques
 
-- Backend : Laravel + Filament v4 | Frontend : React + Tailwind
+- Backend : Laravel 12 + Filament v4 | Frontend : React + Tailwind
 - Architecture : Services (pas de Repository pattern), Controllers fins
 - Toujours proposer un plan avant de coder
 - Ne jamais modifier de code sans validation explicite

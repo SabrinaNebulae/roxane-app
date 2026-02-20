@@ -35,7 +35,7 @@ return [
         'widgets' => [
             'stats' => [
                 'name' => 'Nouveaux Membres',
-                'description' => 'Nombre de nouveaux membres par jour',
+                'description' => 'Nombre de nouveaux membres par an',
             ]
         ]
     ],
