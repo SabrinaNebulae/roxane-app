@@ -11,12 +11,20 @@ use Filament\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class MembershipsRelationManager extends RelationManager
 {
     protected static string $relationship = 'memberships';
 
     protected static ?string $title = 'Adhésions';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        $fullName = $ownerRecord->getFullNameAttribute();
+
+        return $fullName ? 'Adhésions de '.$fullName : 'Adhésions';
+    }
 
     public function table(Table $table): Table
     {

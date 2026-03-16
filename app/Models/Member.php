@@ -103,6 +103,9 @@ class Member extends Model
         'phone2',
         'public_membership',
         'website_url',
+        'member_type',
+        'retzien_email',
+        'created_at',
     ];
 
     public static function getAttributeLabel(string $attribute): string

@@ -80,8 +80,90 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 dashboard.form = dashboardForm
 
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+export const synchronisations = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: synchronisations.url(options),
+    method: 'get',
+})
+
+synchronisations.definition = {
+    methods: ["get","head"],
+    url: '/admin/synchronisations',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+synchronisations.url = (options?: RouteQueryOptions) => {
+    return synchronisations.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+synchronisations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: synchronisations.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+synchronisations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: synchronisations.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+const synchronisationsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: synchronisations.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+synchronisationsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: synchronisations.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Pages\Synchronisations::__invoke
+* @see app/Filament/Pages/Synchronisations.php:7
+* @route '/admin/synchronisations'
+*/
+synchronisationsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: synchronisations.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+synchronisations.form = synchronisationsForm
+
 const pages = {
     dashboard: Object.assign(dashboard, dashboard),
+    synchronisations: Object.assign(synchronisations, synchronisations),
 }
 
 export default pages

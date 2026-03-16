@@ -8,6 +8,7 @@ use App\Services\Dolibarr\DolibarrService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
+
 use function Laravel\Prompts\progress;
 
 class SyncDolibarrMembers extends Command
@@ -26,6 +27,7 @@ class SyncDolibarrMembers extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws ConnectionException
      */
     public function handle(): void
@@ -50,7 +52,7 @@ class SyncDolibarrMembers extends Command
         $memberStatuses = [
             '-2' => 'excluded',
             '0' => 'cancelled',
-            '1' => 'valid'
+            '1' => 'valid',
         ];
 
         foreach ($doliMembers as $member) {
@@ -63,8 +65,8 @@ class SyncDolibarrMembers extends Command
                     'nature' => 'physical',
                     'member_type' => $member['type'],
                     'group_id' => null,
-                    'lastname' => $member['firstname'],
-                    'firstname' => $member['lastname'],
+                    'lastname' => $member['lastname'],
+                    'firstname' => $member['firstname'],
                     'email' => $member['email'] ?: null,
                     'retzien_email' => '',
                     'company' => $member['societe'],
@@ -109,7 +111,7 @@ class SyncDolibarrMembers extends Command
                         'payment_status' => 'paid',
                         'note_public' => $membership['note_public'],
                         'note_private' => $membership['note_private'],
-                        'dolibarr_user_id' => $member['id']
+                        'dolibarr_user_id' => $member['id'],
                     ]
                 );
 
@@ -139,6 +141,7 @@ class SyncDolibarrMembers extends Command
 
     /**
      * Convert timestamp to date format safely
+     *
      * @todo: export this in a service or repo
      */
     private function toDate($timestamp): ?string

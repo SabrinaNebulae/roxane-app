@@ -23,6 +23,7 @@ return [
         'paid' => 'Payé',
         'unpaid' => 'Impayé',
         'partial' => 'Paiement partiel',
+        'services' => 'Services',
         'created_at' => 'Créée le',
         'updated_at' => 'Mise à jour le',
         'subscription' => [
