@@ -27,6 +27,8 @@ gitlab-ci.yml
 # Agents
 /.claude
 /.junie
+.claude
+.junie
 .ai-rules.md
 CLAUDE.md
 database-schema.md
