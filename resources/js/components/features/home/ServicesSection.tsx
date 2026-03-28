@@ -2,6 +2,8 @@ import { type Service } from '@/types';
 import { ServiceCard } from './ServiceCard';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { Container } from '@/components/common/Container';
+import PawsDecoration from '@/components/common/PawsDecoration';
+import { useParallax } from '@/hooks/use-parallax';
 
 const services: Service[] = [
     {
@@ -62,8 +64,13 @@ const services: Service[] = [
 ];
 
 export function ServicesSection() {
+    const pawsRef = useParallax<HTMLDivElement>(0.08);
+
     return (
-        <section id="first-section" className="w-full bg-white py-16">
+        <section id="first-section" className="relative overflow-hidden w-full bg-white py-16">
+            <div ref={pawsRef} className="absolute -top-4 left-0 pointer-events-none hidden lg:block w-48 opacity-30">
+                <PawsDecoration className="w-full h-auto" />
+            </div>
             <Container className="flex flex-col gap-10">
                 <SectionHeading
                     title="Nos services"
