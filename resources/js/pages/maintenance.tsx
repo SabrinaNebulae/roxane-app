@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 export default function MaintenancePage() {
     const [dark, setDark] = useState(false);
 

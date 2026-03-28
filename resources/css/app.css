@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 @import 'tailwindcss';
+@import './fonts.css';
 
 @plugin 'tailwindcss-animate';
 
@@ -8,13 +8,17 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans: 'Figtree', 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+    /* Fonts */
+    --font-sans: 'Space Grotesk', 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
+    /* Radius Sizes */
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
+    --radius: 0.5rem;
 
+    /* Colors */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
@@ -38,7 +42,7 @@
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
 
-    --radius: 0.5rem;
+
 }
 
 :root {

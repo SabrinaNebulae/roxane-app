@@ -59,6 +59,16 @@ export interface Plans {
 }
 
 
+export interface Service {
+    title: string;
+    colorTitle: string;
+    bgTitle: string;
+    bgColor: string;
+    description: string;
+    link: string;
+    illustration: string;
+}
+
 export interface PageProps {
     flash?: FlashMessages;
     auth?: Auth;
