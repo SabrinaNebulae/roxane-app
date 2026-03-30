@@ -97,7 +97,7 @@ export default function NavGuestLayout() {
                                 <Button variant="outline">Se connecter</Button>
                             </Link>
                             <Link href={membership()} className="no-underline">
-                                <Button>Adhérer</Button>
+                                <Button variant="secondary">Adhérer</Button>
                             </Link>
                         </>
                     )}
@@ -197,7 +197,7 @@ export default function NavGuestLayout() {
                                         <Button variant="outline" className="w-full">Se connecter</Button>
                                     </Link>
                                     <Link href={membership()} onClick={closeMenu} className="no-underline">
-                                        <Button className="w-full">Adhérer</Button>
+                                        <Button variant="secondary" className="w-full">Adhérer</Button>
                                     </Link>
                                 </>
                             )}
