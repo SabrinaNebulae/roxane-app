@@ -3,14 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\AdminPasswordResetNotification;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 
 /**
  * @property int $id
@@ -29,6 +30,7 @@ use Filament\Panel;
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -45,11 +47,12 @@ use Filament\Panel;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser
 {
-    use HasRoles, HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -87,11 +90,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        //return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
-        //@todo : restreindre aux adresses retzien.fr pour la prod
+        // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        // @todo : restreindre aux adresses retzien.fr pour la prod
         return true;
     }
-
 
     public static function getAttributeLabel(string $attribute): string
     {
@@ -103,6 +105,10 @@ class User extends Authenticatable implements FilamentUser
         return __("roles.fields.' . $role");
     }*/
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new AdminPasswordResetNotification($token));
+    }
 
     public function members(): hasMany
     {

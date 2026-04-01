@@ -20,7 +20,6 @@ class UserForm
                     ->required(),
                 TextInput::make('email')
                     ->label(User::getAttributeLabel('email'))
-                    ->label('Email address')
                     ->email()
                     ->required(),
                 DateTimePicker::make('email_verified_at')
@@ -28,14 +27,19 @@ class UserForm
                 TextInput::make('password')
                     ->label(User::getAttributeLabel('password'))
                     ->password()
+                    ->revealable()
                     ->dehydrated(fn ($state) => filled($state))
-                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->hint(fn (string $operation) => $operation === 'create'
+                        ? __('users.hints.password_create')
+                        : __('users.hints.password_edit'))
+                    ->hintIcon('heroicon-m-information-circle'),
                 Select::make('role')
                     ->label(User::getAttributeLabel('role'))
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
-                    ->searchable()
+                    ->searchable(),
             ]);
     }
 }

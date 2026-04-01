@@ -6,7 +6,6 @@ use App\Models\Service;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -24,8 +23,8 @@ class ServicesTable
                     ->label(Service::getAttributeLabel('identifier'))
                     ->searchable(),
                 IconColumn::make('icon')
-                    ->label('Icône')
-                    ->icon(fn (Service $record) => 'heroicon-o-' . $record->icon),
+                    ->label(Service::getAttributeLabel('icon'))
+                    ->icon(fn (Service $record) => 'heroicon-o-'.$record->icon),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

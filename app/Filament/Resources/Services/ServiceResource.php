@@ -22,6 +22,16 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
 
+    public static function getModelLabel(): string
+    {
+        return Service::getAttributeLabel('service');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return Service::getAttributeLabel('services');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ServiceForm::configure($schema);

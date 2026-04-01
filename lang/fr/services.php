@@ -8,6 +8,6 @@ return [
         'name' => 'Nom',
         'description' => 'Description',
         'url' => 'URL',
-        'icon' => 'Icon',
-    ]
+        'icon' => 'Icône',
+    ],
 ];

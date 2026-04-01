@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import passwordReset from './password-reset'
 /**
 * @see \Filament\Auth\Pages\Login::__invoke
 * @see vendor/filament/filament/src/Auth/Pages/Login.php:7
@@ -136,9 +137,92 @@ logoutForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 logout.form = logoutForm
 
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+export const profile = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: profile.url(options),
+    method: 'get',
+})
+
+profile.definition = {
+    methods: ["get","head"],
+    url: '/admin/profile',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+profile.url = (options?: RouteQueryOptions) => {
+    return profile.definition.url + queryParams(options)
+}
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+profile.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: profile.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+profile.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: profile.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+const profileForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: profile.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+profileForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: profile.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Filament\Auth\Pages\EditProfile::__invoke
+* @see vendor/filament/filament/src/Auth/Pages/EditProfile.php:7
+* @route '/admin/profile'
+*/
+profileForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: profile.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+profile.form = profileForm
+
 const auth = {
     login: Object.assign(login, login),
+    passwordReset: Object.assign(passwordReset, passwordReset),
     logout: Object.assign(logout, logout),
+    profile: Object.assign(profile, profile),
 }
 
 export default auth

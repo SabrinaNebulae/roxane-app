@@ -29,7 +29,24 @@ return [
         'subscription' => [
             'success' => 'Votre inscription a bien été envoyée. Nous vous recontacterons dans les plus brefs délais.',
             'error' => 'Une erreur est survenue lors de l\'envoi de votre inscription.',
-        ]
+        ],
     ],
 
+    'tabs' => [
+        'general_info' => 'Informations générales',
+        'modules' => 'Modules',
+    ],
+
+    'sections' => [
+        'member' => 'Adhérent',
+        'transaction' => 'Informations de transaction',
+        'status' => 'Statut',
+        'ispconfig_mail' => 'Messagerie ISPConfig',
+        'ispconfig_web' => 'Hébergements Web',
+        'nextcloud' => 'NextCloud',
+    ],
+
+    'actions' => [
+        'view_profile' => 'Voir le profil du membre',
+    ],
 ];

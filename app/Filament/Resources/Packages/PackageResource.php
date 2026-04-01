@@ -7,14 +7,12 @@ use App\Filament\Resources\Packages\Pages\EditPackage;
 use App\Filament\Resources\Packages\Pages\ListPackages;
 use App\Filament\Resources\Packages\Schemas\PackageForm;
 use App\Filament\Resources\Packages\Tables\PackagesTable;
+use App\Models\Package;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Package;
 
 class PackageResource extends Resource
 {
@@ -23,6 +21,16 @@ class PackageResource extends Resource
     protected static string|null|\UnitEnum $navigationGroup = 'Modules';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
+
+    public static function getModelLabel(): string
+    {
+        return Package::getAttributeLabel('package');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return Package::getAttributeLabel('packages');
+    }
 
     public static function form(Schema $schema): Schema
     {

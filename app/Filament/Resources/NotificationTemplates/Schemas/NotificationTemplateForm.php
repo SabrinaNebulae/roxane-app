@@ -32,11 +32,15 @@ class NotificationTemplateForm
                         TextInput::make('subject')
                             ->label(NotificationTemplate::getAttributeLabel('subject'))
                             ->required()
-                            ->helperText('Variables : {member_name}, {expiry_date}'),
+                            ->helperText(fn (?NotificationTemplate $record) => $record?->variables
+                                ? NotificationTemplate::getAttributeLabel('variables').' : '.implode(', ', array_map(fn ($k) => '{'.$k.'}', array_keys($record->variables)))
+                                : null),
                         RichEditor::make('body')
                             ->label(NotificationTemplate::getAttributeLabel('body'))
                             ->required()
-                            ->helperText('Variables : {member_name}, {expiry_date}')
+                            ->helperText(fn (?NotificationTemplate $record) => $record?->variables
+                                ? NotificationTemplate::getAttributeLabel('variables').' : '.implode(', ', array_map(fn ($k) => '{'.$k.'}', array_keys($record->variables)))
+                                : null)
                             ->columnSpanFull(),
                     ]),
             ]);

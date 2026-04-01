@@ -11,7 +11,6 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\QueryBuilder\Constraints\DateConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\SelectConstraint;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class MembershipsTable
@@ -84,29 +83,27 @@ class MembershipsTable
                 'amount',
             ])
             ->filters([
-                // Filtres pour status, date de début et date de fin, status de paiement
-
                 QueryBuilder::make()
                     ->constraints([
                         SelectConstraint::make('status')
-                            ->label('Statut de l\'adhésion')
+                            ->label(Membership::getAttributeLabel('status'))
                             ->options([
-                                'active' => 'Active',
-                                'expired' => 'Expirée',
-                                'pending' => 'En attente',
+                                'active' => Membership::getAttributeLabel('active'),
+                                'expired' => Membership::getAttributeLabel('expired'),
+                                'pending' => Membership::getAttributeLabel('pending'),
                             ]),
                         DateConstraint::make('start_date')
-                            ->label('Date de début'),
+                            ->label(Membership::getAttributeLabel('start_date')),
                         DateConstraint::make('end_date')
-                            ->label('Date de fin'),
+                            ->label(Membership::getAttributeLabel('end_date')),
                         SelectConstraint::make('payment_status')
-                            ->label('Statut de paiement')
+                            ->label(Membership::getAttributeLabel('payment_status'))
                             ->options([
-                                'paid' => 'Payée',
-                                'unpaid' => 'Impayée',
-                                'partial' => 'Partiellement payée'
+                                'paid' => Membership::getAttributeLabel('paid'),
+                                'unpaid' => Membership::getAttributeLabel('unpaid'),
+                                'partial' => Membership::getAttributeLabel('partial'),
                             ]),
-                ]),
+                    ]),
             ], layout: FiltersLayout::Modal)
             ->recordActions([
                 EditAction::make(),

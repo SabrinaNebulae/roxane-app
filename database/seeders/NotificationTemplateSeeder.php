@@ -25,5 +25,46 @@ class NotificationTemplateSeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'admin_invitation'],
+            [
+                'name' => 'Invitation administrateur',
+                'subject' => 'Bienvenue sur {app_name} — Configurez votre mot de passe',
+                'body' => '<p>Bonjour {name},</p>'
+                    .'<p>Un administrateur a créé un compte pour vous sur {app_name}.</p>'
+                    .'<p>Cliquez sur le lien ci-dessous pour configurer votre mot de passe et accéder au back office.</p>'
+                    .'<p><a href="{url}">Configurer mon mot de passe</a></p>'
+                    .'<p>Ce lien expire dans {expire_minutes} minutes.</p>'
+                    .'<p>Si vous n\'attendiez pas cette invitation, vous pouvez ignorer cet e-mail en toute sécurité.</p>',
+                'variables' => [
+                    'name' => 'Nom de l\'utilisateur',
+                    'url' => 'URL de configuration du mot de passe',
+                    'app_name' => 'Nom de l\'application',
+                    'expire_minutes' => 'Durée de validité du lien (minutes)',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'admin_password_reset'],
+            [
+                'name' => 'Réinitialisation de mot de passe',
+                'subject' => 'Réinitialiser votre mot de passe — {app_name}',
+                'body' => '<p>Bonjour {name},</p>'
+                    .'<p>Vous recevez cet e-mail car une demande de réinitialisation de mot de passe a été effectuée pour votre compte.</p>'
+                    .'<p><a href="{url}">Réinitialiser mon mot de passe</a></p>'
+                    .'<p>Ce lien expire dans {expire_minutes} minutes.</p>'
+                    .'<p>Si vous n\'avez pas demandé de réinitialisation de mot de passe, aucune action supplémentaire n\'est requise.</p>',
+                'variables' => [
+                    'name' => 'Nom de l\'utilisateur',
+                    'url' => 'URL de réinitialisation du mot de passe',
+                    'app_name' => 'Nom de l\'application',
+                    'expire_minutes' => 'Durée de validité du lien (minutes)',
+                ],
+                'is_active' => true,
+            ]
+        );
     }
 }

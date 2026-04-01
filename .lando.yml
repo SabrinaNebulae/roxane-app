@@ -34,6 +34,14 @@ services:
     type: redis:5
     persist: false
     portforward: true
+  worker:
+    type: php:8.3
+    via: cli
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=60
+    overrides:
+      volumes:
+        - .:/app
+      working_dir: /app
 
 tooling:
   npm:

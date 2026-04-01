@@ -40,14 +40,14 @@ class MembershipForm
                                          | TAB : Informations générales
                                          |--------------------------------------------------------------------------
                                          */
-                                        Tabs\Tab::make('Informations générales')
+                                        Tabs\Tab::make(__('memberships.tabs.general_info'))
                                             ->icon(Heroicon::OutlinedInformationCircle)
                                             ->schema([
-                                                Section::make('Adhérent')
+                                                Section::make(__('memberships.sections.member'))
                                                     ->headerActions([
                                                         Action::make('view-profile')
                                                             ->icon('heroicon-o-user')
-                                                            ->label('Voir le profil du membre')
+                                                            ->label(__('memberships.actions.view_profile'))
                                                             ->action(function (Membership $record) {
                                                                 return redirect()->route('filament.admin.resources.members.edit', ['record' => $record->member_id]);
                                                             }),
@@ -62,7 +62,7 @@ class MembershipForm
                                                     ])
                                                     ->columns(2),
 
-                                                Section::make('Informations de transaction')
+                                                Section::make(__('memberships.sections.transaction'))
                                                     ->schema([
                                                         Select::make('package_id')
                                                             ->label(Membership::getAttributeLabel('package_id'))
@@ -89,136 +89,131 @@ class MembershipForm
                                           | TAB : Services/Modules
                                           |--------------------------------------------------------------------------
                                           */
-                                        Tabs\Tab::make('Modules')
+                                        Tabs\Tab::make(__('memberships.tabs.modules'))
                                             ->icon(Heroicon::OutlinedPuzzlePiece)
                                             ->schema([
-                                                /*
-                                                 | Messageries ISPConfig (lecture seule)
-                                                 */
-                                                Section::make('Messagerie ISPConfig')
+                                                Section::make(__('memberships.sections.ispconfig_mail'))
                                                     ->afterHeader([
                                                         ServiceToggleAction::forService('mail'),
                                                     ])
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('ispconfig_mails')
-                                                            ->label('Données ISPConfig Mail')
-                                                            ->state(fn(?Membership $record) => $record?->member?->ispconfigs()
+                                                            ->label(__('members.ispconfig.mail_data'))
+                                                            ->state(fn (?Membership $record) => $record?->member?->ispconfigs()
                                                                 ->where('type', IspconfigType::MAIL)
                                                                 ->get()
                                                             )
                                                             ->schema([
                                                                 TextEntry::make('email')
-                                                                    ->label('Adresse email'),
+                                                                    ->label(__('members.ispconfig.email')),
 
                                                                 TextEntry::make('ispconfig_service_user_id')
-                                                                    ->label('ID ISPConfig'),
+                                                                    ->label(__('members.ispconfig.id')),
 
                                                                 TextEntry::make('data.mailuser.quota')
-                                                                    ->label('Quota'),
+                                                                    ->label(__('members.ispconfig.quota')),
 
                                                                 TextEntry::make('data.mailuser.domain')
-                                                                    ->label('Domaine')
+                                                                    ->label(__('members.ispconfig.domain'))
                                                                     ->default('retzien.fr'),
 
                                                                 ViewEntry::make('data')
                                                                     ->label('JSON')
                                                                     ->view('filament.components.json-viewer')
-                                                                    ->viewData(fn($state) => [
+                                                                    ->viewData(fn ($state) => [
                                                                         'data' => $state,
                                                                     ])
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(2),
                                                     ])
-                                                    ->visible(fn(?Membership $record) => $record?->member?->ispconfigs()
+                                                    ->visible(fn (?Membership $record) => $record?->member?->ispconfigs()
                                                         ->where('type', IspconfigType::MAIL)
                                                         ->exists() ?? false
                                                     ),
 
-                                                /*
-                                                 | Hébergements web ISPConfig
-                                                 */
-                                                Section::make('Hébergements Web')
+                                                Section::make(__('memberships.sections.ispconfig_web'))
                                                     ->afterHeader([
                                                         ServiceToggleAction::forService('webhosting'),
                                                     ])
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('ispconfigs_web')
-                                                            ->label('Données ISPConfig Web')
-                                                            ->state(fn(?Membership $record) => $record?->member?->ispconfigs()
+                                                            ->label(__('members.ispconfig.web_data'))
+                                                            ->state(fn (?Membership $record) => $record?->member?->ispconfigs()
                                                                 ->where('type', IspconfigType::WEB)
                                                                 ->get()
-                                                                ->map(fn($ispconfig) => $ispconfig->toArray())
+                                                                ->map(fn ($ispconfig) => $ispconfig->toArray())
                                                                 ->all()
                                                             )
                                                             ->schema([
                                                                 TextEntry::make('data.domain_id')
-                                                                    ->label('ID ISPConfig'),
+                                                                    ->label(__('members.ispconfig.id')),
 
                                                                 TextEntry::make('data.domain')
-                                                                    ->label('Domaine'),
+                                                                    ->label(__('members.ispconfig.domain')),
 
                                                                 TextEntry::make('data.active')
-                                                                    ->label('État')
-                                                                    ->formatStateUsing(fn($state) => $state === 'y' ? 'Activé' : 'Désactivé'
+                                                                    ->label(__('members.ispconfig.state'))
+                                                                    ->formatStateUsing(fn ($state) => $state === 'y'
+                                                                        ? __('members.ispconfig.enabled')
+                                                                        : __('members.ispconfig.disabled')
                                                                     ),
 
                                                                 ViewEntry::make('data')
                                                                     ->label('JSON')
                                                                     ->view('filament.components.json-viewer')
-                                                                    ->viewData(fn($state) => [
+                                                                    ->viewData(fn ($state) => [
                                                                         'data' => $state,
                                                                     ])
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(3),
                                                     ])
-                                                    ->visible(fn(?Membership $record) => $record?->member?->ispconfigs()
+                                                    ->visible(fn (?Membership $record) => $record?->member?->ispconfigs()
                                                         ->where('type', IspconfigType::WEB)
                                                         ->exists() ?? false
                                                     ),
 
-                                                /*
-                                                 | Compte(s) NextCloud (lecture seule)
-                                                 */
-                                                Section::make('NextCloud')
+                                                Section::make(__('memberships.sections.nextcloud'))
                                                     ->afterHeader([
                                                         ServiceToggleAction::forService('nextcloud'),
                                                     ])
                                                     ->collapsible()
                                                     ->schema([
                                                         RepeatableEntry::make('nextcloud_accounts')
-                                                            ->label('Données NextCloud')
-                                                            ->state(fn(?Membership $record) => $record?->member?->nextcloudAccounts()
+                                                            ->label(__('members.ispconfig.nextcloud_data'))
+                                                            ->state(fn (?Membership $record) => $record?->member?->nextcloudAccounts()
                                                                 ->get()
-                                                                ->map(fn($nextcloudAccount) => $nextcloudAccount->toArray())
+                                                                ->map(fn ($nextcloudAccount) => $nextcloudAccount->toArray())
                                                                 ->all()
                                                             )
                                                             ->schema([
                                                                 TextEntry::make('nextcloud_user_id')
-                                                                    ->label('Id Nextcloud'),
+                                                                    ->label(__('members.ispconfig.nextcloud_id')),
 
                                                                 TextEntry::make('data.displayname')
-                                                                    ->label('Nom de l\'utilisateur'),
+                                                                    ->label(__('members.ispconfig.display_name')),
 
                                                                 TextEntry::make('data.enabled')
-                                                                    ->label('État')
-                                                                    ->formatStateUsing(fn($state) => $state == 'true' ? 'Activé' : 'Désactivé'
+                                                                    ->label(__('members.ispconfig.state'))
+                                                                    ->formatStateUsing(fn ($state) => $state == 'true'
+                                                                        ? __('members.ispconfig.enabled')
+                                                                        : __('members.ispconfig.disabled')
                                                                     ),
 
                                                                 ViewEntry::make('data')
                                                                     ->label('JSON')
                                                                     ->view('filament.components.json-viewer')
-                                                                    ->viewData(fn($state) => [
+                                                                    ->viewData(fn ($state) => [
                                                                         'data' => $state,
                                                                     ])
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(3),
                                                     ])
-                                                    ->visible(fn(?Membership $record) => $record?->member?->nextcloudAccounts()
+                                                    ->visible(fn (?Membership $record) => $record?->member?->nextcloudAccounts()
                                                         ->exists() ?? false
                                                     ),
                                             ]),
@@ -234,7 +229,7 @@ class MembershipForm
                          */
                         Grid::make(1)
                             ->schema([
-                                Section::make('Statut')
+                                Section::make(__('memberships.sections.status'))
                                     ->schema([
                                         Select::make('status')
                                             ->label(Membership::getAttributeLabel('status'))
