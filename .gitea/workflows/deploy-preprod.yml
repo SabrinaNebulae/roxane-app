@@ -44,42 +44,61 @@ jobs:
 
           echo "SSH_HOST_SSH=$SSH_HOST" >> "$GITEA_ENV"
 
+      - name: Checkout code
+        run: |
+          set -e
+          git clone ${{ vars.GIT_REPO }} /workspace/roxane
+          cd /workspace/roxane
+          git checkout release
+
       - name: Deploy Roxane to preprod
         env:
           SSH_USER: ${{ vars.PREPROD_USER }}
           SSH_PORT: ${{ vars.PREPROD_PORT }}
           PREPROD_PATH: ${{ vars.PREPROD_PATH }}
-          GIT_REPO: ${{ vars.GIT_REPO }}
+          # GIT_REPO: ${{ vars.GIT_REPO }}  # Ancien système : le serveur preprod tirait le code depuis Gitea
+          #                                  # Ne fonctionne plus car Free bloque les ports entrants
         run: |
           set -e
+
+          echo "[>>] Envoi du code vers le serveur preprod..."
+          # Crée l'archive depuis le runner et l'envoie directement par SSH
+          # Le serveur preprod n'a plus besoin de contacter Gitea
+          git -C /workspace/roxane archive --format=tar.gz release | \
+            ssh -6 -o StrictHostKeyChecking=yes \
+                -o ConnectTimeout=10 \
+                -o ServerAliveInterval=60 \
+                -p "$SSH_PORT" \
+                "$SSH_USER@$SSH_HOST_SSH" \
+                "mkdir -p $PREPROD_PATH && tar -xz -C $PREPROD_PATH"
 
           ssh -6 -o StrictHostKeyChecking=yes \
               -o ConnectTimeout=10 \
               -o ServerAliveInterval=60 \
               -p "$SSH_PORT" \
-              "$SSH_USER@$SSH_HOST_SSH" bash -l -s <<'EOF' "$PREPROD_PATH" "$GIT_REPO"
+              "$SSH_USER@$SSH_HOST_SSH" bash -l -s <<'EOF' "$PREPROD_PATH"
           set -e
 
           PREPROD_PATH="$1"
-          GIT_REPO="$2"
 
-          # Vérifier si le dépôt existe, sinon le cloner
-          if [ ! -d "$PREPROD_PATH/.git" ]; then
-            echo "[!] Repository not found. Cloning from $GIT_REPO..."
-            mkdir -p "$(dirname "$PREPROD_PATH")"
-            git clone "$GIT_REPO" "$PREPROD_PATH"
-            cd "$PREPROD_PATH"
-            git checkout release
-          else
-            cd "$PREPROD_PATH"
-            git config --global --add safe.directory "$PREPROD_PATH" 2>/dev/null || true
+          cd "$PREPROD_PATH"
 
-            echo "[>>] Pulling latest Roxane release..."
-            git fetch origin
-            git checkout release
-            git reset --hard origin/release
-            git clean -fd  # Nettoyer les fichiers non trackés
-          fi
+          # Ancien système (commenté) :
+          # if [ ! -d "$PREPROD_PATH/.git" ]; then
+          #   echo "[!] Repository not found. Cloning from $GIT_REPO..."
+          #   mkdir -p "$(dirname "$PREPROD_PATH")"
+          #   git clone "$GIT_REPO" "$PREPROD_PATH"
+          #   cd "$PREPROD_PATH"
+          #   git checkout release
+          # else
+          #   cd "$PREPROD_PATH"
+          #   git config --global --add safe.directory "$PREPROD_PATH" 2>/dev/null || true
+          #   echo "[>>] Pulling latest Roxane release..."
+          #   git fetch origin
+          #   git checkout release
+          #   git reset --hard origin/release
+          #   git clean -fd
+          # fi
 
           echo "[*] Installing Composer dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
@@ -117,9 +136,8 @@ jobs:
           cd "$1"
 
           echo "[?] Verifying deployment..."
-          echo "Current branch: $(git branch --show-current)"
-          echo "Last commit: $(git log -1 --oneline)"
           echo "Laravel version: $(php artisan --version)"
+          echo "Déploiement effectué le : $(date)"
           EOF
 
       - name: Cleanup on failure
