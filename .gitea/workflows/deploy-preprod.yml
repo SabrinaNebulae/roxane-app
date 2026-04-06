@@ -13,6 +13,19 @@ jobs:
       image: nebulaed/php83-node22
 
     steps:
+      - name: Debug réseau container
+        run: |
+          echo "=== Résolution DNS ==="
+          cat /etc/hosts | grep nebulabs
+
+          echo "=== Test connexion directe IP ==="
+          curl -v --max-time 10 -k https://192.168.1.41 2>&1 | head -30
+
+          echo "=== Test avec hostname ==="
+          curl -v --max-time 10 https://nebulabs.nebulae-design.com 2>&1 | head -30
+
+          echo "=== Route réseau ==="
+          ip route
       - name: Install network & SSH tools
         run: |
           set -e
