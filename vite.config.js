@@ -11,8 +11,8 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/backend.css',
                 'resources/css/fonts.css',
+                'resources/css/filament-admin.css',
                 'resources/js/app.tsx',
-                'vendor/andreia/filament-nord-theme/resources/css/theme.css'
             ],
             ssr: 'resources/js/ssr.tsx',
             refresh: true,

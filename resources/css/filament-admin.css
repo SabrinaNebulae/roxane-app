@@ -1,0 +1,3 @@
+@import '../../vendor/andreia/filament-nord-theme/resources/css/theme.css';
+
+@source '../../resources/views/filament/**/*.blade.php';

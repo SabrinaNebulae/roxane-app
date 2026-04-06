@@ -101,8 +101,8 @@ Elle gère les membres, les cotisations, et s'intègre avec des services tiers (
 | `members:cleanup-expired`       | Desactive les membres expires (Dolibarr + ISPConfig + Nextcloud). `--dry-run`  |
 | `sync:ispconfig-mail-members`   | Lie les membres a leurs comptes mail ISPConfig (@retzien.fr)                   |
 | `sync:ispconfig-web-members`    | Lie les membres a leurs comptes d'hebergement web                              |
-| `sync:nextcloud-members`        | Lie les membres a leurs comptes Nextcloud                                      |
-| `sync:services-members`         | Synchronise les services associes aux membres                                  |
+| `nextcloud:sync-members`        | Lie les membres a leurs comptes Nextcloud                                      |
+| `memberships:sync-services`     | Synchronise les services associes aux membres                                  |
 
 ---
 
@@ -173,7 +173,7 @@ resources/js/components/
 
 ## Localisation
 
-Langues : **fr**, **en** — fichiers dans `lang/{locale}/` : contacts, members, memberships, packages, services, users, member_groups.
+Langues : **fr**, **en** — fichiers dans `lang/{locale}/` : contacts, members, memberships, packages, services, users, member_groups, synchronisations.
 
 ---
 

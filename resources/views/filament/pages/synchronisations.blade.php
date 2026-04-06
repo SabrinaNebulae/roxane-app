@@ -1,109 +1,142 @@
-@vite('resources/css/backend.css')
-
 <x-filament-panels::page>
     <div
-        class="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        class="grid grid-cols-1 sm:grid-cols-2"
+        style="gap: 1.5rem"
         @if($this->hasRunningCommands()) wire:poll.5s @endif
     >
         @php
-            $dolibarr     = $this->getCommandStatus('dolibarr');
-            $expired      = $this->getCommandStatus('cleanup_expired');
-            $ispMail      = $this->getCommandStatus('ispconfig_mail');
-            $ispWeb       = $this->getCommandStatus('ispconfig_web');
-            $nextcloud    = $this->getCommandStatus('nextcloud');
-            $services     = $this->getCommandStatus('services');
+            $dolibarr  = $this->getCommandStatus('dolibarr');
+            $expired   = $this->getCommandStatus('cleanup_expired');
+            $ispMail   = $this->getCommandStatus('ispconfig_mail');
+            $ispWeb    = $this->getCommandStatus('ispconfig_web');
+            $nextcloud = $this->getCommandStatus('nextcloud');
+            $services  = $this->getCommandStatus('services');
         @endphp
 
-        {{-- Dolibarr --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'Dolibarr', 'status' => $dolibarr])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.dolibarr.heading'),
+                    'status' => $dolibarr,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Importe les membres et cotisations depuis Dolibarr.
+                    {{ __('synchronisations.sections.dolibarr.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $dolibarr])
-
-                {{ $this->getAction('syncDolibarr') }}
+                <x-filament::button
+                    wire:click="mountAction('syncDolibarr')"
+                    :disabled="in_array($dolibarr['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
 
-        {{-- Membres expirés --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'Membres expirés', 'status' => $expired])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.expired.heading'),
+                    'status' => $expired,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Désactive les membres expirés dans Dolibarr, ISPConfig et Nextcloud.
+                    {{ __('synchronisations.sections.expired.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $expired])
-
-                {{ $this->getAction('cleanupExpired') }}
+                <x-filament::button
+                    wire:click="mountAction('cleanupExpired')"
+                    :disabled="in_array($expired['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
 
-        {{-- ISPConfig Mail --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'ISPConfig Mail', 'status' => $ispMail])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.ispconfig_mail.heading'),
+                    'status' => $ispMail,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Lie les membres à leurs comptes mail ISPConfig (@retzien.fr).
+                    {{ __('synchronisations.sections.ispconfig_mail.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $ispMail])
-
-                {{ $this->getAction('syncISPConfigMail') }}
+                <x-filament::button
+                    wire:click="mountAction('syncISPConfigMail')"
+                    :disabled="in_array($ispMail['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
 
-        {{-- ISPConfig Web --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'ISPConfig Web', 'status' => $ispWeb])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.ispconfig_web.heading'),
+                    'status' => $ispWeb,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Lie les membres à leurs comptes d'hébergement web.
+                    {{ __('synchronisations.sections.ispconfig_web.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $ispWeb])
-
-                {{ $this->getAction('syncISPConfigWeb') }}
+                <x-filament::button
+                    wire:click="mountAction('syncISPConfigWeb')"
+                    :disabled="in_array($ispWeb['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
 
-        {{-- Nextcloud --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'Nextcloud', 'status' => $nextcloud])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.nextcloud.heading'),
+                    'status' => $nextcloud,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Lie les membres à leurs comptes Nextcloud.
+                    {{ __('synchronisations.sections.nextcloud.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $nextcloud])
-
-                {{ $this->getAction('syncNextcloud') }}
+                <x-filament::button
+                    wire:click="mountAction('syncNextcloud')"
+                    :disabled="in_array($nextcloud['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
 
-        {{-- Services membres --}}
         <x-filament::section>
             <x-slot name="heading">
-                @include('filament.pages.partials.sync-heading', ['label' => 'Services membres', 'status' => $services])
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.services.heading'),
+                    'status' => $services,
+                ])
             </x-slot>
             <div class="space-y-3">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Synchronise les services associés aux membres actifs.
+                    {{ __('synchronisations.sections.services.description') }}
                 </p>
                 @include('filament.pages.partials.sync-status', ['status' => $services])
-
-                {{ $this->getAction('syncServices') }}
+                <x-filament::button
+                    wire:click="mountAction('syncServices')"
+                    :disabled="in_array($services['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
             </div>
         </x-filament::section>
     </div>
-
-    <x-filament-actions::modals />
 </x-filament-panels::page>

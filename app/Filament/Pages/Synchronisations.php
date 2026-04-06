@@ -3,26 +3,18 @@
 namespace App\Filament\Pages;
 
 use App\Jobs\RunSyncCommand;
-use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Cache;
-use UnitEnum;
 
 class Synchronisations extends Page
 {
     protected string $view = 'filament.pages.synchronisations';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrow-path';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-arrow-path';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Paramètres';
-
-    protected static ?string $navigationLabel = 'Synchronisations';
-
-    protected static ?string $title = 'Synchronisations';
-
-    protected static ?string $slug = 'synchronisations';
+    protected static string|null|\UnitEnum $navigationGroup = 'Paramètres';
 
     protected static ?int $navigationSort = 10;
 
@@ -34,6 +26,16 @@ class Synchronisations extends Page
         'nextcloud',
         'services',
     ];
+
+    public static function getNavigationLabel(): string
+    {
+        return __('synchronisations.navigation_label');
+    }
+
+    public function getTitle(): string
+    {
+        return __('synchronisations.title');
+    }
 
     public static function canAccess(): bool
     {
@@ -76,11 +78,10 @@ class Synchronisations extends Page
     public function syncDolibarrAction(): Action
     {
         return Action::make('syncDolibarr')
-            ->label('Lancer')
             ->requiresConfirmation()
-            ->modalHeading('Synchronisation Dolibarr')
-            ->modalDescription('Importer les membres et cotisations depuis Dolibarr.')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.dolibarr.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.dolibarr.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->disabled(fn () => in_array($this->getCommandStatus('dolibarr')['status'], ['pending', 'running']))
             ->action(fn () => $this->enqueueCommand('dolibarr', 'sync:dolibarr-members'));
     }
@@ -88,18 +89,17 @@ class Synchronisations extends Page
     public function cleanupExpiredAction(): Action
     {
         return Action::make('cleanupExpired')
-            ->label('Lancer')
-            ->modalHeading('Désactiver les membres expirés')
-            ->modalDescription('Désactive les membres expirés dans Dolibarr, ISPConfig et Nextcloud.')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.expired.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.expired.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->schema([
                 Toggle::make('dry_run')
-                    ->label('Mode simulation (dry-run)')
-                    ->helperText('Simule l\'opération sans effectuer de modifications.')
+                    ->label(__('synchronisations.sections.expired.dry_run_label'))
+                    ->helperText(__('synchronisations.sections.expired.dry_run_helper'))
                     ->default(true),
             ])
             ->disabled(fn () => in_array($this->getCommandStatus('cleanup_expired')['status'], ['pending', 'running']))
-            ->action(function (array $data) {
+            ->action(function (array $data): void {
                 $parameters = $data['dry_run'] ? ['--dry-run' => true] : [];
                 $this->enqueueCommand('cleanup_expired', 'members:cleanup-expired', $parameters);
             });
@@ -108,11 +108,10 @@ class Synchronisations extends Page
     public function syncISPConfigMailAction(): Action
     {
         return Action::make('syncISPConfigMail')
-            ->label('Lancer')
             ->requiresConfirmation()
-            ->modalHeading('Synchronisation ISPConfig Mail')
-            ->modalDescription('Lie les membres à leurs comptes mail ISPConfig (@retzien.fr).')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.ispconfig_mail.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.ispconfig_mail.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->disabled(fn () => in_array($this->getCommandStatus('ispconfig_mail')['status'], ['pending', 'running']))
             ->action(fn () => $this->enqueueCommand('ispconfig_mail', 'sync:ispconfig-mail-members'));
     }
@@ -120,18 +119,17 @@ class Synchronisations extends Page
     public function syncISPConfigWebAction(): Action
     {
         return Action::make('syncISPConfigWeb')
-            ->label('Lancer')
-            ->modalHeading('Synchronisation ISPConfig Web')
-            ->modalDescription('Lie les membres à leurs comptes d\'hébergement web.')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.ispconfig_web.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.ispconfig_web.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->schema([
                 Toggle::make('refresh_cache')
-                    ->label('Vider le cache ISPConfig')
-                    ->helperText('Vide le cache avant la synchronisation.')
+                    ->label(__('synchronisations.sections.ispconfig_web.refresh_cache_label'))
+                    ->helperText(__('synchronisations.sections.ispconfig_web.refresh_cache_helper'))
                     ->default(false),
             ])
             ->disabled(fn () => in_array($this->getCommandStatus('ispconfig_web')['status'], ['pending', 'running']))
-            ->action(function (array $data) {
+            ->action(function (array $data): void {
                 $parameters = $data['refresh_cache'] ? ['--refresh-cache' => true] : [];
                 $this->enqueueCommand('ispconfig_web', 'sync:ispconfig-web-members', $parameters);
             });
@@ -140,18 +138,17 @@ class Synchronisations extends Page
     public function syncNextcloudAction(): Action
     {
         return Action::make('syncNextcloud')
-            ->label('Lancer')
-            ->modalHeading('Synchronisation Nextcloud')
-            ->modalDescription('Lie les membres à leurs comptes Nextcloud.')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.nextcloud.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.nextcloud.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->schema([
                 Toggle::make('dry_run')
-                    ->label('Mode simulation (dry-run)')
-                    ->helperText('Simule l\'opération sans effectuer de modifications.')
+                    ->label(__('synchronisations.sections.nextcloud.dry_run_label'))
+                    ->helperText(__('synchronisations.sections.nextcloud.dry_run_helper'))
                     ->default(false),
             ])
             ->disabled(fn () => in_array($this->getCommandStatus('nextcloud')['status'], ['pending', 'running']))
-            ->action(function (array $data) {
+            ->action(function (array $data): void {
                 $parameters = $data['dry_run'] ? ['--dry-run' => true] : [];
                 $this->enqueueCommand('nextcloud', 'nextcloud:sync-members', $parameters);
             });
@@ -160,11 +157,10 @@ class Synchronisations extends Page
     public function syncServicesAction(): Action
     {
         return Action::make('syncServices')
-            ->label('Lancer')
             ->requiresConfirmation()
-            ->modalHeading('Synchronisation des services')
-            ->modalDescription('Synchronise les services associés aux membres actifs.')
-            ->modalSubmitActionLabel('Lancer')
+            ->modalHeading(__('synchronisations.sections.services.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.services.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
             ->disabled(fn () => in_array($this->getCommandStatus('services')['status'], ['pending', 'running']))
             ->action(fn () => $this->enqueueCommand('services', 'memberships:sync-services'));
     }

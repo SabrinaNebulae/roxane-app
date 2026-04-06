@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->plugin(FilamentNordThemePlugin::make())
+            ->viteTheme('resources/css/filament-admin.css')
             ->default()
             ->id('admin')
             ->path('admin')
