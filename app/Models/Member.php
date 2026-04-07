@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -33,7 +34,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $website_url
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read string $full_name
  * @property-read \App\Models\MemberGroup|null $group
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\IspconfigMember> $ispconfigs
@@ -80,7 +81,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class Member extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -151,7 +152,7 @@ class Member extends Model
         return $this->hasMany(NextCloudMember::class, 'member_id');
     }
 
-    public function lastMembership(): Membership
+    public function lastMembership(): ?Membership
     {
         return $this->memberships()->where('status', 'active')->first();
     }
@@ -160,13 +161,20 @@ class Member extends Model
     {
         $membership = $this->lastMembership();
 
+        if ($membership === null) {
+            return false;
+        }
+
         return $membership->services()->where('identifier', $serviceIdentifier)->exists();
     }
 
     public function isExpired(): bool
     {
-        // Member ayant leur dernière adhésion non renouvellée depuis plus d'un mois
         $lastMembership = $this->lastMembership();
+
+        if ($lastMembership === null) {
+            return true;
+        }
 
         return $lastMembership->status === 'expired' || $lastMembership->created_at->addMonths(1) < now();
     }

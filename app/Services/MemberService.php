@@ -6,6 +6,9 @@ use App\Events\MemberRegistered;
 use App\Models\Member;
 use App\Models\MemberGroup;
 use App\Models\Package;
+use App\Notifications\MemberDeactivatedAdminNotification;
+use App\Notifications\MemberDeactivatedMemberNotification;
+use Illuminate\Support\Facades\Notification;
 
 class MemberService
 {
@@ -58,14 +61,16 @@ class MemberService
      */
     public function deactivateMember(Member $member): void
     {
-        // todo: send email to member + admin
         $member->update(['status' => 'excluded']);
         $membership = $member->memberships()
             ->where('status', 'active')->first();
         $membership->update(['status' => 'inactive']);
 
-        // On détache les services côté Roxane - à tester
         $membership->services()->detach();
 
+        $member->notify(new MemberDeactivatedMemberNotification($member));
+
+        Notification::route('mail', config('app.admin_email'))
+            ->notify(new MemberDeactivatedAdminNotification($member));
     }
 }

@@ -48,6 +48,60 @@ class NotificationTemplateSeeder extends Seeder
         );
 
         NotificationTemplate::updateOrCreate(
+            ['identifier' => 'contact_new_request'],
+            [
+                'name' => 'Nouvelle demande de contact',
+                'subject' => 'Nouvelle demande de contact — {app_name}',
+                'body' => '<p>Une nouvelle demande de contact a été reçue.</p>'
+                    .'<p><strong>Nom :</strong> {contact_name}<br>'
+                    .'<strong>Email :</strong> {contact_email}<br>'
+                    .'<strong>Sujet :</strong> {contact_subject}</p>'
+                    .'<p><strong>Message :</strong><br>{contact_message}</p>',
+                'variables' => [
+                    'contact_name' => 'Nom complet de l\'expéditeur',
+                    'contact_email' => 'Adresse email de l\'expéditeur',
+                    'contact_subject' => 'Sujet du message',
+                    'contact_message' => 'Contenu du message',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_deactivated_member'],
+            [
+                'name' => 'Compte membre désactivé — membre',
+                'subject' => 'Votre compte {app_name} a été désactivé',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Votre compte a été désactivé. Vos services associés ne sont plus accessibles.</p>'
+                    .'<p>Pour toute question, n\'hésitez pas à nous contacter.</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_deactivated_admin'],
+            [
+                'name' => 'Compte membre désactivé — admin',
+                'subject' => 'Compte désactivé : {member_name}',
+                'body' => '<p>Le compte du membre suivant a été désactivé.</p>'
+                    .'<p><strong>Nom :</strong> {member_name}<br>'
+                    .'<strong>Email :</strong> {member_email}</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'member_email' => 'Adresse email du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
             ['identifier' => 'admin_password_reset'],
             [
                 'name' => 'Réinitialisation de mot de passe',
