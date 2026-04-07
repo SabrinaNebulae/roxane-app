@@ -10,6 +10,7 @@
             $ispMail   = $this->getCommandStatus('ispconfig_mail');
             $ispWeb    = $this->getCommandStatus('ispconfig_web');
             $nextcloud = $this->getCommandStatus('nextcloud');
+            $listmonk  = $this->getCommandStatus('listmonk');
             $services  = $this->getCommandStatus('services');
         @endphp
 
@@ -112,6 +113,27 @@
                 <x-filament::button
                     wire:click="mountAction('syncNextcloud')"
                     :disabled="in_array($nextcloud['status'], ['pending', 'running'])"
+                >
+                    {{ __('synchronisations.action.submit') }}
+                </x-filament::button>
+            </div>
+        </x-filament::section>
+
+        <x-filament::section>
+            <x-slot name="heading">
+                @include('filament.pages.partials.sync-heading', [
+                    'label' => __('synchronisations.sections.listmonk.heading'),
+                    'status' => $listmonk,
+                ])
+            </x-slot>
+            <div class="space-y-3">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ __('synchronisations.sections.listmonk.description') }}
+                </p>
+                @include('filament.pages.partials.sync-status', ['status' => $listmonk])
+                <x-filament::button
+                    wire:click="mountAction('syncListmonk')"
+                    :disabled="in_array($listmonk['status'], ['pending', 'running'])"
                 >
                     {{ __('synchronisations.action.submit') }}
                 </x-filament::button>

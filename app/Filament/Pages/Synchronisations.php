@@ -24,6 +24,7 @@ class Synchronisations extends Page
         'ispconfig_mail',
         'ispconfig_web',
         'nextcloud',
+        'listmonk',
         'services',
     ];
 
@@ -152,6 +153,17 @@ class Synchronisations extends Page
                 $parameters = $data['dry_run'] ? ['--dry-run' => true] : [];
                 $this->enqueueCommand('nextcloud', 'nextcloud:sync-members', $parameters);
             });
+    }
+
+    public function syncListmonkAction(): Action
+    {
+        return Action::make('syncListmonk')
+            ->requiresConfirmation()
+            ->modalHeading(__('synchronisations.sections.listmonk.modal_heading'))
+            ->modalDescription(__('synchronisations.sections.listmonk.modal_description'))
+            ->modalSubmitActionLabel(__('synchronisations.action.submit'))
+            ->disabled(fn () => in_array($this->getCommandStatus('listmonk')['status'], ['pending', 'running']))
+            ->action(fn () => $this->enqueueCommand('listmonk', 'listmonk:sync-members'));
     }
 
     public function syncServicesAction(): Action

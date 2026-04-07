@@ -46,6 +46,13 @@ return [
             'dry_run_label' => 'Mode simulation (dry-run)',
             'dry_run_helper' => 'Simule l\'opération sans effectuer de modifications.',
         ],
+        'listmonk' => [
+            'heading' => 'Listmonk',
+            'description' => 'Lie les membres à leurs comptes abonnés Listmonk (@retzien.fr).',
+            'action_label' => 'Listmonk',
+            'modal_heading' => 'Synchronisation Listmonk',
+            'modal_description' => 'Lie les membres à leurs comptes abonnés Listmonk en se basant sur leur adresse @retzien.fr.',
+        ],
         'services' => [
             'heading' => 'Services membres',
             'description' => 'Synchronise les services associés aux membres actifs.',

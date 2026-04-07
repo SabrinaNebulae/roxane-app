@@ -68,7 +68,7 @@ class SyncDolibarrMembers extends Command
                     'lastname' => $member['lastname'],
                     'firstname' => $member['firstname'],
                     'email' => $member['email'] ?: null,
-                    'retzien_email' => '',
+                    'retzien_email' => Member::extractRetzienEmail($member['email'] ?? ''),
                     'company' => $member['societe'],
                     'website_url' => $member['url'],
                     'address' => $member['address'],

@@ -113,16 +113,17 @@ class Member extends Model
         return __("members.fields.$attribute");
     }
 
+    public static function extractRetzienEmail(string $rawEmails): ?string
+    {
+        return collect(explode(';', $rawEmails))
+            ->map(fn (string $email) => trim($email))
+            ->filter(fn (string $email) => str_ends_with($email, '@retzien.fr'))
+            ->first();
+    }
+
     public function getFullNameAttribute(): string
     {
         return "{$this->firstname} {$this->lastname}";
-    }
-
-    public function getRetzienEmailAttribute(): ?string
-    {
-        $emails = explode(';', $this->email);
-
-        return collect($emails)->filter(fn ($email) => str_contains($email, '@retzien.fr'))->first();
     }
 
     public function user(): BelongsTo
@@ -164,7 +165,7 @@ class Member extends Model
 
     public function isExpired(): bool
     {
-        // Member ayant leur dernière adhésion non renouvellée de puis plus d'un mois
+        // Member ayant leur dernière adhésion non renouvellée depuis plus d'un mois
         $lastMembership = $this->lastMembership();
 
         return $lastMembership->status === 'expired' || $lastMembership->created_at->addMonths(1) < now();

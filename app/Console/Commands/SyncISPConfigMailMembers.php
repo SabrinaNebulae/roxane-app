@@ -7,20 +7,22 @@ use App\Models\IspconfigMember;
 use App\Models\Member;
 use App\Services\ISPConfig\ISPConfigMailService;
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\progress;
 
 class SyncISPConfigMailMembers extends Command
 {
     protected $signature = 'sync:ispconfig-mail-members';
+
     protected $description = 'Synchronise les services MAIL ISPConfig des membres - Email Retzien';
 
     public function handle(): void
     {
         $this->info('Synchronisation ISPConfig MAIL');
 
-        $ispMail = new ISPConfigMailService();
+        $ispMail = new ISPConfigMailService;
 
-        //Récupération de tous les mail users
+        // Récupération de tous les mail users
         $mailUsers = collect($ispMail->getAllMailUsers());
 
         $progressBar = progress(label: 'ISPConfig Mail Members import', steps: $mailUsers->count());
@@ -35,40 +37,37 @@ class SyncISPConfigMailMembers extends Command
         $synced = 0;
 
         // Parcours des membres
-        Member::whereNotNull('email')->chunk(100, function ($members) use (
+        Member::whereNotNull('retzien_email')->where('retzien_email', '!=', '')->chunk(100, function ($members) use (
             $progressBar,
             $emailToMailUserId,
             $ispMail,
             &$synced
         ) {
             foreach ($members as $member) {
-                $emails = array_map('trim', explode(';', $member->email));
+                $retzienEmail = strtolower($member->retzien_email);
 
-                $retzienEmail = collect($emails)
-                    ->map(fn ($e) => strtolower($e))
-                    ->first(fn ($e) => str_ends_with($e, '@retzien.fr'));
-
-                if (!$retzienEmail) {
+                if (! $retzienEmail) {
                     continue;
                 }
 
                 $mailUserId = $emailToMailUserId->get($retzienEmail);
 
-                if (!$mailUserId) {
+                if (! $mailUserId) {
                     $this->warn("Aucun mail user ISPConfig pour {$retzienEmail}");
+
                     continue;
                 }
 
-                //Récupération des données complètes de la boîte mail
+                // Récupération des données complètes de la boîte mail
                 $mailUserData = $ispMail->getMailUserDetails($retzienEmail);
 
                 // Création / mise à jour
                 IspconfigMember::updateOrCreate(
                     [
                         'member_id' => $member->id,
-                        //@todo : 'ispconfig_client_id' => ?,
-                        'type'      => IspconfigType::MAIL,
-                        'email'     => $retzienEmail,
+                        // @todo : 'ispconfig_client_id' => ?,
+                        'type' => IspconfigType::MAIL,
+                        'email' => $retzienEmail,
                     ],
                     [
                         'ispconfig_service_user_id' => $mailUserId,
