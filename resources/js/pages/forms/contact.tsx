@@ -1,11 +1,11 @@
-import {useEffect, useState} from "react";
-import {Form, Head, usePage} from "@inertiajs/react";
-import {LoaderCircle} from 'lucide-react';
-import ContactFormController from "@/actions/App/Http/Controllers/Forms/ContactFormController";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import InputError from "@/components/input-error";
-import {Button} from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { Form, Head, usePage } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import ContactFormController from '@/actions/App/Http/Controllers/Forms/ContactFormController';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Select,
     SelectContent,
@@ -13,16 +13,18 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
-import {Textarea} from "@/components/ui/textarea";
-import NavGuestLayout from "@/layouts/nav-guest-layout";
-import {PageProps} from "@/types";
-import {FlashMessage} from "@/components/flash-message";
+    SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import NavGuestLayout from '@/layouts/nav-guest-layout';
+import { PageProps } from '@/types';
+import { FlashMessage } from '@/components/flash-message';
+import { Container } from '@/components/common/Container';
+import { SectionHeading } from '@/components/common/SectionHeading';
+import { Footer } from '@/components/footer';
 
 export default function Contact() {
-    const {flash} = usePage().props as PageProps;
-
+    const { flash, captcha_question } = usePage().props as PageProps;
     const [showFlashMessage, setFlashMessage] = useState(!!flash);
 
     useEffect(() => {
@@ -33,167 +35,129 @@ export default function Contact() {
         }
     }, [flash]);
 
-
     return (
         <>
-            <Head title="Nous contacter"/>
-            <div
-                className="flex flex-col items-center bg-[#F5F5F5] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-                <NavGuestLayout/>
+            <Head title="Nous contacter" />
+            <div className="flex flex-col min-h-screen bg-white dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC]">
+                <div className="flex flex-col items-center px-4">
+                    <NavGuestLayout />
+                </div>
 
-                <section className="flex flex-col h-screen items-center  mt-15 gap-4">
-                    <div>
-                        <h1>Nous contacter</h1>
-                        <p>
-                            Vous désirez nous contacter, merci de remplir le formulaire suivant :
-                        </p>
-                    </div>
+                <main className="flex-1 py-12">
+                    <Container className="flex flex-col gap-10">
+                        <SectionHeading
+                            title="Nous contacter"
+                            color="primary"
+                            subtitle="Une question, une remarque ? Remplissez le formulaire ci-dessous, nous vous répondrons dans les plus brefs délais."
+                            align="left"
+                        />
 
-                    {showFlashMessage && (
-                        <FlashMessage messages={flash ?? {}} />
-                    )}
+                        {showFlashMessage && <FlashMessage messages={flash ?? {}} />}
 
-                    <Form
-                        {...ContactFormController.store.form()}
-                        resetOnSuccess
-                        disableWhileProcessing
-                    >
-                        {({processing, errors}) => (
-                            <div className="lg:w-5xl px-10">
-                                <div className="flex gap-6 w-full">
-                                    <div className="w-1/2">
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="lastname">Nom*</Label>
-                                            <Input
-                                                id="lastname"
-                                                type="text"
-                                                required
-                                                autoFocus
-                                                tabIndex={1}
-                                                autoComplete="lastname"
-                                                name="lastname"
-                                                placeholder="Nom"
-                                            />
-                                            <InputError
-                                                message={errors.name}
-                                                className="mt-2"
-                                            />
+                        <Form
+                            {...ContactFormController.store.form()}
+                            resetOnSuccess
+                            disableWhileProcessing
+                        >
+                            {({ processing, errors }) => (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl">
+
+                                    {/* Left — Identité + adresse */}
+                                    <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-4">
+                                        <h2 className="text-lg font-semibold text-primary">Vos informations</h2>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="grid gap-1">
+                                                <Label htmlFor="lastname">Nom*</Label>
+                                                <Input id="lastname" name="lastname" type="text" required tabIndex={1} autoComplete="family-name" placeholder="Votre nom" />
+                                                <InputError message={errors.lastname} />
+                                            </div>
+                                            <div className="grid gap-1">
+                                                <Label htmlFor="firstname">Prénom*</Label>
+                                                <Input id="firstname" name="firstname" type="text" required tabIndex={2} autoComplete="given-name" placeholder="Votre prénom" />
+                                                <InputError message={errors.firstname} />
+                                            </div>
                                         </div>
 
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="firstname">Prénom*</Label>
-                                            <Input
-                                                id="firstname"
-                                                type="text"
-                                                required
-                                                autoFocus
-                                                tabIndex={2}
-                                                autoComplete="firstname"
-                                                name="firstname"
-                                                placeholder="Prénom"
-                                            />
-                                            <InputError
-                                                message={errors.name}
-                                                className="mt-2"
-                                            />
+                                        <div className="grid gap-1">
+                                            <Label htmlFor="email">Adresse e-mail*</Label>
+                                            <Input id="email" name="email" type="email" required tabIndex={3} autoComplete="email" placeholder="email@exemple.com" />
+                                            <InputError message={errors.email} />
                                         </div>
 
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="email">Adresse Mail*</Label>
-                                            <Input
-                                                id="email"
-                                                type="email"
-                                                required
-                                                tabIndex={3}
-                                                autoComplete="email"
-                                                name="email"
-                                                placeholder="email@exemple.com"
-                                            />
-                                            <InputError message={errors.email}/>
-                                        </div>
-
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="address">Votre adresse postale</Label>
-                                            <Input
-                                                id="address"
-                                                type="text"
-                                                required
-                                                autoFocus
-                                                tabIndex={4}
-                                                autoComplete="address"
-                                                name="address"
-                                                placeholder="Votre adresse postale (facultatif)"
-                                            />
-                                            <InputError
-                                                message={errors.name}
-                                                className="mt-2"
-                                            />
+                                        <div className="grid gap-1">
+                                            <Label htmlFor="address">
+                                                Adresse postale <span className="text-muted-foreground text-xs">(facultatif)</span>
+                                            </Label>
+                                            <Input id="address" name="address" type="text" tabIndex={4} autoComplete="street-address" placeholder="Votre adresse postale" />
+                                            <InputError message={errors.address} />
                                         </div>
                                     </div>
 
-                                    <div className="w-1/2">
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="subject">Objet de votre demande*</Label>
-                                            <Select name="subject" required>
-                                                <SelectTrigger tabIndex={5}>
-                                                    <SelectValue placeholder="Sélectionnez un objet"/>
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        <SelectLabel>Objets</SelectLabel>
-                                                        <SelectItem value="info-request">Demande
-                                                            d'informations</SelectItem>
-                                                        <SelectItem value="service-request">Services</SelectItem>
-                                                        <SelectItem value="other">Autres</SelectItem>
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                    {/* Right — Message + captcha + submit */}
+                                    <div className="flex flex-col gap-6">
+                                        <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-4">
+                                            <h2 className="text-lg font-semibold text-primary">Votre message</h2>
+
+                                            <div className="grid gap-1">
+                                                <Label htmlFor="subject">Objet*</Label>
+                                                <Select name="subject" required>
+                                                    <SelectTrigger tabIndex={5}>
+                                                        <SelectValue placeholder="Sélectionnez un objet" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectLabel>Objets</SelectLabel>
+                                                            <SelectItem value="info-request">Demande d'informations</SelectItem>
+                                                            <SelectItem value="service-request">Services</SelectItem>
+                                                            <SelectItem value="other">Autres</SelectItem>
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                                <InputError message={errors.subject} />
+                                            </div>
+
+                                            <div className="grid gap-1">
+                                                <Label htmlFor="message">Message*</Label>
+                                                <Textarea id="message" name="message" tabIndex={6} required placeholder="Entrez votre message ici..." className="h-32 resize-none" />
+                                                <InputError message={errors.message} />
+                                            </div>
                                         </div>
 
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="message">Votre message</Label>
-                                            <Textarea
-                                                className="h-28"
-                                                id="message"
-                                                name="message"
-                                                tabIndex={6}
-                                                required
-                                                placeholder="Entrez votre message ici..."
-                                            />
-                                        </div>
+                                        <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-5">
+                                            <div className="grid gap-1">
+                                                <Label htmlFor="captcha" className="font-semibold">{captcha_question}</Label>
+                                                <Input
+                                                    id="captcha"
+                                                    name="captcha"
+                                                    type="text"
+                                                    tabIndex={7}
+                                                    placeholder="Votre réponse"
+                                                    autoComplete="off"
+                                                    className="max-w-[180px]"
+                                                />
+                                                <InputError message={errors.captcha} />
+                                            </div>
 
-                                        <div className="grid gap-2 my-4">
-                                            <Label htmlFor="captcha">Captcha</Label>
-                                            <Input
-                                                id="captcha"
-                                                type="text"
-                                                autoFocus
-                                                tabIndex={7}
-                                                name="captcha"
-                                                placeholder="Entrez le captcha ci-dessous"
-                                            />
+                                            <Button
+                                                type="submit"
+                                                variant="secondary"
+                                                tabIndex={8}
+                                                className="w-full border-3 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 font-bold text-base py-5"
+                                            >
+                                                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                                Envoyer
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mx-auto justify-center">
-                                    <Button
-                                        variant="outline"
-                                        type="submit"
-                                        className="mt-2"
-                                        tabIndex={8}
-                                        data-test="register-user-button"
-                                    >
-                                        {processing && (
-                                            <LoaderCircle className="h-4 w-4 animate-spin"/>
-                                        )}
-                                        Envoyer
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
-                    </Form>
-                </section>
+                            )}
+                        </Form>
+                    </Container>
+                </main>
+
+                <Footer />
             </div>
         </>
-    )
+    );
 }

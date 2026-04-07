@@ -54,8 +54,13 @@ export interface Plans {
     identifier: string;
     name: string;
     price: number;
-    description?: string,
-    is_active: boolean;
+    description?: string;
+    months?: number | null;
+}
+
+export interface MembershipService {
+    name: string;
+    description: string;
 }
 
 
@@ -73,6 +78,8 @@ export interface PageProps {
     flash?: FlashMessages;
     auth?: Auth;
     plans?: Plans[];
+    services?: MembershipService[];
+    captcha_question?: string;
 
     [key: string]: unknown;
 }

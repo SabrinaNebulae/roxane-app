@@ -8,6 +8,7 @@ use App\Models\MemberGroup;
 use App\Models\Package;
 use App\Notifications\MemberDeactivatedAdminNotification;
 use App\Notifications\MemberDeactivatedMemberNotification;
+use App\Notifications\MemberNewRequestAdminNotification;
 use Illuminate\Support\Facades\Notification;
 
 class MemberService
@@ -50,6 +51,9 @@ class MemberService
             'payment_status' => 'unpaid',
 
         ]);
+
+        Notification::route('mail', config('app.admin_email'))
+            ->notify(new MemberNewRequestAdminNotification($member, $package, (float) $data['amount']));
 
         event(new MemberRegistered($member));
 
