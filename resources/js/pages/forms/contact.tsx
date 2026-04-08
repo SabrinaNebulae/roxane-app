@@ -22,6 +22,7 @@ import { FlashMessage } from '@/components/flash-message';
 import { Container } from '@/components/common/Container';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { Footer } from '@/components/footer';
+import IllustrationLogo from "@/img/utils/lrl-logo-full.svg";
 
 export default function Contact() {
     const { flash, captcha_question } = usePage().props as PageProps;
@@ -50,6 +51,7 @@ export default function Contact() {
                             color="primary"
                             subtitle="Une question, une remarque ? Remplissez le formulaire ci-dessous, nous vous répondrons dans les plus brefs délais."
                             align="left"
+                            className="mx-auto"
                         />
 
                         {showFlashMessage && <FlashMessage messages={flash ?? {}} />}
@@ -60,11 +62,18 @@ export default function Contact() {
                             disableWhileProcessing
                         >
                             {({ processing, errors }) => (
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
                                     {/* Left — Identité + adresse */}
-                                    <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-4">
-                                        <h2 className="text-lg font-semibold text-primary">Vos informations</h2>
+                                    <div className="nb-shadow-static bg-primary dark:bg-[#171717] rounded-2xl p-6 flex flex-col gap-4">
+                                        <div className="lg:w-1/2 flex justify-center mx-auto">
+                                            <img
+                                                src={IllustrationLogo}
+                                                alt="Le Retzien Libre"
+                                                className="rounded-lg max-w-md w-full"
+                                            />
+                                        </div>
+                                        <h2 className="text-lg text-accent font-semibold">Vos informations</h2>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="grid gap-1">
@@ -96,7 +105,7 @@ export default function Contact() {
 
                                     {/* Right — Message + captcha + submit */}
                                     <div className="flex flex-col gap-6">
-                                        <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-4">
+                                        <div className="bg-white dark:bg-[#171717] nb-shadow-static rounded-2xl p-6 flex flex-col gap-4">
                                             <h2 className="text-lg font-semibold text-primary">Votre message</h2>
 
                                             <div className="grid gap-1">
@@ -124,7 +133,7 @@ export default function Contact() {
                                             </div>
                                         </div>
 
-                                        <div className="bg-white dark:bg-[#171717] rounded-2xl border-3 border-black p-6 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex flex-col gap-5">
+                                        <div className="bg-white dark:bg-[#171717] nb-shadow-static rounded-2xl p-6 flex flex-col gap-5">
                                             <div className="grid gap-1">
                                                 <Label htmlFor="captcha" className="font-semibold">{captcha_question}</Label>
                                                 <Input
@@ -143,10 +152,10 @@ export default function Contact() {
                                                 type="submit"
                                                 variant="secondary"
                                                 tabIndex={8}
-                                                className="w-full border-3 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 font-bold text-base py-5"
+                                                className="nb-shadow w-full font-bold text-base py-5"
                                             >
                                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                                Envoyer
+                                                Envoyer mon message
                                             </Button>
                                         </div>
                                     </div>

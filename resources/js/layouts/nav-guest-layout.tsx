@@ -50,7 +50,7 @@ export default function NavGuestLayout() {
         <>
             <header className="flex justify-between items-center my-6 w-full max-w-[335px] lg:max-w-7xl text-sm">
                 {/* Logo */}
-                <Link href={home()} className="flex items-center gap-2 font-medium no-underline">
+                <Link href={home()} className="flex items-center gap-2 font-medium no-underline text-foreground">
                     <div className="flex items-center justify-center rounded-md">
                         <AppLogo className="max-w-[200px] max-h-[42px] w-full h-auto" />
                     </div>
@@ -79,13 +79,13 @@ export default function NavGuestLayout() {
 
                     {auth.user ? (
                         <>
-                            <Link href={dashboard()} className="no-underline">
+                            <Link href={dashboard()} className="no-underline text-foreground">
                                 <Button variant="outline">Tableau de bord</Button>
                             </Link>
                             <Link
                                 href={logout()}
                                 onClick={handleLogout}
-                                className="border-3 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-2 transition delay-50 duration-200 ease-in-out font-bold no-underline"
+                                className="nb-shadow bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 font-bold no-underline"
                                 data-test="logout-button"
                             >
                                 Se déconnecter
@@ -103,7 +103,7 @@ export default function NavGuestLayout() {
                     )}
                     <button
                         onClick={toggleAppearance}
-                        className="border-3 bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-2 transition delay-50 duration-200 ease-in-out font-bold no-underline"
+                        className="nb-shadow bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 font-bold no-underline"
                         aria-label="Changer le thème"
                     >
                         {appearance === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -114,7 +114,7 @@ export default function NavGuestLayout() {
                 <div className="flex lg:hidden items-center gap-2">
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="border-3 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-2 transition delay-50 duration-200 ease-in-out font-bold no-underline"
+                        className="nb-shadow bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 font-bold no-underline"
                         aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
                         aria-expanded={isMenuOpen}
                     >
@@ -122,7 +122,7 @@ export default function NavGuestLayout() {
                     </button>
                     <button
                         onClick={toggleAppearance}
-                        className="border-3 bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-2 transition delay-50 duration-200 ease-in-out font-bold no-underline"
+                        className="nb-shadow bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 font-bold no-underline"
                         aria-label="Changer le thème"
                     >
                         {appearance === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -177,7 +177,7 @@ export default function NavGuestLayout() {
                         <div className="flex flex-col gap-3">
                             {auth.user ? (
                                 <>
-                                    <Link href={dashboard()} onClick={closeMenu} className="no-underline mx-auto mb-4">
+                                    <Link href={dashboard()} onClick={closeMenu} className="no-underline text-foreground mx-auto mb-4">
                                         <Button variant="outline" className="max-w-[150px]">Tableau de bord</Button>
                                     </Link>
                                     <Link
@@ -185,7 +185,7 @@ export default function NavGuestLayout() {
                                         method="post"
                                         as="button"
                                         onClick={() => { closeMenu(); handleLogout(); }}
-                                        className="inline-flex items-center justify-center max-w-[150px] mx-auto gap-2 whitespace-nowrap rounded-md text-sm font-bold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 border-3 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-2 transition delay-50 duration-200 ease-in-out w-full no-underline"
+                                        className="nb-shadow inline-flex items-center justify-center max-w-[150px] mx-auto gap-2 whitespace-nowrap rounded-md text-sm font-bold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full no-underline"
                                         data-test="logout-button"
                                     >
                                         Se déconnecter

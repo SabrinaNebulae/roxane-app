@@ -13,53 +13,26 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { UserMenuContent } from '@/components/user-menu-content';
+import { useAppearance } from '@/hooks/use-appearance';
 import { useInitials } from '@/hooks/use-initials';
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { cn } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { dashboard, logout } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
-import AppearanceToggleDropdown from './appearance-dropdown';
+import { Link, router, usePage } from '@inertiajs/react';
+import { LayoutGrid, LogOut, Menu, Moon, Settings, Sun, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Tableau de Bord',
         href: dashboard(),
         icon: LayoutGrid,
     },
 ];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
-
-const activeItemStyles =
-    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -69,122 +42,68 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    const cleanup = useMobileNavigation();
+    const { appearance, updateAppearance } = useAppearance();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleAppearance = () => {
+        updateAppearance(appearance === 'dark' ? 'light' : 'dark');
+    };
+
+    const closeMenu = () => setIsMenuOpen(false);
+
+    const handleLogout = () => {
+        cleanup();
+        router.flushAll();
+    };
+
+    useEffect(() => {
+        return router.on('navigate', closeMenu);
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') closeMenu();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    useEffect(() => {
+        document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [isMenuOpen]);
+
     return (
         <>
-            <div className="border-b border-sidebar-border/80">
+            <div className="border-b border-border bg-background">
                 <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-                    {/* Mobile Menu */}
-                    <div className="lg:hidden">
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="mr-2 h-[34px] w-[34px]"
-                                >
-                                    <Menu className="h-5 w-5" />
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent
-                                side="left"
-                                className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar"
-                            >
-                                <SheetTitle className="sr-only">
-                                    Navigation Menu
-                                </SheetTitle>
-                                <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
-                                </SheetHeader>
-                                <div className="flex h-full flex-1 flex-col space-y-4 p-4">
-                                    <div className="flex h-full flex-col justify-between text-sm">
-                                        <div className="flex flex-col space-y-4">
-                                            {mainNavItems.map((item) => (
-                                                <Link
-                                                    key={item.title}
-                                                    href={item.href}
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && (
-                                                        <Icon
-                                                            iconNode={item.icon}
-                                                            className="h-5 w-5"
-                                                        />
-                                                    )}
-                                                    <span>{item.title}</span>
-                                                </Link>
-                                            ))}
-                                        </div>
 
-                                        <div className="flex flex-col space-y-4">
-                                            {rightNavItems.map((item) => (
-                                                <a
-                                                    key={item.title}
-                                                    href={
-                                                        typeof item.href ===
-                                                        'string'
-                                                            ? item.href
-                                                            : item.href.url
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && (
-                                                        <Icon
-                                                            iconNode={item.icon}
-                                                            className="h-5 w-5"
-                                                        />
-                                                    )}
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </SheetContent>
-                        </Sheet>
-                    </div>
-
-                    <Link
-                        href={dashboard()}
-                        prefetch
-                        className="flex items-center space-x-2 no-underline"
-                    >
-                        <AppLogo />
+                    {/* Logo */}
+                    <Link href={dashboard()} prefetch className="flex items-center no-underline text-foreground">
+                        <AppLogo className="h-8 w-auto max-w-[180px]" />
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
+                    {/* Desktop nav */}
+                    <div className="ml-6 hidden h-full items-center lg:flex">
                         <NavigationMenu className="flex h-full items-stretch">
-                            <NavigationMenuList className="flex h-full items-stretch space-x-2">
+                            <NavigationMenuList className="flex h-full items-stretch gap-1">
                                 {mainNavItems.map((item, index) => (
-                                    <NavigationMenuItem
-                                        key={index}
-                                        className="relative flex h-full items-center"
-                                    >
+                                    <NavigationMenuItem key={index} className="relative flex h-full items-center">
                                         <Link
                                             href={item.href}
                                             className={cn(
                                                 navigationMenuTriggerStyle(),
-                                                page.url ===
-                                                    (typeof item.href ===
-                                                    'string'
-                                                        ? item.href
-                                                        : item.href.url) &&
-                                                    activeItemStyles,
-                                                'h-9 cursor-pointer px-3',
+                                                'h-9 cursor-pointer px-3 text-foreground no-underline',
+                                                page.url === (typeof item.href === 'string' ? item.href : item.href.url) &&
+                                                    'font-semibold',
                                             )}
                                         >
-                                            {item.icon && (
-                                                <Icon
-                                                    iconNode={item.icon}
-                                                    className="mr-2 h-4 w-4"
-                                                />
-                                            )}
+                                            {item.icon && <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />}
                                             {item.title}
                                         </Link>
-                                        {page.url === item.href && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
+                                        {page.url === (typeof item.href === 'string' ? item.href : item.href.url) && (
+                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-primary" />
                                         )}
                                     </NavigationMenuItem>
                                 ))}
@@ -192,66 +111,23 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </NavigationMenu>
                     </div>
 
-                    <div className="ml-auto flex items-center space-x-2">
-                        <div className="relative flex items-center space-x-1">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="group h-9 w-9 cursor-pointer"
-                            >
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
-                            </Button>
-                            <div className="hidden lg:flex">
-                                {rightNavItems.map((item) => (
-                                    <TooltipProvider
-                                        key={item.title}
-                                        delayDuration={0}
-                                    >
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <a
-                                                    href={
-                                                        typeof item.href ===
-                                                        'string'
-                                                            ? item.href
-                                                            : item.href.url
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="group ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium text-accent-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                                                >
-                                                    <span className="sr-only">
-                                                        {item.title}
-                                                    </span>
-                                                    {item.icon && (
-                                                        <Icon
-                                                            iconNode={item.icon}
-                                                            className="size-5 opacity-80 group-hover:opacity-100"
-                                                        />
-                                                    )}
-                                                </a>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>{item.title}</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ))}
-                            </div>
-                        </div>
-                        <AppearanceToggleDropdown />
+                    {/* Right actions */}
+                    <div className="ml-auto flex items-center gap-2">
+                        {/* Theme toggle — desktop only */}
+                        <button
+                            onClick={toggleAppearance}
+                            className="hidden lg:flex nb-shadow bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 font-bold"
+                            aria-label="Changer le thème"
+                        >
+                            {appearance === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
+                        </button>
+
+                        {/* Avatar dropdown — always visible */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="size-10 rounded-full p-1"
-                                >
+                                <Button variant="secondary" className="size-10 rounded-full mr-2">
                                     <Avatar className="size-8 overflow-hidden rounded-full">
-                                        <AvatarImage
-                                            src={auth.user.avatar}
-                                            alt={auth.user.name}
-                                        />
-                                        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                        <AvatarFallback className="rounded-full bg-secondary text-secondary-foreground font-semibold text-sm">
                                             {getInitials(auth.user.name)}
                                         </AvatarFallback>
                                     </Avatar>
@@ -261,12 +137,109 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <UserMenuContent user={auth.user} />
                             </DropdownMenuContent>
                         </DropdownMenu>
+
+                        {/* Hamburger — mobile only */}
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="flex lg:hidden nb-shadow bg-primary text-secondary-foreground hover:bg-primary/80 h-10 px-4 py-2 font-bold"
+                            aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                            aria-expanded={isMenuOpen}
+                        >
+                            {isMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Mobile menu */}
+            {isMenuOpen && (
+                <>
+                    <div
+                        className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+                        onClick={closeMenu}
+                        aria-hidden="true"
+                    />
+                    <div className="fixed inset-x-0 top-0 z-50 lg:hidden bg-[#F5F5F5] dark:bg-[#0a0a0a] border-b-4 border-black flex flex-col gap-6 p-6">
+                        {/* Header du panel */}
+                        <div className="flex justify-between items-center">
+                            <Link href={dashboard()} onClick={closeMenu} className="flex items-center gap-2 no-underline text-foreground">
+                                <AppLogoIcon className="size-8" />
+                                <span className="font-bold text-foreground">Le Retzien Libre</span>
+                            </Link>
+                            <button
+                                onClick={closeMenu}
+                                className="p-2 rounded-md border border-black/20 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition"
+                                aria-label="Fermer le menu"
+                            >
+                                <X className="size-5" />
+                            </button>
+                        </div>
+
+                        {/* Nav links */}
+                        <nav className="flex flex-col">
+                            {mainNavItems.map((item) => (
+                                <Link
+                                    key={item.title}
+                                    href={item.href}
+                                    onClick={closeMenu}
+                                    className="flex items-center gap-2 text-lg py-3 border-b border-black/10 dark:border-white/10 no-underline text-foreground hover:underline"
+                                >
+                                    {item.icon && <Icon iconNode={item.icon} className="size-5" />}
+                                    <span>{item.title}</span>
+                                </Link>
+                            ))}
+                        </nav>
+
+                        {/* Theme toggle */}
+                        <button
+                            onClick={toggleAppearance}
+                            className="flex items-center gap-2 text-lg py-3 border-b border-black/10 dark:border-white/10 text-foreground hover:underline w-full"
+                            aria-label="Changer le thème"
+                        >
+                            {appearance === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+                            <span>{appearance === 'dark' ? 'Mode clair' : 'Mode sombre'}</span>
+                        </button>
+
+                        {/* User actions */}
+                        <div className="flex flex-col gap-3">
+                            <div className="flex items-center gap-3 py-2 border-b border-black/10 dark:border-white/10">
+                                <Avatar className="size-8 rounded-full">
+                                    <AvatarFallback className="rounded-full bg-secondary text-secondary-foreground font-semibold text-sm">
+                                        {getInitials(auth.user.name)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold text-foreground">{auth.user.name}</span>
+                                    <span className="text-xs text-muted-foreground">{auth.user.email}</span>
+                                </div>
+                            </div>
+                            <Link
+                                href="/profile/edit"
+                                onClick={closeMenu}
+                                className="flex items-center gap-2 text-lg py-3 border-b border-black/10 dark:border-white/10 no-underline text-foreground hover:underline"
+                            >
+                                <Settings className="size-5" />
+                                <span>Paramètres</span>
+                            </Link>
+                            <Link
+                                href={logout()}
+                                method="post"
+                                as="button"
+                                onClick={() => { closeMenu(); handleLogout(); }}
+                                className="flex bg-primary items-center gap-2 text-lg py-3 no-underline text-foreground hover:underline border-black border-3 shadow-[4px_4px_0px_rgba(0,0,0,1)]"
+                                data-test="logout-button"
+                            >
+                                <LogOut className="size-5" />
+                                <span>Se déconnecter</span>
+                            </Link>
+                        </div>
+                    </div>
+                </>
+            )}
+
             {breadcrumbs.length > 1 && (
-                <div className="flex w-full border-b border-sidebar-border/70">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
+                <div className="flex w-full border-b border-border">
+                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-muted-foreground md:max-w-7xl">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                     </div>
                 </div>

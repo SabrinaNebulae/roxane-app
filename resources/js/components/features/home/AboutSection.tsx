@@ -9,7 +9,7 @@ export function AboutSection() {
                                 subtitle="Le Retzien Libre, c’est une association qui promeut l’auto-hébergement et la décentralisation des services en ligne depuis 2017."
                                 align='left'/>
                 <div
-                    className="bg-white rounded-4xl border-3 border-black mt-10 px-10 pt-20 pb-10 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    className="nb-shadow-static bg-white rounded-4xl mt-10 px-10 pt-20 pb-10">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="flex flex-col gap-3 lg:border-r-2 border-black lg:pr-10 border-0">
                             <h3 className="text-xl text-primary font-semibold">Une association locale</h3>
