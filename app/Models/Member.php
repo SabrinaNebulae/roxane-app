@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -150,6 +151,11 @@ class Member extends Model
     public function nextcloudAccounts(): HasMany
     {
         return $this->hasMany(NextCloudMember::class, 'member_id');
+    }
+
+    public function lastActiveMembership(): HasOne
+    {
+        return $this->hasOne(Membership::class)->where('status', 'active')->latest();
     }
 
     public function lastMembership(): ?Membership

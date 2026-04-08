@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -32,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Package $package
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Service> $services
  * @property-read int|null $services_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership query()
@@ -53,6 +52,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Membership whereValidationDate($value)
+ *
  * @mixin \Eloquent
  */
 class Membership extends Model
@@ -71,9 +71,8 @@ class Membership extends Model
         'note_public',
         'note_private',
         'dolibarr_id',
-        'dolibarr_user_id'
+        'dolibarr_user_id',
     ];
-
 
     public static function getAttributeLabel(string $attribute): string
     {
@@ -97,7 +96,7 @@ class Membership extends Model
 
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Service::class, 'services_memberships', 'membership_id', 'service_id');
+        return $this->belongsToMany(Service::class, 'services_memberships', 'membership_id', 'service_id')
+            ->withPivot('is_active');
     }
-
 }

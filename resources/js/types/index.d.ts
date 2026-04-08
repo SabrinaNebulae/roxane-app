@@ -74,12 +74,47 @@ export interface Service {
     illustration: string;
 }
 
+export interface DashboardService {
+    identifier: string;
+    name: string;
+    description: string | null;
+    url: string;
+    icon: string | null;
+    is_active: boolean;
+}
+
+export interface DashboardPackage {
+    identifier: string;
+    name: string;
+    description: string | null;
+    price: string;
+}
+
+export interface DashboardMembership {
+    status: string;
+    payment_status: string;
+    start_date: string | null;
+    end_date: string | null;
+    amount: string;
+    package: DashboardPackage | null;
+    services: DashboardService[];
+}
+
+export interface DashboardMember {
+    firstname: string | null;
+    lastname: string | null;
+    email: string;
+    retzien_email: string;
+    membership: DashboardMembership | null;
+}
+
 export interface PageProps {
     flash?: FlashMessages;
     auth?: Auth;
     plans?: Plans[];
     services?: MembershipService[];
     captcha_question?: string;
+    member?: DashboardMember | null;
 
     [key: string]: unknown;
 }
