@@ -30,8 +30,6 @@ Route::get('/test-dolibarr', function () {
 });
 */
 
-
-
 // Test ISPConfig
 /*Route::get('/test/sync-ispconfig', function () {
 
@@ -54,3 +52,4 @@ Route::get('/test/isp-mails', function() {
     return $ispService->getAllMailDomains();
 });*/
 
+// Test info user on Front

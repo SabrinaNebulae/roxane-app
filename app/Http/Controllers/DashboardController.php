@@ -23,7 +23,7 @@ class DashboardController extends Controller
             ->first();
 
         return Inertia::render('dashboard', [
-            'member' => $member ? new MemberResource($member) : null,
+            'member' => $member ? (new MemberResource($member))->resolve() : null,
         ]);
     }
 
