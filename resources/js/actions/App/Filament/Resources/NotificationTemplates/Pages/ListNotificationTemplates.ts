@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
 * @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
@@ -42,42 +42,5 @@ ListNotificationTemplates.head = (options?: RouteQueryOptions): RouteDefinition<
     url: ListNotificationTemplates.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
-* @route '/admin/notification-templates'
-*/
-const ListNotificationTemplatesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: ListNotificationTemplates.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
-* @route '/admin/notification-templates'
-*/
-ListNotificationTemplatesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: ListNotificationTemplates.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
-* @route '/admin/notification-templates'
-*/
-ListNotificationTemplatesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: ListNotificationTemplates.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-ListNotificationTemplates.form = ListNotificationTemplatesForm
 
 export default ListNotificationTemplates

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
 * @see app/Filament/Resources/Members/Pages/EditMember.php:7
@@ -60,42 +60,5 @@ EditMember.head = (args: { record: string | number } | [record: string | number 
     url: EditMember.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
-* @see app/Filament/Resources/Members/Pages/EditMember.php:7
-* @route '/admin/members/{record}/edit'
-*/
-const EditMemberForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMember.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
-* @see app/Filament/Resources/Members/Pages/EditMember.php:7
-* @route '/admin/members/{record}/edit'
-*/
-EditMemberForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMember.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
-* @see app/Filament/Resources/Members/Pages/EditMember.php:7
-* @route '/admin/members/{record}/edit'
-*/
-EditMemberForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMember.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-EditMember.form = EditMemberForm
 
 export default EditMember

@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="flex flex-col lg:flex-row justify-between gap-8">
                         <div className="flex flex-col gap-3">
                             <Link href={home()} className="flex items-center gap-2 no-underline">
-                                <AppLogoIcon className="size-8 text-[var(--foreground)] dark:text-white"/>
+                                <AppLogoIcon variant="white" className="size-8" />
                                 <span className="font-bold text-white text-lg">Le Retzien Libre</span>
                             </Link>
                             <p className="text-sm max-w-xs">
@@ -30,9 +30,9 @@ export function Footer() {
                             &copy; {currentYear} Le Retzien Libre. Tous droits réservés.
                         </div>
                         <div className="flex items-stretch text-right">
-                            <Link href="#" className="text-sm text-white underline mx-4 hover:underline">Mentions Légales</Link>
-                            <Link href="#" className="text-sm text-white underline mx-4 hover:underline">CGU</Link>
-                            <Link href={"#"} className="text-sm text-white underline mx-4 hover:underline">Confidentialité</Link>
+                            <Link href="/mentions-legales" className="text-sm text-white underline mx-4 hover:no-underline">Mentions légales</Link>
+                            <Link href="/conditions-generales" className="text-sm text-white underline mx-4 hover:no-underline">CGU</Link>
+                            <Link href="/confidentialite" className="text-sm text-white underline mx-4 hover:no-underline">Confidentialité</Link>
                         </div>
 
                     </div>

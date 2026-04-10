@@ -24,7 +24,7 @@ export default function AuthSimpleLayout({
                             className="flex flex-col items-center font-medium no-underline"
                         >
                             <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 text-[var(--foreground)] dark:text-white" />
+                                <AppLogoIcon className="size-9" />
                             </div>
                             <h1 className="text-black">Le Retzien Libre</h1>
                         </Link>

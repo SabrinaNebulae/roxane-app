@@ -145,7 +145,7 @@ export default function NavGuestLayout() {
                         {/* En-tête du panel */}
                         <div className="flex justify-between items-center">
                             <Link href={home()} onClick={closeMenu} className="flex items-center gap-2 no-underline">
-                                <AppLogoIcon className="size-8 text-[var(--foreground)] dark:text-white" />
+                                <AppLogoIcon className="size-8" />
                                 <span className="font-bold text-black dark:text-white">Le Retzien Libre</span>
                             </Link>
                             <button

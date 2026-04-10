@@ -6,6 +6,7 @@ import { AboutSection } from '@/components/features/home/AboutSection';
 import { AlternativeSection } from '@/components/features/home/AlternativeSection';
 import { Footer } from '@/components/footer';
 import { ScrollToTop } from '@/components/common/ScrollToTop';
+import { PawsScrollAnimation } from '@/components/features/home/PawsScrollAnimation';
 
 export default function Welcome() {
     return (
@@ -23,6 +24,8 @@ export default function Welcome() {
                 </main>
                 <Footer />
             </div>
+            <PawsScrollAnimation elementId="hero" side="right" />
+            <PawsScrollAnimation elementId="alternative" side="left" />
             <ScrollToTop />
         </>
     );

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\MemberGroups\Pages\EditMemberGroup::__invoke
 * @see app/Filament/Resources/MemberGroups/Pages/EditMemberGroup.php:7
@@ -60,42 +60,5 @@ EditMemberGroup.head = (args: { record: string | number } | [record: string | nu
     url: EditMemberGroup.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\MemberGroups\Pages\EditMemberGroup::__invoke
-* @see app/Filament/Resources/MemberGroups/Pages/EditMemberGroup.php:7
-* @route '/admin/member-groups/{record}/edit'
-*/
-const EditMemberGroupForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMemberGroup.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\MemberGroups\Pages\EditMemberGroup::__invoke
-* @see app/Filament/Resources/MemberGroups/Pages/EditMemberGroup.php:7
-* @route '/admin/member-groups/{record}/edit'
-*/
-EditMemberGroupForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMemberGroup.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\MemberGroups\Pages\EditMemberGroup::__invoke
-* @see app/Filament/Resources/MemberGroups/Pages/EditMemberGroup.php:7
-* @route '/admin/member-groups/{record}/edit'
-*/
-EditMemberGroupForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMemberGroup.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-EditMemberGroup.form = EditMemberGroupForm
 
 export default EditMemberGroup

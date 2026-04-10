@@ -3,13 +3,9 @@ import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { dashboard, membership } from '@/routes';
 import { type SharedData } from '@/types';
-import illustrationImage from '@/img/utils/lrl-illustration.png';
-import PawsDecoration from '@/components/common/PawsDecoration';
-import { useParallax } from '@/hooks/use-parallax';
-
+import illustrationImage from '@/img/utils/lrl-illustration.svg';
 export function HeroSection() {
     const { auth } = usePage<SharedData>().props;
-    const pawsRef = useParallax<HTMLDivElement>(0.12);
 
     const scrollToFirstSection = () => {
         document.getElementById('first-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -18,7 +14,7 @@ export function HeroSection() {
     return (
         <section
             id="hero"
-            className="relative flex flex-col w-full max-w-[335px] lg:max-w-7xl mx-auto min-h-[calc(100vh-80px)] px-4"
+            className="relative flex flex-col w-full max-w-[500px] lg:max-w-7xl mx-auto min-h-[calc(100vh-80px)] px-4"
         >
             {/* Contenu principal */}
             <div className="flex flex-1 items-center justify-center gap-4 w-full">
@@ -42,12 +38,8 @@ export function HeroSection() {
                     )}
                 </div>
                 <div className="hidden lg:flex w-full items-center justify-center">
-                    <img src={illustrationImage} alt="Illustration Le Retzien Libre" className="max-w-md w-full" />
+                    <img src={illustrationImage} alt="Illustration Le Retzien Libre" className="max-w-lg w-full" />
                 </div>
-            </div>
-
-            <div ref={pawsRef} className="absolute bottom-12 right-0 pointer-events-none hidden lg:block w-48 opacity-40">
-                <PawsDecoration className="w-full h-auto" />
             </div>
 
             {/* Flèche vers la première section */}

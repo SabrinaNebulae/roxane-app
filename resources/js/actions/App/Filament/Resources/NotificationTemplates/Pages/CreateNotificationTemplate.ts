@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
 * @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
@@ -42,42 +42,5 @@ CreateNotificationTemplate.head = (options?: RouteQueryOptions): RouteDefinition
     url: CreateNotificationTemplate.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
-* @route '/admin/notification-templates/create'
-*/
-const CreateNotificationTemplateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateNotificationTemplate.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
-* @route '/admin/notification-templates/create'
-*/
-CreateNotificationTemplateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateNotificationTemplate.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
-* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
-* @route '/admin/notification-templates/create'
-*/
-CreateNotificationTemplateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateNotificationTemplate.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-CreateNotificationTemplate.form = CreateNotificationTemplateForm
 
 export default CreateNotificationTemplate

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
 * @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
@@ -32,28 +32,6 @@ uploadFile.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: uploadFile.url(options),
     method: 'post',
 })
-
-/**
-* @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
-* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
-* @route '/livewire/upload-file'
-*/
-const uploadFileForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadFile.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
-* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
-* @route '/livewire/upload-file'
-*/
-uploadFileForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: uploadFile.url(options),
-    method: 'post',
-})
-
-uploadFile.form = uploadFileForm
 
 /**
 * @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
@@ -118,43 +96,6 @@ previewFile.head = (args: { filename: string | number } | [filename: string | nu
 })
 
 /**
-* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
-* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
-* @route '/livewire/preview-file/{filename}'
-*/
-const previewFileForm = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewFile.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
-* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
-* @route '/livewire/preview-file/{filename}'
-*/
-previewFileForm.get = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewFile.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \Livewire\Features\SupportFileUploads\FilePreviewController::previewFile
-* @see vendor/livewire/livewire/src/Features/SupportFileUploads/FilePreviewController.php:18
-* @route '/livewire/preview-file/{filename}'
-*/
-previewFileForm.head = (args: { filename: string | number } | [filename: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: previewFile.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-previewFile.form = previewFileForm
-
-/**
 * @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
 * @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:109
 * @route '/livewire/update'
@@ -187,28 +128,6 @@ update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: update.url(options),
     method: 'post',
 })
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:109
-* @route '/livewire/update'
-*/
-const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:109
-* @route '/livewire/update'
-*/
-updateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(options),
-    method: 'post',
-})
-
-update.form = updateForm
 
 const livewire = {
     uploadFile: Object.assign(uploadFile, uploadFile),

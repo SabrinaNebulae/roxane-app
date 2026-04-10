@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
 * @see app/Filament/Resources/Members/Pages/CreateMember.php:7
@@ -42,42 +42,5 @@ CreateMember.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: CreateMember.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
-* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
-* @route '/admin/members/create'
-*/
-const CreateMemberForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateMember.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
-* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
-* @route '/admin/members/create'
-*/
-CreateMemberForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateMember.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
-* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
-* @route '/admin/members/create'
-*/
-CreateMemberForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: CreateMember.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-CreateMember.form = CreateMemberForm
 
 export default CreateMember

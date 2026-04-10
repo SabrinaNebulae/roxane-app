@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \Filament\Pages\Dashboard::__invoke
 * @see vendor/filament/filament/src/Pages/Dashboard.php:7
@@ -44,43 +44,6 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \Filament\Pages\Dashboard::__invoke
-* @see vendor/filament/filament/src/Pages/Dashboard.php:7
-* @route '/admin'
-*/
-const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Filament\Pages\Dashboard::__invoke
-* @see vendor/filament/filament/src/Pages/Dashboard.php:7
-* @route '/admin'
-*/
-dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url(options),
-    method: 'get',
-})
-
-/**
-* @see \Filament\Pages\Dashboard::__invoke
-* @see vendor/filament/filament/src/Pages/Dashboard.php:7
-* @route '/admin'
-*/
-dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: dashboard.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-dashboard.form = dashboardForm
-
-/**
 * @see \App\Filament\Pages\Synchronisations::__invoke
 * @see app/Filament/Pages/Synchronisations.php:7
 * @route '/admin/synchronisations'
@@ -123,43 +86,6 @@ synchronisations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
     url: synchronisations.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Pages\Synchronisations::__invoke
-* @see app/Filament/Pages/Synchronisations.php:7
-* @route '/admin/synchronisations'
-*/
-const synchronisationsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: synchronisations.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Pages\Synchronisations::__invoke
-* @see app/Filament/Pages/Synchronisations.php:7
-* @route '/admin/synchronisations'
-*/
-synchronisationsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: synchronisations.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Pages\Synchronisations::__invoke
-* @see app/Filament/Pages/Synchronisations.php:7
-* @route '/admin/synchronisations'
-*/
-synchronisationsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: synchronisations.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-synchronisations.form = synchronisationsForm
 
 const pages = {
     dashboard: Object.assign(dashboard, dashboard),

@@ -2,8 +2,13 @@ import { type Service } from '@/types';
 import { ServiceCard } from './ServiceCard';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { Container } from '@/components/common/Container';
-import PawsDecoration from '@/components/common/PawsDecoration';
-import { useParallax } from '@/hooks/use-parallax';
+
+import IllustrationMail from '@/img/utils/service-mail.svg';
+import IllustrationCloud from '@/img/utils/service-cloud.svg';
+import IllustrationHosting from '@/img/utils/service-webhosting.svg';
+import IllustrationShare from '@/img/utils/service-share.svg';
+import IllustrationMailing from '@/img/utils/service-mailing-marketing.svg';
+import IllustrationSurvey from '@/img/utils/service-survey.svg';
 
 const services: Service[] = [
     {
@@ -12,8 +17,9 @@ const services: Service[] = [
         colorTitle: 'white',
         bgTitle: 'accent',
         bgColor: 'secondary',
+        descriptionColor: 'black',
         link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
+        illustration: IllustrationMail
     },
     {
         title: 'Stockage Cloud',
@@ -21,26 +27,29 @@ const services: Service[] = [
         colorTitle: 'black',
         bgTitle: 'white',
         bgColor: 'primary',
+        descriptionColor: 'black',
         link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
-    },
-    {
-        title: 'Hébergement de site',
-        description: "Solutions d'hébergement web éthiques et performantes",
-        colorTitle: 'black',
-        bgTitle: 'primary',
-        bgColor: 'accent',
-        link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
+        illustration: IllustrationCloud
     },
     {
         title: 'Email Marketing',
         description: "Gérez vos communications de groupe efficacement",
         colorTitle: 'black',
+        bgTitle: 'primary',
+        bgColor: 'accent',
+        descriptionColor: 'white',
+        link: '#',
+        illustration: IllustrationMailing
+    },
+    {
+        title: 'Hébergement de site',
+        description: "Solutions d'hébergement web éthiques et performantes",
+        colorTitle: 'black',
         bgTitle: 'secondary',
         bgColor: 'gray',
+        descriptionColor: 'black',
         link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
+        illustration: IllustrationHosting
     },
     {
         title: 'Partage de fichiers',
@@ -48,8 +57,9 @@ const services: Service[] = [
         colorTitle: 'black',
         bgTitle: 'white',
         bgColor: 'primary',
+        descriptionColor: 'black',
         link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
+        illustration: IllustrationShare
     },
     {
         title: 'Outil de Sondage',
@@ -57,20 +67,16 @@ const services: Service[] = [
         colorTitle: 'black',
         bgTitle: 'primary',
         bgColor: 'accent',
+        descriptionColor: 'white',
         link: '#',
-        illustration: '../../img/utils/lrl-logo.svg'
+        illustration: IllustrationSurvey
     },
 
 ];
 
 export function ServicesSection() {
-    const pawsRef = useParallax<HTMLDivElement>(0.08);
-
     return (
         <section id="first-section" className="relative overflow-hidden w-full bg-white py-16">
-            <div ref={pawsRef} className="absolute -top-4 left-0 pointer-events-none hidden lg:block w-48 opacity-30">
-                <PawsDecoration className="w-full h-auto" />
-            </div>
             <Container className="flex flex-col gap-10">
                 <SectionHeading
                     title="Nos services"

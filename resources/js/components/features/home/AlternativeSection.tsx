@@ -8,7 +8,7 @@ export function AlternativeSection() {
     const { auth } = usePage<SharedData>().props;
 
     return (
-        <section className="w-full py-16">
+        <section id="alternative" className="w-full py-16">
             <div className="bg-gray-100 rounded-4xl max-w-7xl mx-auto px-4">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     <div className="lg:w-1/2 flex justify-center">

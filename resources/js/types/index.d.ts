@@ -69,6 +69,7 @@ export interface Service {
     colorTitle: string;
     bgTitle: string;
     bgColor: string;
+    descriptionColor: string;
     description: string;
     link: string;
     illustration: string;

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Memberships\Pages\EditMembership::__invoke
 * @see app/Filament/Resources/Memberships/Pages/EditMembership.php:7
@@ -60,42 +60,5 @@ EditMembership.head = (args: { record: string | number } | [record: string | num
     url: EditMembership.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Filament\Resources\Memberships\Pages\EditMembership::__invoke
-* @see app/Filament/Resources/Memberships/Pages/EditMembership.php:7
-* @route '/admin/memberships/{record}/edit'
-*/
-const EditMembershipForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMembership.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Memberships\Pages\EditMembership::__invoke
-* @see app/Filament/Resources/Memberships/Pages/EditMembership.php:7
-* @route '/admin/memberships/{record}/edit'
-*/
-EditMembershipForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMembership.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Filament\Resources\Memberships\Pages\EditMembership::__invoke
-* @see app/Filament/Resources/Memberships/Pages/EditMembership.php:7
-* @route '/admin/memberships/{record}/edit'
-*/
-EditMembershipForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: EditMembership.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-EditMembership.form = EditMembershipForm
 
 export default EditMembership

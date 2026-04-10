@@ -3,7 +3,7 @@ import {Button} from '@/components/ui/button';
 
 export function AboutSection() {
     return (
-        <section className="w-full py-16">
+        <section id="about-section" className="w-full py-16">
             <div className="max-w-7xl mx-auto px-4">
                 <SectionHeading title="Qui sommes-nous ?" color="secondary"
                                 subtitle="Le Retzien Libre, c’est une association qui promeut l’auto-hébergement et la décentralisation des services en ligne depuis 2017."
