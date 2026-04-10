@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Members\Pages\ListMembers::__invoke
 * @see app/Filament/Resources/Members/Pages/ListMembers.php:7
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Filament\Resources\Members\Pages\ListMembers::__invoke
+* @see app/Filament/Resources/Members/Pages/ListMembers.php:7
+* @route '/admin/members'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\ListMembers::__invoke
+* @see app/Filament/Resources/Members/Pages/ListMembers.php:7
+* @route '/admin/members'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\ListMembers::__invoke
+* @see app/Filament/Resources/Members/Pages/ListMembers.php:7
+* @route '/admin/members'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
 * @see app/Filament/Resources/Members/Pages/CreateMember.php:7
 * @route '/admin/members/create'
@@ -86,6 +123,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
+* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
+* @route '/admin/members/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
+* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
+* @route '/admin/members/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\CreateMember::__invoke
+* @see app/Filament/Resources/Members/Pages/CreateMember.php:7
+* @route '/admin/members/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
 
 /**
 * @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
@@ -148,6 +222,43 @@ edit.head = (args: { record: string | number } | [record: string | number ] | st
     url: edit.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
+* @see app/Filament/Resources/Members/Pages/EditMember.php:7
+* @route '/admin/members/{record}/edit'
+*/
+const editForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
+* @see app/Filament/Resources/Members/Pages/EditMember.php:7
+* @route '/admin/members/{record}/edit'
+*/
+editForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Members\Pages\EditMember::__invoke
+* @see app/Filament/Resources/Members/Pages/EditMember.php:7
+* @route '/admin/members/{record}/edit'
+*/
+editForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
 
 const members = {
     index: Object.assign(index, index),

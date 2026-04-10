@@ -4,7 +4,11 @@ namespace App\Filament\Resources\Members\Schemas;
 
 use App\Enums\IspconfigType;
 use App\Filament\Actions\ServiceToggleAction;
+use App\Filament\Resources\Memberships\MembershipResource;
+use App\Models\ListmonkMember;
 use App\Models\Member;
+use App\Models\Membership;
+use App\Models\Package;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -159,11 +163,7 @@ class MemberForm
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(2),
-                                                    ])
-                                                    ->visible(fn (?Member $record) => $record?->ispconfigs()
-                                                        ->where('type', IspconfigType::MAIL)
-                                                        ->exists()
-                                                    ),
+                                                    ]),
 
                                                 Section::make(__('members.sections.ispconfig_web'))
                                                     ->afterHeader([
@@ -202,11 +202,7 @@ class MemberForm
                                                             ])
                                                             ->columns(3),
 
-                                                    ])
-                                                    ->visible(fn (?Member $record) => $record?->ispconfigs()
-                                                        ->where('type', IspconfigType::WEB)
-                                                        ->exists()
-                                                    ),
+                                                    ]),
 
                                                 Section::make(__('members.sections.nextcloud'))
                                                     ->afterHeader([
@@ -244,10 +240,34 @@ class MemberForm
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(3),
+                                                    ]),
+
+                                                Section::make(__('members.sections.listmonk'))
+                                                    ->afterHeader([
+                                                        ServiceToggleAction::forService('listmonk'),
                                                     ])
-                                                    ->visible(fn (?Member $record) => $record?->nextcloudAccounts()
-                                                        ->exists()
-                                                    ),
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        RepeatableEntry::make('listmonk_accounts')
+                                                            ->label(__('members.ispconfig.listmonk_data'))
+                                                            ->state(fn (?Member $record) => $record?->listmonkMembers()
+                                                                ->get()
+                                                                ->map(fn (ListmonkMember $lm) => $lm->toArray())
+                                                                ->all()
+                                                            )
+                                                            ->schema([
+                                                                TextEntry::make('listmonk_user_id')
+                                                                    ->label(__('members.ispconfig.listmonk_id')),
+                                                                ViewEntry::make('data')
+                                                                    ->label('JSON')
+                                                                    ->view('filament.components.json-viewer')
+                                                                    ->viewData(fn ($state) => [
+                                                                        'data' => $state,
+                                                                    ])
+                                                                    ->columnSpanFull(),
+                                                            ])
+                                                            ->columns(2),
+                                                    ]),
                                             ]),
                                     ])
                                     ->contained(false),
@@ -285,9 +305,59 @@ class MemberForm
                                 Section::make(__('members.sections.actions'))
                                     ->collapsible()
                                     ->schema([
+                                        Action::make('create-membership')
+                                            ->label(__('members.actions.create_membership'))
+                                            ->icon('heroicon-o-plus-circle')
+                                            ->color('primary')
+                                            ->modalHeading(__('members.actions.create_membership'))
+                                            ->modalSubmitActionLabel(__('members.actions.create_membership_submit'))
+                                            ->form([
+                                                Select::make('package_id')
+                                                    ->label(Membership::getAttributeLabel('package_id'))
+                                                    ->options(fn () => Package::all()->pluck('name', 'id'))
+                                                    ->searchable()
+                                                    ->required(),
+                                                Select::make('status')
+                                                    ->label(Membership::getAttributeLabel('status'))
+                                                    ->options([
+                                                        'pending' => Membership::getAttributeLabel('pending'),
+                                                        'active' => Membership::getAttributeLabel('active'),
+                                                    ])
+                                                    ->default('pending')
+                                                    ->required(),
+                                                Select::make('payment_status')
+                                                    ->label(Membership::getAttributeLabel('payment_status'))
+                                                    ->options([
+                                                        'paid' => Membership::getAttributeLabel('paid'),
+                                                        'unpaid' => Membership::getAttributeLabel('unpaid'),
+                                                        'partial' => Membership::getAttributeLabel('partial'),
+                                                    ])
+                                                    ->default('unpaid')
+                                                    ->required(),
+                                                TextInput::make('amount')
+                                                    ->label(Membership::getAttributeLabel('amount'))
+                                                    ->numeric()
+                                                    ->default(0)
+                                                    ->required(),
+                                                DatePicker::make('start_date')
+                                                    ->label(Membership::getAttributeLabel('start_date'))
+                                                    ->default(now()),
+                                                DatePicker::make('end_date')
+                                                    ->label(Membership::getAttributeLabel('end_date')),
+                                            ])
+                                            ->action(function (array $data, Member $record) {
+                                                $membership = $record->memberships()->create([
+                                                    'admin_id' => auth()->id(),
+                                                    ...$data,
+                                                ]);
+
+                                                return redirect(MembershipResource::getUrl('edit', ['record' => $membership->id]));
+                                            }),
+
                                         Action::make('send-payment-mail')
                                             ->label(__('members.actions.send_payment_mail'))
                                             ->icon('heroicon-o-envelope')
+                                            ->color('primary')
                                             ->action(function () {
                                                 // Mail de paiement pour nouvelle inscription (Job)
                                             }),
@@ -295,6 +365,7 @@ class MemberForm
                                         Action::make('send-renewal-mail')
                                             ->label(__('members.actions.send_renewal_mail'))
                                             ->icon('heroicon-o-envelope')
+                                            ->color('primary')
                                             ->action(function () {
                                                 // Mail de relance à créer (Job)
                                             }),

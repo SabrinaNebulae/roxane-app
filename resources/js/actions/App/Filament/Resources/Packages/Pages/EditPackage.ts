@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Packages\Pages\EditPackage::__invoke
 * @see app/Filament/Resources/Packages/Pages/EditPackage.php:7
@@ -60,5 +60,42 @@ EditPackage.head = (args: { record: string | number } | [record: string | number
     url: EditPackage.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\EditPackage::__invoke
+* @see app/Filament/Resources/Packages/Pages/EditPackage.php:7
+* @route '/admin/packages/{record}/edit'
+*/
+const EditPackageForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditPackage.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\EditPackage::__invoke
+* @see app/Filament/Resources/Packages/Pages/EditPackage.php:7
+* @route '/admin/packages/{record}/edit'
+*/
+EditPackageForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditPackage.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\EditPackage::__invoke
+* @see app/Filament/Resources/Packages/Pages/EditPackage.php:7
+* @route '/admin/packages/{record}/edit'
+*/
+EditPackageForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditPackage.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+EditPackage.form = EditPackageForm
 
 export default EditPackage

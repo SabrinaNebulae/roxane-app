@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see routes/web.php:20
 * @route '/mentions-legales'
@@ -38,6 +38,40 @@ mentions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: mentions.url(options),
     method: 'head',
 })
+
+/**
+* @see routes/web.php:20
+* @route '/mentions-legales'
+*/
+const mentionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: mentions.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:20
+* @route '/mentions-legales'
+*/
+mentionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: mentions.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:20
+* @route '/mentions-legales'
+*/
+mentionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: mentions.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+mentions.form = mentionsForm
 
 /**
 * @see routes/web.php:21
@@ -80,6 +114,40 @@ cgu.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see routes/web.php:21
+* @route '/conditions-generales'
+*/
+const cguForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: cgu.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:21
+* @route '/conditions-generales'
+*/
+cguForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: cgu.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:21
+* @route '/conditions-generales'
+*/
+cguForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: cgu.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+cgu.form = cguForm
+
+/**
 * @see routes/web.php:22
 * @route '/confidentialite'
 */
@@ -118,6 +186,40 @@ confidentialite.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
     url: confidentialite.url(options),
     method: 'head',
 })
+
+/**
+* @see routes/web.php:22
+* @route '/confidentialite'
+*/
+const confidentialiteForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confidentialite.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:22
+* @route '/confidentialite'
+*/
+confidentialiteForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confidentialite.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:22
+* @route '/confidentialite'
+*/
+confidentialiteForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: confidentialite.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+confidentialite.form = confidentialiteForm
 
 const legal = {
     mentions: Object.assign(mentions, mentions),

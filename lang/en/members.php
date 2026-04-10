@@ -38,6 +38,7 @@ return [
         'ispconfig_mail' => 'ISPConfig Mail',
         'ispconfig_web' => 'Web Hosting',
         'nextcloud' => 'NextCloud',
+        'listmonk' => 'Listmonk',
     ],
 
     'ispconfig' => [
@@ -53,9 +54,13 @@ return [
         'disabled' => 'Disabled',
         'nextcloud_id' => 'Nextcloud ID',
         'display_name' => 'Display name',
+        'listmonk_data' => 'Listmonk data',
+        'listmonk_id' => 'Listmonk ID',
     ],
 
     'actions' => [
+        'create_membership' => 'Create a membership',
+        'create_membership_submit' => 'Create',
         'send_payment_mail' => 'Send payment email',
         'send_renewal_mail' => 'Send follow-up email',
     ],

@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\Packages\Pages\ListPackages::__invoke
 * @see app/Filament/Resources/Packages/Pages/ListPackages.php:7
@@ -42,5 +42,42 @@ ListPackages.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: ListPackages.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\ListPackages::__invoke
+* @see app/Filament/Resources/Packages/Pages/ListPackages.php:7
+* @route '/admin/packages'
+*/
+const ListPackagesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ListPackages.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\ListPackages::__invoke
+* @see app/Filament/Resources/Packages/Pages/ListPackages.php:7
+* @route '/admin/packages'
+*/
+ListPackagesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ListPackages.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\Packages\Pages\ListPackages::__invoke
+* @see app/Filament/Resources/Packages/Pages/ListPackages.php:7
+* @route '/admin/packages'
+*/
+ListPackagesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: ListPackages.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+ListPackages.form = ListPackagesForm
 
 export default ListPackages

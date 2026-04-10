@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
 * @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
@@ -60,5 +60,42 @@ EditNotificationTemplate.head = (args: { record: string | number } | [record: st
     url: EditNotificationTemplate.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+const EditNotificationTemplateForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditNotificationTemplate.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+EditNotificationTemplateForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditNotificationTemplate.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+EditNotificationTemplateForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditNotificationTemplate.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+EditNotificationTemplate.form = EditNotificationTemplateForm
 
 export default EditNotificationTemplate

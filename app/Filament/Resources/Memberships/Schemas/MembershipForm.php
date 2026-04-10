@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Memberships\Schemas;
 
 use App\Enums\IspconfigType;
 use App\Filament\Actions\ServiceToggleAction;
+use App\Models\ListmonkMember;
 use App\Models\Membership;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
@@ -127,11 +128,7 @@ class MembershipForm
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(2),
-                                                    ])
-                                                    ->visible(fn (?Membership $record) => $record?->member?->ispconfigs()
-                                                        ->where('type', IspconfigType::MAIL)
-                                                        ->exists() ?? false
-                                                    ),
+                                                    ]),
 
                                                 Section::make(__('memberships.sections.ispconfig_web'))
                                                     ->afterHeader([
@@ -170,11 +167,7 @@ class MembershipForm
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(3),
-                                                    ])
-                                                    ->visible(fn (?Membership $record) => $record?->member?->ispconfigs()
-                                                        ->where('type', IspconfigType::WEB)
-                                                        ->exists() ?? false
-                                                    ),
+                                                    ]),
 
                                                 Section::make(__('memberships.sections.nextcloud'))
                                                     ->afterHeader([
@@ -212,10 +205,34 @@ class MembershipForm
                                                                     ->columnSpanFull(),
                                                             ])
                                                             ->columns(3),
+                                                    ]),
+
+                                                Section::make(__('memberships.sections.listmonk'))
+                                                    ->afterHeader([
+                                                        ServiceToggleAction::forService('listmonk'),
                                                     ])
-                                                    ->visible(fn (?Membership $record) => $record?->member?->nextcloudAccounts()
-                                                        ->exists() ?? false
-                                                    ),
+                                                    ->collapsible()
+                                                    ->schema([
+                                                        RepeatableEntry::make('listmonk_accounts')
+                                                            ->label(__('members.ispconfig.listmonk_data'))
+                                                            ->state(fn (?Membership $record) => $record?->member?->listmonkMembers()
+                                                                ->get()
+                                                                ->map(fn (ListmonkMember $lm) => $lm->toArray())
+                                                                ->all()
+                                                            )
+                                                            ->schema([
+                                                                TextEntry::make('listmonk_user_id')
+                                                                    ->label(__('members.ispconfig.listmonk_id')),
+                                                                ViewEntry::make('data')
+                                                                    ->label('JSON')
+                                                                    ->view('filament.components.json-viewer')
+                                                                    ->viewData(fn ($state) => [
+                                                                        'data' => $state,
+                                                                    ])
+                                                                    ->columnSpanFull(),
+                                                            ])
+                                                            ->columns(2),
+                                                    ]),
                                             ]),
                                     ])
                                     ->contained(false),

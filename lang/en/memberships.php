@@ -44,6 +44,7 @@ return [
         'ispconfig_mail' => 'ISPConfig Mail',
         'ispconfig_web' => 'Web Hosting',
         'nextcloud' => 'NextCloud',
+        'listmonk' => 'Listmonk',
     ],
 
     'actions' => [

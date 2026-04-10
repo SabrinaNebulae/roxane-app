@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
 * @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
@@ -60,5 +60,42 @@ EditRole.head = (args: { record: string | number } | [record: string | number ] 
     url: EditRole.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+const EditRoleForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditRole.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+EditRoleForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditRole.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+EditRoleForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: EditRole.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+EditRole.form = EditRoleForm
 
 export default EditRole

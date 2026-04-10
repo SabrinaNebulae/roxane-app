@@ -2,10 +2,10 @@
 
 namespace App\Filament\Actions;
 
+use App\Models\Member;
 use App\Models\Membership;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\Bus;
-use App\Models\Member;
 
 class ServiceToggleAction extends Action
 {
@@ -16,7 +16,7 @@ class ServiceToggleAction extends Action
      */
     public static function forService(string $serviceIdentifier): static
     {
-        return static::make('toggle_' . $serviceIdentifier)
+        return static::make('toggle_'.$serviceIdentifier)
             ->configureForService($serviceIdentifier);
     }
 
@@ -28,50 +28,48 @@ class ServiceToggleAction extends Action
         $this->serviceIdentifier = $serviceIdentifier;
 
         return $this
-            ->label('Service actif')
-            ->icon(fn (Member|Membership $record) =>
-            $this->getMember($record)?->hasService($serviceIdentifier)
-                ? 'heroicon-o-check-circle'
-                : 'heroicon-o-x-circle'
+            ->label(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+                    ? 'Service actif'
+                    : 'Activer le service'
             )
-            ->color(fn (Member|Membership $record) =>
-            $this->getMember($record)?->hasService($serviceIdentifier)
-                ? 'success'
-                : 'gray'
+            ->icon(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+                    ? 'heroicon-o-check-circle'
+                    : 'heroicon-o-x-circle'
+            )
+            ->color(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+                    ? 'success'
+                    : 'warning'
             )
             ->requiresConfirmation()
-            ->modalHeading(fn (Member|Membership $record) =>
-            $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalHeading(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Désactiver le service'
                 : 'Activer le service'
             )
-            ->modalDescription(fn (Member|Membership $record) =>
-            $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalDescription(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Êtes-vous sûr·e de vouloir désactiver ce service pour ce membre ?'
                 : 'Êtes-vous sûr·e de vouloir activer ce service pour ce membre ?'
             )
-            ->modalSubmitActionLabel(fn (Member|Membership $record) =>
-            $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalSubmitActionLabel(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Désactiver'
                 : 'Activer'
             )
-            ->action(function (Member|Membership $record) use ($serviceIdentifier) {
+            ->action(function (Member|Membership $record) {
                 $member = $this->getMember($record);
 
-                if (!$member) {
+                if (! $member) {
                     return;
                 }
 
                 // @todo à discuter
-               /* if ($record->hasService($serviceIdentifier)) {
-                    Bus::dispatch(
-                        new \App\Jobs\DisableServiceJob($record, $serviceIdentifier)
-                    );
-                } else {
-                    Bus::dispatch(
-                        new \App\Jobs\EnableServiceJob($record, $serviceIdentifier)
-                    );
-                }*/
+                /* if ($record->hasService($serviceIdentifier)) {
+                     Bus::dispatch(
+                         new \App\Jobs\DisableServiceJob($record, $serviceIdentifier)
+                     );
+                 } else {
+                     Bus::dispatch(
+                         new \App\Jobs\EnableServiceJob($record, $serviceIdentifier)
+                     );
+                 }*/
             });
     }
 

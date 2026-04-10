@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\DashboardController::serviceActivation
 * @see app/Http/Controllers/DashboardController.php:30
@@ -32,6 +32,28 @@ serviceActivation.post = (options?: RouteQueryOptions): RouteDefinition<'post'> 
     url: serviceActivation.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\DashboardController::serviceActivation
+* @see app/Http/Controllers/DashboardController.php:30
+* @route '/dashboard/service-activation'
+*/
+const serviceActivationForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: serviceActivation.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\DashboardController::serviceActivation
+* @see app/Http/Controllers/DashboardController.php:30
+* @route '/dashboard/service-activation'
+*/
+serviceActivationForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: serviceActivation.url(options),
+    method: 'post',
+})
+
+serviceActivation.form = serviceActivationForm
 
 const dashboard = {
     serviceActivation: Object.assign(serviceActivation, serviceActivation),

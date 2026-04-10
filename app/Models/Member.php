@@ -153,6 +153,11 @@ class Member extends Model
         return $this->hasMany(NextCloudMember::class, 'member_id');
     }
 
+    public function listmonkMembers(): HasMany
+    {
+        return $this->hasMany(ListmonkMember::class, 'member_id');
+    }
+
     public function lastActiveMembership(): HasOne
     {
         return $this->hasOne(Membership::class)->where('status', 'active')->latest();

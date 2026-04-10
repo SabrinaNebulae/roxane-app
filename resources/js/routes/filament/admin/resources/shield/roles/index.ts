@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles::__invoke
 * @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ListRoles.php:7
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ListRoles.php:7
+* @route '/admin/shield/roles'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ListRoles.php:7
+* @route '/admin/shield/roles'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ListRoles.php:7
+* @route '/admin/shield/roles'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
 * @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
 * @route '/admin/shield/roles/create'
@@ -86,6 +123,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
 })
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
 
 /**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole::__invoke
@@ -150,6 +224,43 @@ view.head = (args: { record: string | number } | [record: string | number ] | st
 })
 
 /**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ViewRole.php:7
+* @route '/admin/shield/roles/{record}'
+*/
+const viewForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: view.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ViewRole.php:7
+* @route '/admin/shield/roles/{record}'
+*/
+viewForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: view.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/ViewRole.php:7
+* @route '/admin/shield/roles/{record}'
+*/
+viewForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: view.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+view.form = viewForm
+
+/**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
 * @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
 * @route '/admin/shield/roles/{record}/edit'
@@ -210,6 +321,43 @@ edit.head = (args: { record: string | number } | [record: string | number ] | st
     url: edit.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+const editForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+editForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/EditRole.php:7
+* @route '/admin/shield/roles/{record}/edit'
+*/
+editForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
 
 const roles = {
     index: Object.assign(index, index),

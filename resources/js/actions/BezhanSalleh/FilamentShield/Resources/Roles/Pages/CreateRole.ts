@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
 /**
 * @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
 * @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
@@ -42,5 +42,42 @@ CreateRole.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: CreateRole.url(options),
     method: 'head',
 })
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+const CreateRoleForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: CreateRole.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+CreateRoleForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: CreateRole.url(options),
+    method: 'get',
+})
+
+/**
+* @see \BezhanSalleh\FilamentShield\Resources\Roles\Pages\CreateRole::__invoke
+* @see vendor/bezhansalleh/filament-shield/src/Resources/Roles/Pages/CreateRole.php:7
+* @route '/admin/shield/roles/create'
+*/
+CreateRoleForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: CreateRole.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+CreateRole.form = CreateRoleForm
 
 export default CreateRole

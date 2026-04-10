@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
 * @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
@@ -44,6 +44,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
+* @route '/admin/notification-templates'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
+* @route '/admin/notification-templates'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\ListNotificationTemplates::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/ListNotificationTemplates.php:7
+* @route '/admin/notification-templates'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
 * @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
 * @route '/admin/notification-templates/create'
@@ -86,6 +123,43 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
+* @route '/admin/notification-templates/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
+* @route '/admin/notification-templates/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\CreateNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/CreateNotificationTemplate.php:7
+* @route '/admin/notification-templates/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
 
 /**
 * @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
@@ -148,6 +222,43 @@ edit.head = (args: { record: string | number } | [record: string | number ] | st
     url: edit.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+const editForm = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+editForm.get = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Filament\Resources\NotificationTemplates\Pages\EditNotificationTemplate::__invoke
+* @see app/Filament/Resources/NotificationTemplates/Pages/EditNotificationTemplate.php:7
+* @route '/admin/notification-templates/{record}/edit'
+*/
+editForm.head = (args: { record: string | number } | [record: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
 
 const notificationTemplates = {
     index: Object.assign(index, index),
