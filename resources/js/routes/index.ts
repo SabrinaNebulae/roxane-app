@@ -138,7 +138,7 @@ logout.form = logoutForm
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: home.url(options),
@@ -147,12 +147,12 @@ export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 home.definition = {
     methods: ["get","head"],
-    url: '/welcome',
+    url: '/',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
     return home.definition.url + queryParams(options)
@@ -160,7 +160,7 @@ home.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: home.url(options),
@@ -169,7 +169,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: home.url(options),
@@ -178,7 +178,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: home.url(options),
@@ -187,7 +187,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: home.url(options),
@@ -196,7 +196,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see routes/web.php:7
-* @route '/welcome'
+* @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: home.url({
@@ -212,7 +212,7 @@ home.form = homeForm
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 export const maintenance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: maintenance.url(options),
@@ -221,12 +221,12 @@ export const maintenance = (options?: RouteQueryOptions): RouteDefinition<'get'>
 
 maintenance.definition = {
     methods: ["get","head"],
-    url: '/',
+    url: '/maintenance',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 maintenance.url = (options?: RouteQueryOptions) => {
     return maintenance.definition.url + queryParams(options)
@@ -234,7 +234,7 @@ maintenance.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 maintenance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: maintenance.url(options),
@@ -243,7 +243,7 @@ maintenance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 maintenance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: maintenance.url(options),
@@ -252,7 +252,7 @@ maintenance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 const maintenanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: maintenance.url(options),
@@ -261,7 +261,7 @@ const maintenanceForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 maintenanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: maintenance.url(options),
@@ -270,7 +270,7 @@ maintenanceForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see routes/web.php:11
-* @route '/'
+* @route '/maintenance'
 */
 maintenanceForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: maintenance.url({

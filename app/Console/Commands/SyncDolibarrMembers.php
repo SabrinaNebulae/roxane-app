@@ -63,7 +63,6 @@ class SyncDolibarrMembers extends Command
                 [
                     'status' => $memberStatuses[$member['status']] ?? 'draft',
                     'nature' => 'physical',
-                    'member_type' => $member['type'],
                     'group_id' => null,
                     'lastname' => $member['lastname'],
                     'firstname' => $member['firstname'],

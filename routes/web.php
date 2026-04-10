@@ -4,11 +4,11 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/welcome', function () {
+Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/', function () {
+Route::get('/maintenance', function () {
     return Inertia::render('maintenance');
 })->name('maintenance');
 
