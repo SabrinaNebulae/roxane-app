@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useScrollProgress } from '@/hooks/use-scroll-progress';
 
 /**
@@ -48,8 +49,32 @@ interface Props {
     side: 'left' | 'right';
 }
 
+const LERP_FACTOR = 0.06;
+
 export function PawsScrollAnimation({ elementId, side }: Props) {
-    const progress = useScrollProgress(elementId);
+    const rawProgress = useScrollProgress(elementId);
+    const targetRef = useRef(rawProgress);
+    const smoothRef = useRef(rawProgress);
+    const rafRef = useRef<number>(0);
+    const [progress, setProgress] = useState(rawProgress);
+
+    useEffect(() => {
+        targetRef.current = rawProgress;
+    }, [rawProgress]);
+
+    useEffect(() => {
+        const animate = () => {
+            const diff = targetRef.current - smoothRef.current;
+            if (Math.abs(diff) > 0.0005) {
+                smoothRef.current += diff * LERP_FACTOR;
+                setProgress(smoothRef.current);
+            }
+            rafRef.current = requestAnimationFrame(animate);
+        };
+
+        rafRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(rafRef.current);
+    }, []);
 
     return (
         <div
