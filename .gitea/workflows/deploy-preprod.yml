@@ -118,6 +118,9 @@ jobs:
 
           echo "[<>] Restarting queue workers..."
           php artisan queue:restart || true
+          sudo supervisorctl reread
+          sudo supervisorctl update
+          sudo supervisorctl restart roxane-worker:*
 
           echo "[OK] Roxane deployed successfully to preprod!"
           EOF
