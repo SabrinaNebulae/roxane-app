@@ -28,32 +28,32 @@ class ServiceToggleAction extends Action
         $this->serviceIdentifier = $serviceIdentifier;
 
         return $this
-            ->label(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->label(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                     ? 'Service actif'
                     : 'Activer le service'
             )
-            ->icon(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->icon(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                     ? 'heroicon-o-check-circle'
                     : 'heroicon-o-x-circle'
             )
-            ->color(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->color(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                     ? 'success'
                     : 'warning'
             )
             ->requiresConfirmation()
-            ->modalHeading(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalHeading(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Désactiver le service'
                 : 'Activer le service'
             )
-            ->modalDescription(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalDescription(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Êtes-vous sûr·e de vouloir désactiver ce service pour ce membre ?'
                 : 'Êtes-vous sûr·e de vouloir activer ce service pour ce membre ?'
             )
-            ->modalSubmitActionLabel(fn (Member|Membership $record) => $this->getMember($record)?->hasService($serviceIdentifier)
+            ->modalSubmitActionLabel(fn (Member|Membership|null $record) => $this->getMember($record)?->hasService($serviceIdentifier)
                 ? 'Désactiver'
                 : 'Activer'
             )
-            ->action(function (Member|Membership $record) {
+            ->action(function (Member|Membership|null $record) {
                 $member = $this->getMember($record);
 
                 if (! $member) {
@@ -76,8 +76,12 @@ class ServiceToggleAction extends Action
     /**
      * Get the member associated with the given record.
      */
-    protected function getMember(Member|Membership $record): ?Member
+    protected function getMember(Member|Membership|null $record): ?Member
     {
+        if ($record === null) {
+            return null;
+        }
+
         return $record instanceof Member ? $record : $record->member;
     }
 }
