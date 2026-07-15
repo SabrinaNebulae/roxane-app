@@ -9,6 +9,7 @@ use App\Models\Package;
 use App\Notifications\MemberDeactivatedAdminNotification;
 use App\Notifications\MemberDeactivatedMemberNotification;
 use App\Notifications\MemberNewRequestAdminNotification;
+use App\Notifications\MemberNewRequestMemberNotification;
 use Illuminate\Support\Facades\Notification;
 
 class MemberService
@@ -54,6 +55,8 @@ class MemberService
 
         Notification::route('mail', config('app.admin_email'))
             ->notify(new MemberNewRequestAdminNotification($member, $package, (float) $data['amount']));
+
+        $member->notify(new MemberNewRequestMemberNotification($member, $package));
 
         event(new MemberRegistered($member));
 

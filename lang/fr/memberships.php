@@ -49,5 +49,7 @@ return [
 
     'actions' => [
         'view_profile' => 'Voir le profil du membre',
+        'validate' => 'Valider l\'adhésion',
+        'validate_missing_dates' => 'Veuillez renseigner les dates de début et de fin avant de valider.',
     ],
 ];

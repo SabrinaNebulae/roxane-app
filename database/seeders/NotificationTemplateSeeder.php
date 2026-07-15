@@ -10,6 +10,45 @@ class NotificationTemplateSeeder extends Seeder
     public function run(): void
     {
         NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_new_request_member'],
+            [
+                'name' => 'Nouvelle demande d\'adhésion — membre',
+                'subject' => 'Votre demande d\'adhésion a bien été reçue — {app_name}',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Nous avons bien reçu votre demande d\'adhésion pour la formule <strong>{package_name}</strong>.</p>'
+                    .'<p>Votre dossier est en attente de validation par notre équipe. Vous recevrez un e-mail dès que votre adhésion aura été traitée.</p>'
+                    .'<p>Merci pour votre confiance et bienvenue dans l\'association !</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'package_name' => 'Nom de la formule choisie',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'membership_validated'],
+            [
+                'name' => 'Adhésion validée — membre',
+                'subject' => 'Votre adhésion a été validée — {app_name}',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Votre adhésion pour la formule <strong>{package_name}</strong> a été validée par notre équipe.</p>'
+                    .'<p><strong>Début :</strong> {start_date}<br><strong>Fin :</strong> {end_date}</p>'
+                    .'<p>Vous pouvez dès à présent accéder à vos services. Pour toute question, n\'hésitez pas à nous contacter.</p>'
+                    .'<p>Merci pour votre adhésion !</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'package_name' => 'Nom de la formule',
+                    'start_date' => 'Date de début de l\'adhésion',
+                    'end_date' => 'Date de fin de l\'adhésion',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
             ['identifier' => 'subscription_expired_phase1'],
             [
                 'name' => 'Adhésion expirée - Phase 1',

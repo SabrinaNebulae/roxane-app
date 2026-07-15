@@ -49,5 +49,7 @@ return [
 
     'actions' => [
         'view_profile' => 'View member profile',
+        'validate' => 'Validate membership',
+        'validate_missing_dates' => 'Please fill in the start and end dates before validating.',
     ],
 ];

@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Member;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class MemberFactory extends Factory
 {
@@ -13,18 +12,16 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'keycloak_id' => $this->faker->word(),
             'email' => $this->faker->unique()->safeEmail(),
             'firstname' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
-            'phone' => $this->faker->phoneNumber(),
-            'address' => $this->faker->address(),
+            'phone1' => $this->faker->phoneNumber(),
+            'address' => $this->faker->streetAddress(),
             'city' => $this->faker->city(),
-            'zipcode' => $this->faker->word(),
-            'last_login_at' => Carbon::now(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'deleted_at' => Carbon::now(),
+            'zipcode' => $this->faker->postcode(),
+            'country' => 'FR',
+            'status' => 'pending',
+            'nature' => 'physical',
         ];
     }
 }
