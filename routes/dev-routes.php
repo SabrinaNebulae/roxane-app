@@ -53,3 +53,24 @@ Route::get('/test/isp-mails', function() {
 });*/
 
 // Test info user on Front
+
+// Temporary mail test route — remove after debugging
+Route::get('/test/mail', function (\Illuminate\Http\Request $request) {
+    $token = config('app.debug_mail_token');
+
+    if (! $token || $request->query('token') !== $token) {
+        abort(403);
+    }
+
+    $to = $request->query('to');
+
+    if (! $to || ! filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        return response()->json(['error' => 'Provide a valid ?to=email@example.com'], 422);
+    }
+
+    \Illuminate\Support\Facades\Mail::raw('Test mail from Roxane — SMTP is working.', function ($message) use ($to) {
+        $message->to($to)->subject('Roxane — SMTP test');
+    });
+
+    return response()->json(['status' => 'sent', 'to' => $to]);
+});

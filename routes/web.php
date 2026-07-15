@@ -24,6 +24,6 @@ Route::get('/confidentialite', fn () => Inertia::render('legal/confidentialite')
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/forms.php';
-if (app()->environment('local')) {
+if (app()->environment('local', 'staging', 'preprod')) {
     require __DIR__.'/dev-routes.php';
 }

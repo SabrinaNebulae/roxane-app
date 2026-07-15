@@ -41,6 +41,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'debug_mail_token' => env('DEBUG_MAIL_TOKEN'),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL
