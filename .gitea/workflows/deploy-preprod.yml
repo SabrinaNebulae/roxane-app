@@ -26,7 +26,7 @@ jobs:
 
       - name: Ping IPv6 preprod server
         run: |
-          ping6 -c 3 2a01:e0a:bfe:a8a0::205
+          ping6 -c 3 2a01:e0a:ef9:d10::205
 
       - name: Configure SSH
         env:
