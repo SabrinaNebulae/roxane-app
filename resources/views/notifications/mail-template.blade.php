@@ -56,13 +56,13 @@
 <body>
     <div class="wrapper">
         <div class="header">
-            <h1>{{ config('app.name') }}</h1>
+            <h1>{{ $appName ?? config('app.name') }}</h1>
         </div>
         <div class="content">
             {!! $body !!}
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. Tous droits réservés.
+            &copy; {{ date('Y') }} {{ $appName ?? config('app.name') }}. Tous droits réservés.
         </div>
     </div>
 </body>

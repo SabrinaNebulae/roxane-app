@@ -45,16 +45,17 @@ class MemberService
             ->firstOrFail();
 
         // Create a new membership
-        $member->memberships()->create([
+        $membership = $member->memberships()->create([
             'status' => 'pending',
             'package_id' => $package->id ?? null,
             'amount' => $data['amount'],
             'payment_status' => 'unpaid',
-
         ]);
 
+        $membershipUrl = route('filament.admin.resources.memberships.edit', ['record' => $membership->id]);
+
         Notification::route('mail', config('app.admin_email'))
-            ->notify(new MemberNewRequestAdminNotification($member, $package, (float) $data['amount']));
+            ->notify(new MemberNewRequestAdminNotification($member, $package, (float) $data['amount'], $membershipUrl));
 
         $member->notify(new MemberNewRequestMemberNotification($member, $package));
 

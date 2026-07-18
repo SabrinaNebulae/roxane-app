@@ -21,6 +21,16 @@ export default function Membership() {
     const [showFlashMessage, setFlashMessage] = useState(!!flash);
     const [selectedPlan, setSelectedPlan] = useState(plans?.[0]?.identifier ?? null);
     const [amount, setAmount] = useState(plans?.[0]?.price ?? 0);
+    const [phone1Value, setPhone1Value] = useState('');
+    const [zipcodeValue, setZipcodeValue] = useState('');
+
+    const phone1LocalError = phone1Value.length > 0 && !/^\d{10}$/.test(phone1Value)
+        ? 'Le numéro doit contenir exactement 10 chiffres.'
+        : null;
+
+    const zipcodeLocalError = zipcodeValue.length > 0 && !/^\d{5}$/.test(zipcodeValue)
+        ? 'Le code postal doit contenir exactement 5 chiffres.'
+        : null;
 
     useEffect(() => {
         if (plans && selectedPlan) {
@@ -98,8 +108,20 @@ export default function Membership() {
 
                                         <div className="grid gap-1">
                                             <Label htmlFor="phone1">Téléphone*</Label>
-                                            <Input id="phone1" name="phone1" type="tel" required tabIndex={4} autoComplete="tel" placeholder="Votre numéro de téléphone" />
-                                            <InputError message={errors.phone1} />
+                                            <Input
+                                                id="phone1"
+                                                name="phone1"
+                                                type="tel"
+                                                required
+                                                tabIndex={4}
+                                                autoComplete="tel"
+                                                inputMode="numeric"
+                                                maxLength={10}
+                                                placeholder="0612345678"
+                                                value={phone1Value}
+                                                onChange={(e) => setPhone1Value(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                            />
+                                            <InputError message={phone1LocalError ?? errors.phone1} />
                                         </div>
 
                                         <div className="grid gap-1">
@@ -117,8 +139,20 @@ export default function Membership() {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="grid gap-1">
                                                 <Label htmlFor="zipcode">Code postal*</Label>
-                                                <Input id="zipcode" name="zipcode" type="text" required tabIndex={7} autoComplete="postal-code" placeholder="Code postal" />
-                                                <InputError message={errors.zipcode} />
+                                                <Input
+                                                    id="zipcode"
+                                                    name="zipcode"
+                                                    type="text"
+                                                    required
+                                                    tabIndex={7}
+                                                    autoComplete="postal-code"
+                                                    inputMode="numeric"
+                                                    maxLength={5}
+                                                    placeholder="44000"
+                                                    value={zipcodeValue}
+                                                    onChange={(e) => setZipcodeValue(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                                                />
+                                                <InputError message={zipcodeLocalError ?? errors.zipcode} />
                                             </div>
                                             <div className="grid gap-1">
                                                 <Label htmlFor="city">Ville*</Label>

@@ -29,7 +29,7 @@ class MemberDeactivatedMemberNotification extends Notification implements Should
 
         $vars = [
             'member_name' => $this->member->full_name,
-            'app_name' => config('app.name'),
+            'app_name' => config('app.front_name'),
         ];
 
         return (new MailMessage)

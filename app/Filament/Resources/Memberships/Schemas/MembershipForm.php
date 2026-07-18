@@ -57,7 +57,8 @@ class MembershipForm
                                                         TextEntry::make('member.full_name')
                                                             ->label(Membership::getAttributeLabel('member_id')),
                                                         TextEntry::make('author.name')
-                                                            ->label(Membership::getAttributeLabel('admin_id')),
+                                                            ->label(Membership::getAttributeLabel('admin_id'))
+                                                            ->default(__('memberships.sections.author_not_set')),
                                                         TextEntry::make('created_at')
                                                             ->label(Membership::getAttributeLabel('created_at')),
                                                     ])

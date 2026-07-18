@@ -12,16 +12,23 @@ The project is developed in the context of **Le Retzien Libre**, a non-profit as
 
 **Back office (administrators)**
 - Member management (status, nature, groups)
-- Subscription and package management
+- Subscription and package management with validation workflow (pending → active)
 - Manual and automated synchronization with third-party services
 - Role and permission management (Spatie Permissions + Filament Shield)
 - Two-factor authentication for admin accounts
 
 **Front office (members)**
-- Registration and membership form
+- Registration and membership form with real-time field validation
 - Personal dashboard with access to associated services
 - Profile and password management
 - Two-factor authentication
+
+**Email notifications**
+- Admin notified on new contact request and new membership request (with direct link to the membership record)
+- Member receives a confirmation email on registration and a validation email when approved
+- Member notified on account deactivation and subscription expiry
+- Queued notifications (`ShouldQueue`) — requires a running queue worker
+- Separate application name for member emails (`FRONT_NAME`) vs admin emails (`APP_NAME`)
 
 **Integrations**
 - Dolibarr ERP (member and subscription import via REST API)
@@ -65,7 +72,7 @@ The project is developed in the context of **Le Retzien Libre**, a non-profit as
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/roxane.git
+git clone https://github.com/SabrinaNebulae/roxane.git
 cd roxane
 ```
 
@@ -87,6 +94,8 @@ Edit `.env` and configure:
 - Database connection (`DB_*`)
 - Redis connection (`REDIS_*`)
 - Mail configuration (`MAIL_*`)
+- Application names: `APP_NAME` (admin panel), `FRONT_NAME` (member-facing emails)
+- Admin email: `ADMIN_EMAIL` (recipient for all admin notifications)
 - Third-party service credentials (Dolibarr, ISPConfig, Nextcloud)
 
 ### 4. Database setup
@@ -186,19 +195,20 @@ php artisan test --compact
 
 ## Known TODOs
 
-| Area                      | Description                                                         |
-|---------------------------|---------------------------------------------------------------------|
-| ContactService            | Send email notification to administrator on new contact request     |
-| MemberService             | Send emails to member and admin on deactivation                     |
-| SubscriptionExpiredPhase1 | Generic template + backend UI for notification content management   |
-| User.php                  | Restrict admin access in production to @retzien.fr emails           |
-| SyncDolibarrMembers       | Extract `toDate()` method into a shared service or helper           |
-| SyncISPConfigMailMembers  | Handle multiple email addresses per member                          |
-| SyncISPConfigMailMembers  | Track `ispconfig_client_id`                                         |
-| Global                    | Make Roxane fully generic for any association ERP use case          |
-| Translations              | Audit project for missing translation keys                          |
-| Global                    | Raise PHPStan to level 8                                            |
-| V2                        | Keycloak SSO integration (OIDC) for front office authentication     |
+| Area                        | Description                                                                      |
+|-----------------------------|----------------------------------------------------------------------------------|
+| Notifications               | Propagate `appName` view variable to all remaining notifications                 |
+| SubscriptionExpiredPhase1   | Backend UI for editing notification template content                             |
+| MembershipValidatedNotif.   | Add HelloAsso payment link once integration is available                         |
+| User.php                    | Restrict admin access in production to @retzien.fr emails                        |
+| SyncDolibarrMembers         | Extract `toDate()` method into a shared service or helper                        |
+| SyncISPConfigMailMembers    | Handle multiple email addresses per member                                       |
+| SyncISPConfigMailMembers    | Track `ispconfig_client_id`                                                      |
+| Global                      | Make Roxane fully generic for any association ERP use case                       |
+| Translations                | Audit project for missing translation keys                                       |
+| Global                      | Raise PHPStan to level 8                                                         |
+| dev-routes.php              | Remove `/test/mail` debug route before production deployment                     |
+| V2                          | Keycloak SSO integration (OIDC) for front office authentication                  |
 
 ---
 

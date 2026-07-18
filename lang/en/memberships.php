@@ -45,6 +45,7 @@ return [
         'ispconfig_web' => 'Web Hosting',
         'nextcloud' => 'NextCloud',
         'listmonk' => 'Listmonk',
+        'author_not_set' => 'Awaiting author',
     ],
 
     'actions' => [

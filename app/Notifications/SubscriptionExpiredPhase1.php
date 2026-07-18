@@ -35,6 +35,7 @@ class SubscriptionExpiredPhase1 extends Notification implements ShouldQueue
             ->subject($this->template->renderSubject($vars))
             ->view('notifications.mail-template', [
                 'body' => $this->template->renderBody($vars),
+                'appName' => config('app.front_name'),
             ]);
     }
 

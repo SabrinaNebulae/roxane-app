@@ -13,6 +13,17 @@ class MembershipRequest extends FormRequest
     }
 
     /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'phone1.digits' => 'Le numéro de téléphone doit contenir exactement 10 chiffres.',
+            'zipcode.digits' => 'Le code postal doit contenir exactement 5 chiffres.',
+        ];
+    }
+
+    /**
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -23,9 +34,9 @@ class MembershipRequest extends FormRequest
             'email' => 'required|email|max:255',
             'company' => 'nullable|string|max:255',
             'address' => 'required|string|max:255',
-            'zipcode' => 'required|string|max:255',
+            'zipcode' => ['required', 'digits:5'],
             'city' => 'required|string|max:255',
-            'phone1' => 'required|string|max:255',
+            'phone1' => ['required', 'digits:10'],
             'package' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'cgu' => 'required|accepted',

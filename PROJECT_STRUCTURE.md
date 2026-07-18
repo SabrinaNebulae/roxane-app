@@ -165,9 +165,24 @@ resources/js/components/
 
 ## Notifications
 
-| Classe                    | Canal | Description                                   |
-| ------------------------- | ----- | --------------------------------------------- |
-| SubscriptionExpiredPhase1 | Email | Notification d'expiration d'adhesion (queued) |
+Toutes les notifications sont queueable (`ShouldQueue`). Le template Blade `notifications/mail-template.blade.php` est partagé et accepte une variable `$appName` pour différencier les emails membres des emails admin.
+
+| Classe                              | Canal | Destinataire | Déclencheur                                      |
+| ----------------------------------- | ----- | ------------ | ------------------------------------------------ |
+| ContactNewRequestNotification       | Email | Admin        | Soumission formulaire de contact                 |
+| MemberNewRequestAdminNotification   | Email | Admin        | Soumission formulaire d'adhésion                 |
+| MemberNewRequestMemberNotification  | Email | Membre       | Soumission formulaire d'adhésion (confirmation)  |
+| MembershipValidatedNotification     | Email | Membre       | Validation admin d'une adhésion (action Filament)|
+| MemberDeactivatedMemberNotification | Email | Membre       | Désactivation d'un membre                        |
+| MemberDeactivatedAdminNotification  | Email | Admin        | Désactivation d'un membre                        |
+| AdminInvitationNotification         | Email | Admin        | Création d'un compte administrateur              |
+| AdminPasswordResetNotification      | Email | Admin        | Réinitialisation de mot de passe admin           |
+| ServiceActivationRequestNotification| Email | Admin        | Demande d'activation de service (dashboard)      |
+| SubscriptionExpiredPhase1           | Email | Membre       | Job planifié d'expiration d'adhésion             |
+
+### Config app_name dans les emails
+- Emails membres : `config('app.front_name')` (variable `FRONT_NAME` dans `.env`)
+- Emails admin : `config('app.name')` (variable `APP_NAME` dans `.env`)
 
 ---
 
@@ -179,15 +194,16 @@ Langues : **fr**, **en** — fichiers dans `lang/{locale}/` : contacts, members,
 
 ## TODOs identifies dans le code
 
-| Fichier                   | TODO                                                                       |
-|---------------------------|----------------------------------------------------------------------------|
-| ContactService            | Envoyer un email a l'administrateur                                        |
-| MemberService             | Envoyer des emails au membre + admin a la desactivation                    |
-| SubscriptionExpiredPhase1 | Creer un template generique + UI backend pour le contenu                   |
-| User.php                  | Restreindre l'acces admin en prod aux emails @retzien.fr                   |
-| SyncDolibarrMembers       | Exporter la methode toDate() dans un service/helper                        |
-| SyncISPConfigMailMembers  | Gerer plusieurs emails par membre                                          |
-| SyncISPConfigMailMembers  | Ajouter le suivi ispconfig_client_id                                       |
-| Global                    | Refactoriser pour rendre générique le projet Roxane (ERP pour association) |
-| Traduction                | Crawler le prrojet pour retrouver toutes les clés manquantes               |
-| Global                    | PHPstan niveau 8                                                           |
+| Fichier                        | TODO                                                                           |
+|--------------------------------|--------------------------------------------------------------------------------|
+| Notifications (x9)             | Propager `appName` dans `->view()` pour toutes les notifications restantes     |
+| SubscriptionExpiredPhase1      | UI backend pour éditer le contenu du template de notification                  |
+| User.php                       | Restreindre l'acces admin en prod aux emails @retzien.fr                       |
+| SyncDolibarrMembers            | Exporter la methode toDate() dans un service/helper                            |
+| SyncISPConfigMailMembers       | Gerer plusieurs emails par membre                                              |
+| SyncISPConfigMailMembers       | Ajouter le suivi ispconfig_client_id                                           |
+| MembershipValidatedNotification| Ajouter lien HelloAsso vers le paiement quand disponible                       |
+| Global                         | Refactoriser pour rendre générique le projet Roxane (ERP pour association)     |
+| Traduction                     | Crawler le projet pour retrouver toutes les clés manquantes                    |
+| Global                         | PHPstan niveau 8                                                               |
+| dev-routes.php                 | Supprimer la route de test mail (/test/mail) avant mise en production          |

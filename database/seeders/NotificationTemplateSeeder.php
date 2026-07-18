@@ -100,7 +100,7 @@ class NotificationTemplateSeeder extends Seeder
                     .'<strong>Formule :</strong> {package_name}<br>'
                     .'<strong>Montant :</strong> {amount} €'
                     .'</p>'
-                    .'<p><a href="{member_url}" style="display:inline-block;padding:10px 20px;background:#f5a623;color:#000;font-weight:bold;text-decoration:none;border:3px solid #000;border-radius:6px;">Voir la fiche adhérent</a></p>',
+                    .'<p><a href="{membership_url}" style="display:inline-block;padding:10px 20px;background:#f48fb1;color:#000;font-weight:bold;text-decoration:none;border:3px solid #000;border-radius:6px;">Voir la demande d\'adhésion</a></p>',
                 'variables' => [
                     'member_name' => 'Nom complet du membre',
                     'member_email' => 'Adresse email du membre',
@@ -108,7 +108,7 @@ class NotificationTemplateSeeder extends Seeder
                     'member_address' => 'Adresse postale du membre',
                     'package_name' => 'Nom de la formule choisie',
                     'amount' => 'Montant de la cotisation',
-                    'member_url' => 'URL de la fiche dans le back office',
+                    'membership_url' => 'URL de la fiche d\'adhésion dans le back office',
                     'app_name' => 'Nom de l\'application',
                 ],
                 'is_active' => true,

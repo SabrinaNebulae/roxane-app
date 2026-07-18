@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Filament\Resources\Members\MemberResource;
 use App\Models\Member;
 use App\Models\NotificationTemplate;
 use App\Models\Package;
@@ -19,6 +18,7 @@ class MemberNewRequestAdminNotification extends Notification implements ShouldQu
         public readonly Member $member,
         public readonly Package $package,
         public readonly float $amount,
+        public readonly string $membershipUrl,
     ) {}
 
     /**
@@ -44,7 +44,7 @@ class MemberNewRequestAdminNotification extends Notification implements ShouldQu
             ])),
             'package_name' => $this->package->name,
             'amount' => number_format($this->amount, 2, ',', ' '),
-            'member_url' => MemberResource::getUrl('edit', ['record' => $this->member->id]),
+            'membership_url' => $this->membershipUrl,
             'app_name' => config('app.name'),
         ];
 

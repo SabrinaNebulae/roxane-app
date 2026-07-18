@@ -34,7 +34,7 @@ class MemberNewRequestMemberNotification extends Notification implements ShouldQ
         $vars = [
             'member_name' => $this->member->full_name,
             'package_name' => $this->package->name,
-            'app_name' => 'Le Retzien Libre',
+            'app_name' => config('app.front_name'),
         ];
 
         return (new MailMessage)
