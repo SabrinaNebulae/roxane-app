@@ -6,7 +6,7 @@ export function AboutSection() {
         <section id="about-section" className="w-full py-16">
             <div className="max-w-7xl mx-auto px-4">
                 <SectionHeading title="Qui sommes-nous ?" color="secondary"
-                                subtitle="Le Retzien Libre, c’est une association qui promeut l’auto-hébergement et la décentralisation des services en ligne depuis 2017."
+                                subtitle="Le Retzien Libre est une association qui promeut l’auto-hébergement et la décentralisation des services en ligne depuis 2017."
                                 align='left'/>
                 <div
                     className="nb-shadow-static bg-white rounded-4xl mt-10 px-10 pt-20 pb-10">
@@ -14,14 +14,14 @@ export function AboutSection() {
                         <div className="flex flex-col gap-3 lg:border-r-2 border-black lg:pr-10 border-0">
                             <h3 className="text-xl text-primary font-semibold">Une association locale</h3>
                             <p>
-                                Nous voulons vous proposer à travers des outils libres, ouverts et solidaires, de
+                                Nous vous proposons, à travers des outils libres, ouverts et solidaires, de
                                 quitter l'industrie du G.A.F.A.M.
                             </p>
                         </div>
                         <div className="flex flex-col gap-3 border-r-2 border-black pr-10">
                             <h3 className="text-xl text-primary font-semibold">Notre mission</h3>
                             <p>
-                                Nous nous positionnons comme "A.M.A.P. informatique", délivrant des services "bio",
+                                Nous sommes comme une "A.M.A.P. informatique", délivrant des services "bio",
                                 "éthiques" et "locaux" dans le Pays de Retz et Nantes.
                             </p>
                         </div>

@@ -53,7 +53,7 @@ const services: Service[] = [
     },
     {
         title: 'Partage de fichiers',
-        description: 'Partager facielement vos fichiers en toute sécurité',
+        description: 'Partager facilement vos fichiers en toute sécurité',
         colorTitle: 'black',
         bgTitle: 'white',
         bgColor: 'primary',

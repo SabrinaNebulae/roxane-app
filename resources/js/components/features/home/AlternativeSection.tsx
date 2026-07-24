@@ -23,8 +23,8 @@ export function AlternativeSection() {
                             Notre alternative : Le Retzien Libre
                         </h2>
                         <p>
-                            Ici, pas d’exploitation des vos données personnelles à des fins commerciales, ni de dépense aux services centralisés.<br/>
-                            Le Retzien Libre, c’est une association locale engagée pour la promotion du logiciel libre et la protection de vos données personnelles.
+                            Ici, pas d’exploitation des vos données personnelles à des fins commerciales, ni de dépendance aux services centralisés.<br/>
+                            Le Retzien Libre est une association locale engagée pour la promotion du logiciel libre et la protection de vos données personnelles.
                         </p>
                         {auth.user ? (
                             <Link href={dashboard()}>
