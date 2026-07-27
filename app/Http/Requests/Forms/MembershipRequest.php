@@ -29,10 +29,12 @@ class MembershipRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'member_type' => 'required|string|exists:member_types,identifier',
             'lastname' => 'required|string|max:255',
             'firstname' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'company' => 'nullable|string|max:255',
+            'desired_retzien_email' => ['nullable', 'string', 'max:64', 'regex:/^[a-z0-9._-]+$/'],
             'address' => 'required|string|max:255',
             'zipcode' => ['required', 'digits:5'],
             'city' => 'required|string|max:255',

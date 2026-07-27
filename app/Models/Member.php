@@ -133,6 +133,11 @@ class Member extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(MemberType::class);
+    }
+
     public function group(): BelongsTo
     {
         return $this->belongsTo(MemberGroup::class);

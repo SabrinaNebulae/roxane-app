@@ -58,6 +58,12 @@ export interface Plans {
     months?: number | null;
 }
 
+export interface MemberTypeOption {
+    id: number;
+    identifier: string;
+    name: string;
+}
+
 export interface MembershipService {
     name: string;
     description: string;
@@ -114,6 +120,8 @@ export interface PageProps {
     auth?: Auth;
     plans?: Plans[];
     services?: MembershipService[];
+    member_types?: MemberTypeOption[];
+    current_year?: number;
     captcha_question?: string;
     member?: DashboardMember | null;
 

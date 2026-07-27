@@ -170,6 +170,25 @@ class NotificationTemplateSeeder extends Seeder
         );
 
         NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_renewal_reminder'],
+            [
+                'name' => 'Relance adhésion — générique',
+                'subject' => 'Rappel concernant votre adhésion — {app_name}',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Nous vous contactons au sujet de votre adhésion au sein de notre association.</p>'
+                    .'<p>Si votre adhésion est arrivée à expiration ou si vous n\'avez pas encore finalisé votre inscription, '
+                    .'nous vous invitons à régulariser votre situation afin de continuer à bénéficier de l\'ensemble de nos services.</p>'
+                    .'<p>Pour toute question ou besoin d\'assistance, n\'hésitez pas à nous contacter.</p>'
+                    .'<p>Cordialement,<br>L\'équipe {app_name}</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
             ['identifier' => 'admin_password_reset'],
             [
                 'name' => 'Réinitialisation de mot de passe',

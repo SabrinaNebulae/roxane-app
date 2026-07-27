@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 export const mentions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ mentions.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 mentions.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ mentions.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 mentions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -31,7 +31,7 @@ mentions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 mentions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -40,7 +40,7 @@ mentions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 const mentionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -49,7 +49,7 @@ const mentionsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 mentionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -58,7 +58,7 @@ mentionsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 })
 
 /**
-* @see routes/web.php:20
+* @see routes/web.php:21
 * @route '/mentions-legales'
 */
 mentionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -74,7 +74,7 @@ mentionsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 mentions.form = mentionsForm
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 export const cgu = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -88,7 +88,7 @@ cgu.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 cgu.url = (options?: RouteQueryOptions) => {
@@ -96,7 +96,7 @@ cgu.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 cgu.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -105,7 +105,7 @@ cgu.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 cgu.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -114,7 +114,7 @@ cgu.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 const cguForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -123,7 +123,7 @@ const cguForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 cguForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ cguForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:21
+* @see routes/web.php:22
 * @route '/conditions-generales'
 */
 cguForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -148,7 +148,7 @@ cguForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 cgu.form = cguForm
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 export const confidentialite = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -162,7 +162,7 @@ confidentialite.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 confidentialite.url = (options?: RouteQueryOptions) => {
@@ -170,7 +170,7 @@ confidentialite.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 confidentialite.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -179,7 +179,7 @@ confidentialite.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 confidentialite.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -188,7 +188,7 @@ confidentialite.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 })
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 const confidentialiteForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -197,7 +197,7 @@ const confidentialiteForm = (options?: RouteQueryOptions): RouteFormDefinition<'
 })
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 confidentialiteForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -206,7 +206,7 @@ confidentialiteForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'ge
 })
 
 /**
-* @see routes/web.php:22
+* @see routes/web.php:23
 * @route '/confidentialite'
 */
 confidentialiteForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

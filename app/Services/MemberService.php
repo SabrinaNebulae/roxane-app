@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\MemberRegistered;
 use App\Models\Member;
 use App\Models\MemberGroup;
+use App\Models\MemberType;
 use App\Models\Package;
 use App\Notifications\MemberDeactivatedAdminNotification;
 use App\Notifications\MemberDeactivatedMemberNotification;
@@ -22,11 +23,14 @@ class MemberService
         // Check if the member already exists
         $member = Member::where('email', $data['email'])->first();
 
+        $memberType = MemberType::where('identifier', $data['member_type'])->first();
+
         if (! $member) {
             // Create a new member
             $member = new Member;
             $member->status = 'pending';
             $member->nature = 'physical';
+            $member->type_id = $memberType?->id;
             $member->group_id = MemberGroup::where('identifier', 'website')->first()->id ?? null;
             $member->lastname = $data['lastname'];
             $member->firstname = $data['firstname'];
@@ -37,6 +41,11 @@ class MemberService
             $member->city = $data['city'];
             $member->country = 'FR';
             $member->phone1 = $data['phone1'];
+
+            if (! empty($data['desired_retzien_email'])) {
+                $member->retzien_email = $data['desired_retzien_email'].'@retzien.fr';
+            }
+
             $member->save();
         }
 

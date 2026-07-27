@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('dashboard/service-activation', [DashboardController::class, 'requestServiceActivation'])->name('dashboard.service-activation');
 });
 
+Route::get('/faq', fn () => Inertia::render('faq'))->name('faq');
 Route::get('/mentions-legales', fn () => Inertia::render('legal/mentions-legales'))->name('legal.mentions');
 Route::get('/conditions-generales', fn () => Inertia::render('legal/cgu'))->name('legal.cgu');
 Route::get('/confidentialite', fn () => Inertia::render('legal/confidentialite'))->name('legal.confidentialite');

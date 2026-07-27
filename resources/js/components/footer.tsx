@@ -1,5 +1,5 @@
 import {Link} from '@inertiajs/react';
-import {contact, home, membership} from '@/routes';
+import {contact, faq, home, membership} from '@/routes';
 import AppLogoIcon from '@/components/app-logo-icon';
 import LogoChaton from '@/img/utils/logo-chaton.png';
 
@@ -32,6 +32,8 @@ export function Footer() {
                             <Link href={home()} className="text-sm text-white no-underline hover:underline">Accueil</Link>
                             <Link href={contact()} className="text-sm text-white no-underline hover:underline">Contact</Link>
                             <Link href={membership()} className="text-sm text-white no-underline hover:underline">Adhérer</Link>
+                            <Link href={faq()} className="text-sm text-white no-underline hover:underline">FAQ</Link>
+                            <a href="https://doc.retzien.fr" target="_blank" rel="noopener noreferrer" className="text-sm text-white no-underline hover:underline">Documentation</a>
                         </nav>
                     </div>
                     <div className="flex flex-col lg:flex-row lg:justify-between gap-4 border-t border-black/20 pt-6 text-sm">

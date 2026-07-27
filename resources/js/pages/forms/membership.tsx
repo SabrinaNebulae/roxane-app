@@ -8,6 +8,7 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import NavGuestLayout from '@/layouts/nav-guest-layout';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useEffect, useState } from 'react';
 import { PageProps } from '@/types';
 import { FlashMessage } from '@/components/flash-message';
@@ -17,12 +18,14 @@ import { Footer } from '@/components/footer';
 import IllustrationLogo from "@/img/utils/lrl-logo-full.svg";
 
 export default function Membership() {
-    const { flash, plans, services, captcha_question } = usePage().props as PageProps;
+    const { flash, plans, services, member_types, current_year, captcha_question } = usePage().props as PageProps;
     const [showFlashMessage, setFlashMessage] = useState(!!flash);
     const [selectedPlan, setSelectedPlan] = useState(plans?.[0]?.identifier ?? null);
     const [amount, setAmount] = useState(plans?.[0]?.price ?? 0);
+    const [memberType, setMemberType] = useState(member_types?.[0]?.identifier ?? 'individual');
     const [phone1Value, setPhone1Value] = useState('');
     const [zipcodeValue, setZipcodeValue] = useState('');
+    const [retzienEmailValue, setRetzienEmailValue] = useState('');
 
     const phone1LocalError = phone1Value.length > 0 && !/^\d{10}$/.test(phone1Value)
         ? 'Le numéro doit contenir exactement 10 chiffres.'
@@ -30,6 +33,10 @@ export default function Membership() {
 
     const zipcodeLocalError = zipcodeValue.length > 0 && !/^\d{5}$/.test(zipcodeValue)
         ? 'Le code postal doit contenir exactement 5 chiffres.'
+        : null;
+
+    const retzienEmailLocalError = retzienEmailValue.length > 0 && !/^[a-z0-9._-]+$/.test(retzienEmailValue)
+        ? 'Caractères autorisés : lettres minuscules, chiffres, points, tirets.'
         : null;
 
     useEffect(() => {
@@ -46,6 +53,20 @@ export default function Membership() {
             return () => clearTimeout(timer);
         }
     }, [flash]);
+
+    const getPlanLabel = (plan: NonNullable<typeof plans>[number]) => {
+        if (!current_year || !plan.months) return plan.name;
+        if (plan.identifier === 'custom') {
+            return `Année ${current_year} (${plan.months} mois restants)`;
+        }
+        if (plan.identifier === 'one-year') {
+            return `Années ${current_year}–${current_year + 1}`;
+        }
+        if (plan.identifier === 'two-years') {
+            return `Années ${current_year}–${current_year + 2}`;
+        }
+        return plan.name;
+    };
 
     return (
         <>
@@ -85,6 +106,28 @@ export default function Membership() {
                                                 className="rounded-lg max-w-md w-full pt-4"
                                             />
                                         </div>
+
+                                        {/* Member type radio */}
+                                        <div className="grid gap-2">
+                                            <Label className="text-accent font-semibold">Vous êtes*</Label>
+                                            <RadioGroup
+                                                value={memberType}
+                                                onValueChange={setMemberType}
+                                                className="flex flex-wrap gap-4"
+                                            >
+                                                {member_types?.map((type) => (
+                                                    <div key={type.identifier} className="flex items-center gap-2">
+                                                        <RadioGroupItem value={type.identifier} id={`member-type-${type.identifier}`} />
+                                                        <Label htmlFor={`member-type-${type.identifier}`} className="cursor-pointer">
+                                                            {type.name}
+                                                        </Label>
+                                                    </div>
+                                                ))}
+                                            </RadioGroup>
+                                            <input type="hidden" name="member_type" value={memberType} />
+                                            <InputError message={errors.member_type} />
+                                        </div>
+
                                         <h2 className="text-lg font-semibold text-accent">Vos informations</h2>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -131,8 +174,31 @@ export default function Membership() {
                                         </div>
 
                                         <div className="grid gap-1">
+                                            <Label htmlFor="desired_retzien_email">
+                                                Adresse mail Retzien souhaitée <span className="text-muted-foreground text-xs">(facultatif)</span>
+                                            </Label>
+                                            <div className="group/email flex items-center gap-0 rounded-md has-[:focus-visible]:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition duration-100 ease-in-out">
+                                                <Input
+                                                    id="desired_retzien_email"
+                                                    name="desired_retzien_email"
+                                                    type="text"
+                                                    tabIndex={6}
+                                                    autoComplete="off"
+                                                    placeholder="prenom.nom"
+                                                    className="rounded-r-none focus-visible:shadow-none"
+                                                    value={retzienEmailValue}
+                                                    onChange={(e) => setRetzienEmailValue(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))}
+                                                />
+                                                <span className="inline-flex items-center px-3 h-9 border-3 border-l-0 border-black rounded-r-md bg-muted text-sm text-muted-foreground whitespace-nowrap">
+                                                    @retzien.fr
+                                                </span>
+                                            </div>
+                                            <InputError message={retzienEmailLocalError ?? errors.desired_retzien_email} />
+                                        </div>
+
+                                        <div className="grid gap-1">
                                             <Label htmlFor="address">Adresse*</Label>
-                                            <Input id="address" name="address" type="text" required tabIndex={6} autoComplete="street-address" placeholder="Votre adresse" />
+                                            <Input id="address" name="address" type="text" required tabIndex={7} autoComplete="street-address" placeholder="Votre adresse" />
                                             <InputError message={errors.address} />
                                         </div>
 
@@ -144,7 +210,7 @@ export default function Membership() {
                                                     name="zipcode"
                                                     type="text"
                                                     required
-                                                    tabIndex={7}
+                                                    tabIndex={8}
                                                     autoComplete="postal-code"
                                                     inputMode="numeric"
                                                     maxLength={5}
@@ -156,7 +222,7 @@ export default function Membership() {
                                             </div>
                                             <div className="grid gap-1">
                                                 <Label htmlFor="city">Ville*</Label>
-                                                <Input id="city" name="city" type="text" required tabIndex={8} autoComplete="address-level2" placeholder="Ville" />
+                                                <Input id="city" name="city" type="text" required tabIndex={9} autoComplete="address-level2" placeholder="Ville" />
                                                 <InputError message={errors.city} />
                                             </div>
                                         </div>
@@ -174,7 +240,7 @@ export default function Membership() {
                                                     <button
                                                         key={plan.id}
                                                         type="button"
-                                                        tabIndex={9}
+                                                        tabIndex={10}
                                                         onClick={() => setSelectedPlan(plan.identifier)}
                                                         className={cn(
                                                             'flex items-center justify-between rounded-xl border-3 border-black px-5 py-4 text-left transition-all duration-150',
@@ -185,14 +251,12 @@ export default function Membership() {
                                                         )}
                                                     >
                                                         <div className="flex flex-col">
-                                                            <span className="font-bold text-base">{plan.name}</span>
-                                                            {plan.months != null ? (
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    {plan.months} mois × 1€/mois
-                                                                </span>
-                                                            ) : (
-                                                                <span className="text-xs text-muted-foreground">{plan.description}</span>
-                                                            )}
+                                                            <span className="font-bold text-base">{getPlanLabel(plan)}</span>
+                                                            <span className="text-xs text-muted-foreground">
+                                                                {plan.months != null
+                                                                    ? `${plan.months} mois × 1€/mois`
+                                                                    : plan.description}
+                                                            </span>
                                                         </div>
                                                         <span className="text-2xl font-black">{plan.price}€</span>
                                                     </button>
@@ -204,7 +268,7 @@ export default function Membership() {
                                             <InputError message={errors.package} />
 
                                             <p className="text-center text-sm text-muted-foreground border-t border-border pt-3">
-                                                Montant total : <strong className="text-secondary text-lg">{amount}€</strong>
+                                                Montant total : <strong className="text-accent text-2xl">{amount}€</strong>
                                             </p>
                                         </div>
 
@@ -222,6 +286,9 @@ export default function Membership() {
                                                     </div>
                                                 ))}
                                             </div>
+                                            <div className="text-center">
+                                                Et plus encore ...
+                                            </div>
                                         </div>
 
                                         {/* Captcha + CGU + Submit */}
@@ -232,7 +299,7 @@ export default function Membership() {
                                                     id="captcha"
                                                     name="captcha"
                                                     type="text"
-                                                    tabIndex={10}
+                                                    tabIndex={11}
                                                     placeholder="Votre réponse"
                                                     autoComplete="off"
                                                     className="max-w-[180px]"
@@ -242,7 +309,7 @@ export default function Membership() {
 
                                             <div className="flex flex-col gap-1">
                                                 <div className="flex items-start gap-3">
-                                                    <Checkbox id="cgu" name="cgu" tabIndex={11} required className="mt-0.5" />
+                                                    <Checkbox id="cgu" name="cgu" tabIndex={12} required className="mt-0.5" />
                                                     <Label htmlFor="cgu" className="text-sm leading-snug cursor-pointer">
                                                         J'ai lu et j'accepte les <a href="#">C.G.U.</a> et je comprends la
                                                         nécessité des enregistrements de mes données personnelles.
@@ -254,7 +321,7 @@ export default function Membership() {
                                             <Button
                                                 type="submit"
                                                 variant="secondary"
-                                                tabIndex={12}
+                                                tabIndex={13}
                                                 className="nb-shadow w-full font-bold text-base py-5"
                                             >
                                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

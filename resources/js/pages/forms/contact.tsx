@@ -54,6 +54,14 @@ export default function Contact() {
                             className="mx-auto"
                         />
 
+                        <p className="text-sm text-muted-foreground max-w-4xl mx-auto">
+                            Pensez à consulter notre{' '}
+                            <a href="/faq" className="text-primary underline hover:no-underline">FAQ</a>
+                            {' '}ou notre{' '}
+                            <a href="https://doc.retzien.fr" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:no-underline">documentation</a>
+                            {' '}avant de nous écrire.
+                        </p>
+
                         {showFlashMessage && <FlashMessage messages={flash ?? {}} />}
 
                         <Form

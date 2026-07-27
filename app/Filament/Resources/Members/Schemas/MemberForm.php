@@ -9,6 +9,7 @@ use App\Models\ListmonkMember;
 use App\Models\Member;
 use App\Models\Membership;
 use App\Models\Package;
+use App\Notifications\MemberRenewalReminderNotification;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -83,6 +85,11 @@ class MemberForm
                                                             ->default('physical')
                                                             ->required(),
 
+                                                        Select::make('type_id')
+                                                            ->label(Member::getAttributeLabel('type_id'))
+                                                            ->relationship('type', 'name')
+                                                            ->default(null),
+
                                                         Select::make('group_id')
                                                             ->label(Member::getAttributeLabel('group_id'))
                                                             ->relationship('group', 'name')
@@ -97,6 +104,10 @@ class MemberForm
                                                             ->label(Member::getAttributeLabel('email'))
                                                             ->email()
                                                             ->required(),
+
+                                                        TextInput::make('retzien_email')
+                                                            ->label(Member::getAttributeLabel('retzien_email'))
+                                                            ->email(),
 
                                                         TextInput::make('phone1')
                                                             ->label(Member::getAttributeLabel('phone1'))
@@ -366,8 +377,28 @@ class MemberForm
                                             ->label(__('members.actions.send_renewal_mail'))
                                             ->icon('heroicon-o-envelope')
                                             ->color('primary')
-                                            ->action(function () {
-                                                // Mail de relance à créer (Job)
+                                            ->requiresConfirmation()
+                                            ->modalHeading(__('members.actions.send_renewal_mail'))
+                                            ->modalDescription('Êtes-vous sûr de vouloir envoyer un mail de relance à cet adhérent ?')
+                                            ->action(function (Member $record) {
+                                                try {
+                                                    $record->notify(new MemberRenewalReminderNotification($record));
+
+                                                    Notification::make()
+                                                        ->title('Mail de relance envoyé')
+                                                        ->success()
+                                                        ->send();
+                                                } catch (\Throwable $e) {
+                                                    \Log::error('Erreur envoi mail de relance', [
+                                                        'member_id' => $record->id,
+                                                        'error' => $e->getMessage(),
+                                                    ]);
+
+                                                    Notification::make()
+                                                        ->title('Erreur lors de l\'envoi du mail')
+                                                        ->danger()
+                                                        ->send();
+                                                }
                                             }),
                                     ])
                                     ->extraAttributes(['class' => 'sticky top-4 h-fit']),

@@ -12,20 +12,20 @@ class PackageSeeder extends Seeder
         $packages = [
             [
                 'identifier' => 'custom',
-                'name' => 'Sur-mesure',
-                'description' => 'Calcul du nombre de mois restant dans l\'année',
+                'name' => 'Année en cours',
+                'description' => 'Mois restants dans l\'année civile en cours (1€/mois)',
                 'price' => '1.00',
             ],
             [
                 'identifier' => 'one-year',
-                'name' => 'Un an',
-                'description' => '12 mois à compter de la date de validation de l\'adhésion du membre',
+                'name' => 'Année en cours + 1 an',
+                'description' => 'Jusqu\'à la fin de l\'année civile suivante (1€/mois)',
                 'price' => '12.00',
             ],
             [
                 'identifier' => 'two-years',
-                'name' => 'Deux ans',
-                'description' => '24 mois à compter de la date de validation de l\'adhésion du membre',
+                'name' => 'Année en cours + 2 ans',
+                'description' => 'Jusqu\'à la fin de la 2e année civile suivante (1€/mois)',
                 'price' => '24.00',
             ],
         ];
