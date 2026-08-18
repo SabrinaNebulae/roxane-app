@@ -34,7 +34,12 @@ export function AboutSection() {
                         </div>
                     </div>
                     <div className="w-full flex justify-center mt-20">
-                        <Button variant="default">En savoir plus en lisant notre Blog</Button>
+                        <Button
+                            variant="default"
+                            onClick={() => window.open('https://blog.retzien.fr/index.php', '_blank')}
+                        >
+                            En savoir plus en lisant notre Blog
+                        </Button>
                     </div>
                 </div>
             </div>

@@ -66,9 +66,9 @@ export default function NavGuestLayout() {
                     <Link href="#services" className="px-5 py-1.5 text-lg text-[#1b1b18] dark:text-[#EDEDEC] no-underline hover:underline">
                         Nos Services
                     </Link>
-                    <Link href="#" className="px-5 py-1.5 text-lg text-[#1b1b18] dark:text-[#EDEDEC] no-underline hover:underline">
+                    <a href="https://blog.retzien.fr/index.php" target="_blank" rel="noopener noreferrer" className="px-5 py-1.5 text-lg text-[#1b1b18] dark:text-[#EDEDEC] no-underline hover:underline">
                         Le Blog
-                    </Link>
+                    </a>
                     <Link href={contact()} className="px-5 py-1.5 text-lg text-[#1b1b18] dark:text-[#EDEDEC] no-underline hover:underline">
                         Contact
                     </Link>
@@ -165,9 +165,9 @@ export default function NavGuestLayout() {
                             <Link href="#services" onClick={closeMenu} className="text-lg py-3 border-b border-black/10 dark:border-white/10 no-underline">
                                 <span className="text-black hover:underline">Nos Services</span>
                             </Link>
-                            <Link href="#" onClick={closeMenu} className="text-lg py-3 border-b border-black/10 dark:border-white/10 no-underline">
+                            <a href="https://blog.retzien.fr/index.php" target="_blank" onClick={closeMenu} className="text-lg py-3 border-b border-black/10 dark:border-white/10 no-underline">
                                 <span className="text-black hover:underline">Le Blog</span>
-                            </Link>
+                            </a>
                             <Link href={contact()} onClick={closeMenu} className="text-lg py-3 no-underline">
                                 <span className="text-black hover:underline">Contact</span>
                             </Link>
