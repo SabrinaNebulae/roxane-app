@@ -1,5 +1,7 @@
 # Roxane
 
+![Roxane Illustration](./assets/LRL-roxane.png)
+
 Roxane is an open source membership management application designed for associations. It centralizes member management, subscriptions, and integration with self-hosted third-party services (Dolibarr, ISPConfig, Nextcloud, Sympa).
 
 The project is developed in the context of **Le Retzien Libre**, a non-profit association promoting digital freedom and self-hosting. It is intended to be generic enough to be adapted by other associations with similar needs.
