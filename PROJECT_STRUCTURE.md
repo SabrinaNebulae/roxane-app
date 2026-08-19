@@ -88,7 +88,7 @@ Elle gère les membres, les cotisations, et s'intègre avec des services tiers (
 | MemberService          | Inscription et desactivation de membres                     |
 | DolibarrService        | Integration ERP via API REST                                |
 | ISPConfigMailService   | Gestion comptes mail via SOAP                               |
-| ISPConfigWebService    | Gestion hebergement web via SOAP (avec cache)               |
+| ISPConfigWebService    | Gestion hebergement web via SOAP (avec cache). Creation de clients et reassignation de sites |
 | NextcloudService       | Gestion comptes Nextcloud via OCS (avec cache 7 jours)      |
 
 ---
@@ -101,6 +101,7 @@ Elle gère les membres, les cotisations, et s'intègre avec des services tiers (
 | `members:cleanup-expired`       | Desactive les membres expires (Dolibarr + ISPConfig + Nextcloud). `--dry-run`  |
 | `sync:ispconfig-mail-members`   | Lie les membres a leurs comptes mail ISPConfig (@retzien.fr)                   |
 | `sync:ispconfig-web-members`    | Lie les membres a leurs comptes d'hebergement web                              |
+| `ext:create-isp-accounts`       | Cree les clients ISPConfig pour les membres et reassigne leurs sites. `--dry-run`, `--force` |
 | `nextcloud:sync-members`        | Lie les membres a leurs comptes Nextcloud                                      |
 | `memberships:sync-services`     | Synchronise les services associes aux membres                                  |
 

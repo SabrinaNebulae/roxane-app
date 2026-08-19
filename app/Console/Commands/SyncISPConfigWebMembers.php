@@ -7,11 +7,13 @@ use App\Models\IspconfigMember;
 use App\Models\Member;
 use App\Services\ISPConfig\ISPConfigWebService;
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\progress;
 
 class SyncISPConfigWebMembers extends Command
 {
     protected $signature = 'sync:ispconfig-web-members {--refresh-cache : Vider le cache avant la synchronisation}';
+
     protected $description = 'Synchronise les services WEB ISPConfig des membres (via member->website_url)';
 
     /**
@@ -19,11 +21,9 @@ class SyncISPConfigWebMembers extends Command
      */
     public function handle(): void
     {
-        //@todo: Retrouver le client_id pour chaque adhérent
-
         $this->info('Synchronisation ISPConfig WEB (via member->website_url)');
 
-        $ispWeb = new ISPConfigWebService();
+        $ispWeb = new ISPConfigWebService;
 
         // Vider le cache si demandé
         if ($this->option('refresh-cache')) {
@@ -60,38 +60,23 @@ class SyncISPConfigWebMembers extends Command
 
                 // Extraction des domaines depuis website_url
                 $memberDomains = collect(explode(';', $member->website_url))
-                    ->map(fn($url) => $this->normalizeDomain($url))
+                    ->map(fn ($url) => $this->normalizeDomain($url))
                     ->filter()
                     ->unique()
                     ->values();
 
                 if ($memberDomains->isEmpty()) {
                     $progressBar->advance();
+
                     continue;
                 }
 
                 // Recherche des sites ISPConfig correspondants
-                $matchedWebsites = $allWebsites->filter(function ($site) use ($memberDomains, $ispWeb) {
-                    $siteDomain = strtolower($site['domain']);
-
-                    // Vérification du domaine principal
-                    if ($memberDomains->contains($siteDomain)) {
-                        return true;
-                    }
-
-                    // Récupération et vérification des alias (avec cache)
-                    $aliases = $ispWeb->getWebsiteAliases($site['domain_id']);
-                    foreach ($aliases as $alias) {
-                        if ($memberDomains->contains(strtolower($alias))) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
+                $matchedWebsites = $ispWeb->findWebsitesForDomains($allWebsites, $memberDomains);
 
                 if ($matchedWebsites->isEmpty()) {
                     $progressBar->advance();
+
                     continue;
                 }
 
@@ -104,7 +89,7 @@ class SyncISPConfigWebMembers extends Command
                     $ispWeb
                 ) {
                     $domainId = $site['domain_id'];
-                    $sysGroupId = $site['sys_groupid'];
+                    $sysGroupId = $site['sys_groupid'] ?? null;
                     $domain = $site['domain'];
 
                     // Récupération des alias (avec cache)
@@ -112,8 +97,8 @@ class SyncISPConfigWebMembers extends Command
 
                     // Filtrage des bases de données pour ce site
                     $databases = $allDatabases
-                        ->filter(fn($db) => $db['sys_groupid'] == $sysGroupId)
-                        ->map(fn($db) => [
+                        ->filter(fn ($db) => $db['parent_domain_id'] == $domainId)
+                        ->map(fn ($db) => [
                             'database_id' => $db['database_id'],
                             'database_name' => $db['database_name'],
                             'database_user_id' => $db['database_user_id'],
@@ -123,8 +108,8 @@ class SyncISPConfigWebMembers extends Command
 
                     // Filtrage des utilisateurs FTP pour ce site
                     $ftpUsers = $allFtpUsers
-                        ->filter(fn($ftp) => $ftp['parent_domain_id'] == $domainId)
-                        ->map(fn($ftp) => [
+                        ->filter(fn ($ftp) => $ftp['parent_domain_id'] == $domainId)
+                        ->map(fn ($ftp) => [
                             'ftp_user_id' => $ftp['ftp_user_id'],
                             'username' => $ftp['username'],
                             'dir' => $ftp['dir'],
@@ -133,8 +118,8 @@ class SyncISPConfigWebMembers extends Command
 
                     // Filtrage des utilisateurs Shell pour ce site
                     $shellUsers = $allShellUsers
-                        ->filter(fn($shell) => $shell['parent_domain_id'] == $domainId)
-                        ->map(fn($shell) => [
+                        ->filter(fn ($shell) => $shell['parent_domain_id'] == $domainId)
+                        ->map(fn ($shell) => [
                             'shell_user_id' => $shell['shell_user_id'],
                             'username' => $shell['username'],
                             'shell' => $shell['shell'],
@@ -163,7 +148,7 @@ class SyncISPConfigWebMembers extends Command
 
                             return false;
                         })
-                        ->map(fn($zone) => [
+                        ->map(fn ($zone) => [
                             'id' => $zone['id'],
                             'origin' => $zone['origin'],
                             'ns' => $zone['ns'],
@@ -176,6 +161,8 @@ class SyncISPConfigWebMembers extends Command
                     return [
                         'domain_id' => $domainId,
                         'domain' => $domain,
+                        'sys_groupid' => $sysGroupId,
+                        'system_group' => $site['system_group'] ?? null,
                         'document_root' => $site['document_root'],
                         'active' => $site['active'],
                         'aliases' => $aliases,
@@ -195,6 +182,7 @@ class SyncISPConfigWebMembers extends Command
                             'ispconfig_service_user_id' => $siteData['domain_id'],
                         ],
                         [
+                            'ispconfig_client_id' => $siteData['sys_groupid'],
                             'data' => $siteData,
                         ]
                     );
@@ -215,8 +203,8 @@ class SyncISPConfigWebMembers extends Command
     {
         $url = trim($url);
 
-        if (!str_starts_with($url, 'http')) {
-            $url = 'https://' . $url;
+        if (! str_starts_with($url, 'http')) {
+            $url = 'https://'.$url;
         }
 
         $host = parse_url($url, PHP_URL_HOST);
