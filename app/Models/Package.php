@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $identifier
  * @property string $name
  * @property string|null $description
- * @property string $price
+ * @property numeric $price
  * @property int $is_active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -40,7 +39,6 @@ class Package extends Model
 
     public static function getAttributeLabel(string $attribute): string
     {
-        return __('packages.fields.' . $attribute);
+        return __('packages.fields.'.$attribute);
     }
-
 }

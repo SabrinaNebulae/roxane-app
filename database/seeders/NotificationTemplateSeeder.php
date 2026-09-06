@@ -172,13 +172,67 @@ class NotificationTemplateSeeder extends Seeder
         NotificationTemplate::updateOrCreate(
             ['identifier' => 'member_renewal_reminder'],
             [
-                'name' => 'Relance adhésion — générique',
-                'subject' => 'Rappel concernant votre adhésion — {app_name}',
+                'name' => 'Relance renouvellement — 1ère relance (début décembre)',
+                'subject' => 'Renouvellement de votre adhésion pour l\'année à venir — {app_name}',
                 'body' => '<p>Bonjour {member_name},</p>'
-                    .'<p>Nous vous contactons au sujet de votre adhésion au sein de notre association.</p>'
-                    .'<p>Si votre adhésion est arrivée à expiration ou si vous n\'avez pas encore finalisé votre inscription, '
-                    .'nous vous invitons à régulariser votre situation afin de continuer à bénéficier de l\'ensemble de nos services.</p>'
-                    .'<p>Pour toute question ou besoin d\'assistance, n\'hésitez pas à nous contacter.</p>'
+                    .'<p>L\'année touche à sa fin et nous vous invitons à renouveler votre adhésion pour l\'année prochaine.</p>'
+                    .'<p>Cela vous permettra de continuer à bénéficier de l\'ensemble de nos services sans interruption.</p>'
+                    .'<p>Nous restons à votre disposition pour toute question.</p>'
+                    .'<p>Cordialement,<br>L\'équipe {app_name}</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_renewal_reminder_2'],
+            [
+                'name' => 'Relance renouvellement — 2ème relance (mi-décembre)',
+                'subject' => 'Pensez à renouveler votre adhésion — {app_name}',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Nous vous avons récemment contacté concernant le renouvellement de votre adhésion pour l\'année prochaine.</p>'
+                    .'<p>Si vous n\'avez pas encore renouvelé, nous vous encourageons à le faire rapidement pour garantir la continuité de vos services.</p>'
+                    .'<p>N\'hésitez pas à nous contacter si vous avez des questions.</p>'
+                    .'<p>Cordialement,<br>L\'équipe {app_name}</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_renewal_reminder_3'],
+            [
+                'name' => 'Relance renouvellement — 3ème relance (début janvier)',
+                'subject' => 'Dernière relance : renouvellement de votre adhésion — {app_name}',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Nous vous contactons une dernière fois concernant le renouvellement de votre adhésion.</p>'
+                    .'<p><strong>Sans action de votre part d\'ici la fin janvier, votre compte et vos services seront automatiquement désactivés.</strong></p>'
+                    .'<p>Pour éviter toute interruption, nous vous invitons à renouveler dès maintenant.</p>'
+                    .'<p>Pour toute question, n\'hésitez pas à nous contacter.</p>'
+                    .'<p>Cordialement,<br>L\'équipe {app_name}</p>',
+                'variables' => [
+                    'member_name' => 'Nom complet du membre',
+                    'app_name' => 'Nom de l\'application',
+                ],
+                'is_active' => true,
+            ]
+        );
+
+        NotificationTemplate::updateOrCreate(
+            ['identifier' => 'member_account_deactivated'],
+            [
+                'name' => 'Compte désactivé pour non-renouvellement',
+                'subject' => 'Votre compte {app_name} a été désactivé',
+                'body' => '<p>Bonjour {member_name},</p>'
+                    .'<p>Faute de renouvellement de votre adhésion, votre compte et vos services ont été désactivés.</p>'
+                    .'<p>Si vous souhaitez réactiver votre compte, n\'hésitez pas à nous contacter.</p>'
+                    .'<p>Nous vous remercions pour la confiance que vous nous avez accordée.</p>'
                     .'<p>Cordialement,<br>L\'équipe {app_name}</p>',
                 'variables' => [
                     'member_name' => 'Nom complet du membre',

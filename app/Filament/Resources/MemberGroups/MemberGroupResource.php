@@ -5,7 +5,6 @@ namespace App\Filament\Resources\MemberGroups;
 use App\Filament\Resources\MemberGroups\Pages\CreateMemberGroup;
 use App\Filament\Resources\MemberGroups\Pages\EditMemberGroup;
 use App\Filament\Resources\MemberGroups\Pages\ListMemberGroups;
-use App\Filament\Resources\MemberGroups\RelationManagers\MemberRelationManager;
 use App\Filament\Resources\MemberGroups\RelationManagers\MembersRelationManager;
 use App\Filament\Resources\MemberGroups\Schemas\MemberGroupForm;
 use App\Filament\Resources\MemberGroups\Tables\MemberGroupsTable;

@@ -43,10 +43,10 @@ class Service extends Model
 
     public static function getAttributeLabel(string $attribute): string
     {
-        return __('services.fields.' . $attribute);
+        return __('services.fields.'.$attribute);
     }
 
-    public function memberships() : BelongsToMany
+    public function memberships(): BelongsToMany
     {
         return $this->belongsToMany(Membership::class, 'services_memberships', 'service_id', 'membership_id');
     }

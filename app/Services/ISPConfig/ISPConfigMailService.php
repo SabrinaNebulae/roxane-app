@@ -18,9 +18,9 @@ class ISPConfigMailService extends ISPConfigService
     public function getAllMailDomains(): array
     {
         return Cache::remember(
-            "ispconfig.mail.domains.all",
+            'ispconfig.mail.domains.all',
             config('services.ispconfig.cache_ttl'),
-            fn() => $this->call('mail_domain_get', ['primary_id' => -1])
+            fn () => $this->call('mail_domain_get', ['primary_id' => -1])
         );
     }
 
@@ -30,9 +30,9 @@ class ISPConfigMailService extends ISPConfigService
     public function getAllMailUsers(): array
     {
         return Cache::remember(
-            "ispconfig.mail.users.all",
+            'ispconfig.mail.users.all',
             config('services.ispconfig.cache_ttl'),
-            fn() => $this->call('mail_user_get', ['primary_id' => -1])
+            fn () => $this->call('mail_user_get', ['primary_id' => -1])
         );
     }
 
@@ -56,7 +56,7 @@ class ISPConfigMailService extends ISPConfigService
         $allUsers = $this->getAllMailUsers();
 
         return collect($allUsers)->filter(function ($user) use ($domain) {
-            return str_ends_with($user['email'], '@' . $domain);
+            return str_ends_with($user['email'], '@'.$domain);
         });
     }
 
@@ -69,7 +69,7 @@ class ISPConfigMailService extends ISPConfigService
 
         $user = collect($allUsers)->firstWhere('email', $email);
 
-        if (!$user) {
+        if (! $user) {
             return null;
         }
 
@@ -97,7 +97,7 @@ class ISPConfigMailService extends ISPConfigService
         $user = collect($this->getAllMailUsers())
             ->firstWhere('email', $email);
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -105,10 +105,10 @@ class ISPConfigMailService extends ISPConfigService
 
         // On récupère l'enregistrement COMPLET (OBLIGATOIRE)
         $mailUserRecord = $this->call('mail_user_get', [
-            $mailuserId
+            $mailuserId,
         ]);
 
-        if (!is_array($mailUserRecord)) {
+        if (! is_array($mailUserRecord)) {
             throw new \RuntimeException('mail_user_get did not return array');
         }
 
@@ -121,11 +121,9 @@ class ISPConfigMailService extends ISPConfigService
         $result = $this->call('mail_user_update', [
             0,              // client_id (ADMIN)
             $mailuserId,    // primary_id
-            $mailUserRecord // FULL RECORD
+            $mailUserRecord, // FULL RECORD
         ]);
 
         return (bool) $result;
     }
-
-
 }

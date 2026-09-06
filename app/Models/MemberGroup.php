@@ -32,12 +32,12 @@ class MemberGroup extends Model
     protected $fillable = [
         'name',
         'description',
-        'identifier'
+        'identifier',
     ];
 
     public static function getAttributeLabel(string $attribute): string
     {
-        return __('member_groups.fields.' . $attribute);
+        return __('member_groups.fields.'.$attribute);
     }
 
     public function members(): HasMany

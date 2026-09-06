@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->foreignId('membership_id')->constrained('memberships')->onDelete('cascade');
-            //$table->json('data')->nullable();
+            // $table->json('data')->nullable();
             $table->timestamps();
         });
     }

@@ -17,14 +17,13 @@ class MemberGroupForm
             ->components([
                 Section::make(fn (?MemberGroup $record) => $record?->name ?? MemberGroup::getAttributeLabel('name'))
                     ->headerActions([
-                       Action::make('view-members')
+                        Action::make('view-members')
                             ->icon('heroicon-o-users')
                             ->label(MemberGroup::getAttributeLabel('view_members'))
                             ->action(function (MemberGroup $record) {
-                                return redirect()->route('filament.admin.resources.members.index', [ 'filters[group][name][values][0]' => $record->id]);
+                                return redirect()->route('filament.admin.resources.members.index', ['filters[group][name][values][0]' => $record->id]);
                             })
-                           ->visible(fn(?MemberGroup $record) => $record !== null)
-
+                            ->visible(fn (?MemberGroup $record) => $record !== null),
 
                     ])
                     ->schema([

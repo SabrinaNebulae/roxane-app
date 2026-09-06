@@ -41,7 +41,7 @@ class PackagesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-               //
+                //
             ])
             ->recordActions([
                 EditAction::make(),

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MemberRenewalReminderNotification extends Notification implements ShouldQueue
+class MemberAccountDeactivatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -27,7 +27,7 @@ class MemberRenewalReminderNotification extends Notification implements ShouldQu
 
     public function toMail(object $notifiable): MailMessage
     {
-        $template = NotificationTemplate::findByIdentifier('member_renewal_reminder');
+        $template = NotificationTemplate::findByIdentifier('member_account_deactivated');
 
         $vars = [
             'member_name' => $this->member->full_name,

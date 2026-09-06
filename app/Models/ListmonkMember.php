@@ -13,7 +13,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Member $member
- *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereListmonkUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereMemberId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ListmonkMember whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class ListmonkMember extends Model

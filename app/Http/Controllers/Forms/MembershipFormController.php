@@ -25,7 +25,7 @@ class MembershipFormController extends Controller
             ->where('is_active', true)
             ->select('id', 'identifier', 'name', 'price', 'description')
             ->get()
-            ->map(function (Package $p) use ($remainingMonths, $currentYear) {
+            ->map(function (Package $p) use ($remainingMonths) {
                 $months = match ($p->identifier) {
                     'custom' => $remainingMonths,
                     'one-year' => $remainingMonths + 12,

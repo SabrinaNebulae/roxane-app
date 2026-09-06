@@ -29,7 +29,7 @@ return new class extends Migration
                 'valid',
                 'pending',
                 'cancelled',
-                'excluded'
+                'excluded',
             ])->default('draft');
 
             // Nature

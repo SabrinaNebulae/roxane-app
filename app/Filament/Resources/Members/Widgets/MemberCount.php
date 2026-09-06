@@ -16,7 +16,7 @@ class MemberCount extends StatsOverviewWidget
                 ->description(Member::getAttributeLabel('widgets.stats.description'))
                 ->descriptionIcon('heroicon-o-user-group', IconPosition::Before)
                 ->chart([7, 2, 10, 3, 15, 4, 17])
-                ->color('primary')
+                ->color('primary'),
         ];
     }
 }

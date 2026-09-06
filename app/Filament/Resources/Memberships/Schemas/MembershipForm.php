@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Memberships\Schemas;
 
 use App\Enums\IspconfigType;
+use App\Filament\Actions\SendRenewalReminderAction;
 use App\Filament\Actions\ServiceToggleAction;
 use App\Models\ListmonkMember;
 use App\Models\Membership;
@@ -259,6 +260,12 @@ class MembershipForm
                                             ->required(),
                                         DatePicker::make('end_date')
                                             ->label(Membership::getAttributeLabel('end_date')),
+                                    ])
+                                    ->extraAttributes(['class' => 'sticky top-4 h-fit']),
+
+                                Section::make('Relances')
+                                    ->schema([
+                                        SendRenewalReminderAction::make(),
                                     ])
                                     ->extraAttributes(['class' => 'sticky top-4 h-fit']),
                             ])

@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NextCloudMember whereMemberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NextCloudMember whereNextcloudUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|NextCloudMember whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|NextCloudMember whereUsername($value)
  * @mixin \Eloquent
  */
 class NextCloudMember extends Model

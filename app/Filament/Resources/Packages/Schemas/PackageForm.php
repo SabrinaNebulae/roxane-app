@@ -23,9 +23,9 @@ class PackageForm
                     ])
                     ->schema([
                         TextInput::make('name')
-                        ->label(Package::getAttributeLabel('name'))
-                        ->required()
-                        ->default(null),
+                            ->label(Package::getAttributeLabel('name'))
+                            ->required()
+                            ->default(null),
                         TextInput::make('identifier')
                             ->label(Package::getAttributeLabel('identifier'))
                             ->required()
@@ -34,7 +34,7 @@ class PackageForm
                         Textarea::make('description')
                             ->label(Package::getAttributeLabel('description'))
                             ->default(null),
-                    ])
+                    ]),
 
             ]);
     }

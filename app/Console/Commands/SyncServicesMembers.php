@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Member;
 use App\Models\Service;
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\progress;
 
 class SyncServicesMembers extends Command
@@ -31,7 +32,7 @@ class SyncServicesMembers extends Command
         // Tous les membres ayant une adhésion en court ont les services activés
         $this->info('Syncing services members...');
 
-        $members = Member::whereIn('status', ['valid', 'pending'] )->get();
+        $members = Member::whereIn('status', ['valid', 'pending'])->get();
 
         $progressBar = progress(label: 'Syncing services members', steps: $members->count());
 

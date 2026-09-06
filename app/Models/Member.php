@@ -19,10 +19,10 @@ use Illuminate\Notifications\Notifiable;
  * @property string $nature
  * @property int|null $type_id
  * @property int|null $group_id
- * @property string|null $lastname
  * @property string|null $firstname
+ * @property string|null $lastname
  * @property string $email
- * @property string $retzien_email
+ * @property string|null $retzien_email
  * @property string|null $company
  * @property string|null $date_of_birth
  * @property string|null $address
@@ -40,17 +40,23 @@ use Illuminate\Notifications\Notifiable;
  * @property-read \App\Models\MemberGroup|null $group
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\IspconfigMember> $ispconfigs
  * @property-read int|null $ispconfigs_count
+ * @property-read \App\Models\Membership|null $lastActiveMembership
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ListmonkMember> $listmonkMembers
+ * @property-read int|null $listmonk_members_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Membership> $memberships
  * @property-read int|null $memberships_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\NextCloudMember> $nextcloudAccounts
  * @property-read int|null $nextcloud_accounts_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MemberRenewalReminder> $renewalReminders
+ * @property-read int|null $renewal_reminders_count
+ * @property-read \App\Models\MemberType|null $type
  * @property-read \App\Models\User|null $user
- *
  * @method static \Database\Factories\MemberFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Member onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereCity($value)
@@ -77,7 +83,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereWebsiteUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Member whereZipcode($value)
- *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Member withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Member withoutTrashed()
  * @mixin \Eloquent
  */
 class Member extends Model
@@ -161,6 +168,11 @@ class Member extends Model
     public function listmonkMembers(): HasMany
     {
         return $this->hasMany(ListmonkMember::class, 'member_id');
+    }
+
+    public function renewalReminders(): HasMany
+    {
+        return $this->hasMany(MemberRenewalReminder::class);
     }
 
     public function lastActiveMembership(): HasOne

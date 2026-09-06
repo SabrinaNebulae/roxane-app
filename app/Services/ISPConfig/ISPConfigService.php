@@ -4,15 +4,18 @@ namespace App\Services\ISPConfig;
 
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use SoapClient;
 use SoapFault;
-use Illuminate\Support\Facades\Log;
 
 class ISPConfigService
 {
     protected ?SoapClient $client = null;
+
     protected ?string $sessionId = null;
+
     protected array $config;
+
     protected string $serverType;
 
     /**
@@ -23,7 +26,7 @@ class ISPConfigService
         $this->serverType = $serverType;
         $this->config = config("services.ispconfig.servers.{$serverType}");
 
-        if (!$this->config) {
+        if (! $this->config) {
             throw new Exception("ISPConfig server configuration not found for: {$serverType}");
         }
     }
@@ -44,8 +47,8 @@ class ISPConfigService
                     'ssl' => [
                         'verify_peer' => false,
                         'verify_peer_name' => false,
-                    ]
-                ])
+                    ],
+                ]),
             ]);
 
             $this->sessionId = $this->client->login(
@@ -53,17 +56,17 @@ class ISPConfigService
                 $this->config['password']
             );
 
-            Log::info("ISPConfig connected", [
+            Log::info('ISPConfig connected', [
                 'server' => $this->serverType,
-                'session_id' => $this->sessionId
+                'session_id' => $this->sessionId,
             ]);
 
         } catch (SoapFault $e) {
-            Log::error("ISPConfig connection failed", [
+            Log::error('ISPConfig connection failed', [
                 'server' => $this->serverType,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            throw new Exception("Failed to connect to ISPConfig: " . $e->getMessage());
+            throw new Exception('Failed to connect to ISPConfig: '.$e->getMessage());
         }
     }
 
@@ -72,11 +75,11 @@ class ISPConfigService
         if ($this->client && $this->sessionId) {
             try {
                 $this->client->logout($this->sessionId);
-                Log::info("ISPConfig disconnected", ['server' => $this->serverType]);
+                Log::info('ISPConfig disconnected', ['server' => $this->serverType]);
             } catch (SoapFault $e) {
-                Log::warning("ISPConfig logout failed", [
+                Log::warning('ISPConfig logout failed', [
                     'server' => $this->serverType,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
 
@@ -97,21 +100,21 @@ class ISPConfigService
 
             $result = $this->client->__soapCall($method, $params);
 
-            Log::debug("ISPConfig API call", [
+            Log::debug('ISPConfig API call', [
                 'method' => $method,
                 'server' => $this->serverType,
-                'success' => true
+                'success' => true,
             ]);
 
             return $result;
 
         } catch (SoapFault $e) {
-            Log::error("ISPConfig API call failed", [
+            Log::error('ISPConfig API call failed', [
                 'method' => $method,
                 'server' => $this->serverType,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            throw new Exception("ISPConfig API call failed: " . $e->getMessage());
+            throw new Exception('ISPConfig API call failed: '.$e->getMessage());
         }
     }
 
@@ -126,9 +129,9 @@ class ISPConfigService
     public function getAllClients(): array
     {
         return Cache::remember(
-            "ispconfig.mail.clients.all",
+            'ispconfig.mail.clients.all',
             config('services.ispconfig.cache_ttl'),
-            fn() => $this->call('client_get_all')
+            fn () => $this->call('client_get_all')
         );
     }
 

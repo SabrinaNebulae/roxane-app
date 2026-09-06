@@ -22,31 +22,34 @@ class NextcloudService
                 'OCS-APIRequest' => 'true',
                 'Accept' => 'application/json',
             ])
-            ->baseUrl(config('services.nextcloud.url') . '/ocs/v1.php');
+            ->baseUrl(config('services.nextcloud.url').'/ocs/v1.php');
     }
 
     /**
      * Disable user by email
+     *
      * @throws ConnectionException
      */
     public function disableUserByEmail(string $email): void
     {
         $userId = $this->findUserIdByEmail($email);
 
-        if (!$userId) {
-            Log::warning("Utilisateur Nextcloud introuvable", ['email' => $email]);
+        if (! $userId) {
+            Log::warning('Utilisateur Nextcloud introuvable', ['email' => $email]);
+
             return;
         }
 
         $response = $this->http->put("/cloud/users/{$userId}/disable");
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new \RuntimeException("Erreur désactivation Nextcloud {$userId}");
         }
     }
 
     /**
      * Desable user by id
+     *
      * @throws ConnectionException
      */
     public function disableUserById(string $userId): void
@@ -60,7 +63,7 @@ class NextcloudService
     protected function findUserIdByEmail(string $email): ?string
     {
         return Cache::remember(
-            'nextcloud.user_id.' . md5($email),
+            'nextcloud.user_id.'.md5($email),
             now()->addDays(7),
             function () use ($email) {
                 return $this->resolveUserIdByEmail($email);
@@ -110,6 +113,4 @@ class NextcloudService
             ->get("/cloud/users/{$userId}")
             ->json('ocs.data') ?? [];
     }
-
-
 }

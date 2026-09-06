@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 require 'recipe/laravel.php';
@@ -8,10 +9,10 @@ require 'contrib/rsync.php';
 $env = $_SERVER['CI_COMMIT_REF_NAME'] === 'master' ? 'PROD' : 'STAGING';
 
 $envConfig = [
-    'host' => $_SERVER[$env . '_SSH_HOST'],
-    'port' => $_SERVER[$env . '_SSH_PORT'] ?? 22,
-    'user' => $_SERVER[$env . '_SSH_USER'],
-    'path' => $_SERVER[$env . '_SSH_PATH'],
+    'host' => $_SERVER[$env.'_SSH_HOST'],
+    'port' => $_SERVER[$env.'_SSH_PORT'] ?? 22,
+    'user' => $_SERVER[$env.'_SSH_USER'],
+    'path' => $_SERVER[$env.'_SSH_PATH'],
     'repository' => $_SERVER['CI_REPOSITORY_URL'],
 ];
 

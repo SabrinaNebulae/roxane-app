@@ -9,5 +9,5 @@ return [
         'description' => 'Description',
         'url' => 'URL',
         'icon' => 'Icon',
-    ]
+    ],
 ];

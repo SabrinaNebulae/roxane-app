@@ -45,6 +45,7 @@ class Contact extends Model
     {
         return __("contacts.fields.$attribute");
     }
+
     public function getFullNameAttribute(): string
     {
         return "{$this->firstname} {$this->lastname}";

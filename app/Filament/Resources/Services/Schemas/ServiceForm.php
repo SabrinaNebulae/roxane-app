@@ -31,7 +31,7 @@ class ServiceForm
                         TextInput::make('icon')
                             ->label(Service::getAttributeLabel('icon'))
                             ->default(null),
-                    ])
+                    ]),
             ]);
     }
 }
