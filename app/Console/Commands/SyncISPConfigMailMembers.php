@@ -10,6 +10,13 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation des comptes mail ISPConfig (@retzien.fr)
+ *
+ * Lie les membres Roxane à leurs boîtes mail ISPConfig via leur retzien_email.
+ *
+ * Usage : php artisan sync:ispconfig-mail-members
+ */
 class SyncISPConfigMailMembers extends Command
 {
     protected $signature = 'sync:ispconfig-mail-members';

@@ -12,6 +12,15 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation des comptes Nextcloud avec les adhérents
+ *
+ * Lie les membres Roxane à leurs comptes Nextcloud via leur retzien_email.
+ *
+ * Usage :
+ * - php artisan nextcloud:sync-members --dry-run
+ * - php artisan nextcloud:sync-members --member=123
+ */
 class SyncNextcloudMembers extends Command
 {
     protected $signature = 'nextcloud:sync-members

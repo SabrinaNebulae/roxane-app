@@ -8,20 +8,18 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation temporaire des services aux adhésions
+ *
+ * Attache automatiquement tous les services aux adhésions actives des membres valides.
+ * Commande temporaire pour initialisation ou correction.
+ *
+ * Usage : php artisan memberships:sync-services
+ */
 class SyncServicesMembers extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'memberships:sync-services';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Temporary command to sync services members';
 
     /**

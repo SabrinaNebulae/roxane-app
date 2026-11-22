@@ -10,6 +10,14 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation des comptes web ISPConfig avec les adhérents
+ *
+ * Lie les membres Roxane à leurs hébergements web ISPConfig via member->website_url.
+ * Collecte sites, bases de données, comptes FTP, SSH et zones DNS.
+ *
+ * Usage : php artisan sync:ispconfig-web-members --refresh-cache
+ */
 class SyncISPConfigWebMembers extends Command
 {
     protected $signature = 'sync:ispconfig-web-members {--refresh-cache : Vider le cache avant la synchronisation}';

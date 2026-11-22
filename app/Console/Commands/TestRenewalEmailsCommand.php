@@ -8,6 +8,29 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
+/**
+ * Test d'envoi des emails de relance de renouvellement
+ *
+ * Cette commande permet de tester les 4 phases de relance d'adhésion
+ * en envoyant tous les emails aux adresses de test spécifiées uniquement.
+ * Aucun email n'est envoyé aux vrais adhérents, aucune donnée n'est enregistrée.
+ *
+ * Les 4 phases testées :
+ * 1. reminder_1 : 1ère relance (début décembre)
+ * 2. reminder_2 : 2ème relance (mi-décembre)
+ * 3. reminder_3 : 3ème relance (début janvier) + avertissement désactivation
+ * 4. deactivate : Notification de désactivation (fin janvier)
+ *
+ * Chaque phase est espacée de 3 secondes pour garantir l'ordre d'arrivée.
+ * Les sujets contiennent le préfixe [TEST].
+ *
+ * Utilisation :
+ * - php artisan members:test-renewal-emails --test-emails=test@example.com
+ * - php artisan members:test-renewal-emails --test-emails=test1@example.com --test-emails=test2@example.com
+ * - php artisan members:test-renewal-emails --test-emails=test@example.com --year=2027 --limit=5
+ *
+ * @version 1.0.0
+ */
 class TestRenewalEmailsCommand extends Command
 {
     protected $signature = 'members:test-renewal-emails
@@ -90,6 +113,9 @@ class TestRenewalEmailsCommand extends Command
             'deactivate' => 'Notification de désactivation (fin janvier)',
         ];
 
+        $phaseKeys = array_keys($phases);
+        $lastPhaseKey = end($phaseKeys);
+
         foreach ($phases as $phase => $description) {
             foreach ($testEmails as $testEmail) {
                 Notification::route('mail', $testEmail)
@@ -97,6 +123,11 @@ class TestRenewalEmailsCommand extends Command
             }
 
             $this->line("  → {$description}");
+
+            if ($phase !== $lastPhaseKey) {
+                $this->line('    ⏱ Pause de 3 secondes...');
+                sleep(3);
+            }
         }
     }
 }

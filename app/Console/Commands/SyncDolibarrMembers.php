@@ -11,18 +11,18 @@ use Illuminate\Http\Client\ConnectionException;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation des adhérents et cotisations depuis Dolibarr ERP
+ *
+ * Importe/met à jour les membres et leurs adhésions depuis l'API REST Dolibarr.
+ * Lance-le après chaque changement dans Dolibarr (nouvelles adhésions, renouvellements).
+ *
+ * Usage : php artisan sync:dolibarr-members
+ */
 class SyncDolibarrMembers extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string */
     protected $signature = 'sync:dolibarr-members';
 
-    /**
-     * The console command description. *
-     *
-     * @var string */
     protected $description = 'Retrieve members data from Dolibarr';
 
     /**

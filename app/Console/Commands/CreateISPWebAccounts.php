@@ -13,6 +13,16 @@ use Illuminate\Support\Str;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Création de clients ISPConfig pour les adhérents
+ *
+ * Crée automatiquement un compte client ISPConfig par adhérent ayant un site web
+ * et réassigne leurs sites web à leur propre compte client.
+ *
+ * Usage :
+ * - php artisan ext:create-isp-accounts --dry-run
+ * - php artisan ext:create-isp-accounts --force
+ */
 class CreateISPWebAccounts extends Command
 {
     protected $signature = 'ext:create-isp-accounts

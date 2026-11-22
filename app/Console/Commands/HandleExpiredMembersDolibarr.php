@@ -12,6 +12,16 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
+/**
+ * Désactivation des adhérents expirés
+ *
+ * Résilie les adhésions expirées dans Dolibarr, Roxane, ISPConfig et Nextcloud.
+ * À utiliser manuellement ou planifier en cron si besoin.
+ *
+ * Usage :
+ * - php artisan members:cleanup-expired --dry-run
+ * - php artisan members:cleanup-expired jane@retzien.fr
+ */
 class HandleExpiredMembersDolibarr extends Command
 {
     protected $signature = 'members:cleanup-expired

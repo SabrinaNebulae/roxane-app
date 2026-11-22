@@ -6,6 +6,25 @@ use App\Models\Member;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
+/**
+ * Export des adhérents éligibles aux relances de renouvellement en CSV
+ *
+ * Cette commande extrait la liste des adhérents dont l'adhésion se termine
+ * en décembre de l'année précédant l'année de renouvellement cible.
+ * Les données sont exportées dans un fichier CSV dans storage/app/.
+ *
+ * Critères d'éligibilité :
+ * - Membre avec status 'valid'
+ * - Possède une adhésion active se terminant en décembre de l'année N-1
+ * - N'a pas encore d'adhésion active pour l'année N
+ *
+ * Utilisation :
+ * - php artisan members:export-eligible-renewals
+ * - php artisan members:export-eligible-renewals --year=2027
+ * - php artisan members:export-eligible-renewals --year=2027 --output=relances.csv
+ *
+ * @version 1.0.0
+ */
 class ExportEligibleRenewalsCommand extends Command
 {
     protected $signature = 'members:export-eligible-renewals

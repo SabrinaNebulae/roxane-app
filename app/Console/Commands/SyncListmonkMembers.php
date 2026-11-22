@@ -12,6 +12,15 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 
 use function Laravel\Prompts\progress;
 
+/**
+ * Synchronisation des abonnés Listmonk avec les adhérents
+ *
+ * Lie les membres Roxane à leurs comptes Listmonk (newsletter) via leur retzien_email.
+ *
+ * Usage :
+ * - php artisan listmonk:sync-members --dry-run
+ * - php artisan listmonk:sync-members --member=123
+ */
 class SyncListmonkMembers extends Command
 {
     protected $signature = 'listmonk:sync-members

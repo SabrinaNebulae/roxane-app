@@ -8,6 +8,44 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
+/**
+ * Processus de relances pour renouvellement d'adhésion
+ *
+ * Cette commande gère l'envoi automatique des 4 phases de relance aux adhérents
+ * dont l'adhésion arrive à expiration. Elle est planifiée via le scheduler Laravel.
+ *
+ * Les 4 phases :
+ * 1. reminder_1 : 1er décembre - Première relance (invitation renouvellement)
+ * 2. reminder_2 : 15 décembre - Deuxième relance (rappel)
+ * 3. reminder_3 : 5 janvier - Dernière relance (avertissement désactivation fin janvier)
+ * 4. deactivate : 28 janvier - Désactivation des comptes non renouvelés
+ *
+ * Critères d'éligibilité :
+ * - Membre avec status 'valid'
+ * - Possède une adhésion active expirant l'année précédente
+ * - Pas d'adhésion active pour l'année en cours
+ * - Relance pas déjà envoyée (tracking via member_renewal_reminders)
+ *
+ * Modes :
+ * - Mode auto : Détecte automatiquement la phase selon la date actuelle
+ * - Mode manuel : Force une phase spécifique (utile pour tests ou correction)
+ * - Dry-run : Simule l'exécution sans envoyer d'emails
+ * - Ciblé : Traite un seul adhérent via son email
+ *
+ * Planification (routes/console.php) :
+ * - 1er décembre à 09:00 : php artisan members:renewal-process --phase=reminder_1
+ * - 15 décembre à 09:00 : php artisan members:renewal-process --phase=reminder_2
+ * - 5 janvier à 09:00 : php artisan members:renewal-process --phase=reminder_3
+ * - 28 janvier à 09:00 : php artisan members:renewal-process --phase=deactivate
+ *
+ * Utilisation :
+ * - php artisan members:renewal-process (mode auto selon date)
+ * - php artisan members:renewal-process --phase=reminder_1 --year=2027
+ * - php artisan members:renewal-process --dry-run --phase=reminder_1
+ * - php artisan members:renewal-process jane@doe.com --phase=reminder_1
+ *
+ * @version 1.0.0
+ */
 class MemberRenewalProcessCommand extends Command
 {
     protected $signature = 'members:renewal-process
@@ -142,7 +180,7 @@ class MemberRenewalProcessCommand extends Command
         };
 
         if ($sent) {
-            $this->info("  ✓ Relance envoyée");
+            $this->info('  ✓ Relance envoyée');
         } else {
             $this->warn("  → Aucune relance envoyée (Membre non concerné / mail de relance déjà envoyé / adhésion active pour {$year})");
         }
