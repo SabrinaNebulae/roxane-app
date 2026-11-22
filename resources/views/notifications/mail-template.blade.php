@@ -23,6 +23,13 @@
             background-color: #f5a623;
             padding: 24px 32px;
             border-bottom: 3px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header img {
+            width: 32px;
+            height: 32px;
         }
         .header h1 {
             margin: 0;
@@ -43,6 +50,21 @@
             color: #00473e;
             font-weight: bold;
         }
+        .cta-button {
+            display: inline-block;
+            margin: 24px 0;
+            padding: 12px 24px;
+            background-color: #f5a623;
+            color: #000;
+            font-weight: bold;
+            text-decoration: none;
+            border: 3px solid #000;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .cta-button:hover {
+            background-color: #e09615;
+        }
         .footer {
             padding: 16px 32px;
             background-color: #f9f9f9;
@@ -56,13 +78,14 @@
 <body>
     <div class="wrapper">
         <div class="header">
-            <h1>{{ $appName ?? config('app.name') }}</h1>
+            <img src="{{ config('app.url') }}/favicons/favicon-96x96.png" alt="Logo">
+            <h1>{{ config('app.front_name', 'Le Retzien Libre') }}</h1>
         </div>
         <div class="content">
             {!! $body !!}
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} {{ $appName ?? config('app.name') }}. Tous droits réservés.
+            &copy; {{ date('Y') }} {{ config('app.front_name', 'Le Retzien Libre') }}. Tous droits réservés.
         </div>
     </div>
 </body>
